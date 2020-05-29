@@ -1,0 +1,51 @@
+{
+	"name": "tailwindcss-theme-variants",
+	"version": "0.0.4",
+	"description": "JavaScript- or media-query-based theme variants with fallback for Tailwind CSS",
+	"keywords": [
+		"plugin",
+		"tailwind",
+		"tailwindcss",
+		"tailwindcss-plugin"
+	],
+	"author": "Navith <navithnavithnavith+git@gmail.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SirNavith/tailwindcss-theme-variants.git"
+	},
+	"bugs": "https://github.com/SirNavith/tailwindcss-theme-variants/issues",
+	"homepage": "https://github.com/SirNavith/tailwindcss-theme-variants",
+	"files": [
+		"dist/src/*"
+	],
+	"main": "dist/src/index.js",
+	"types": "dist/src/index.d.ts",
+	"scripts": {
+		"lint": "eslint --fix ./src/**/*.ts ./tests/**/*.ts",
+		"test": "cross-env TS_NODE_FILES=true mocha --require ts-node/register 'tests/**/*.ts'",
+		"prepublish": "tsc"
+	},
+	"dependencies": {
+		"postcss-selector-parser": "^6.0.2",
+		"tailwindcss": "^1.4.6"
+	},
+	"devDependencies": {
+		"@types/assert": "^1.4.7",
+		"@types/lodash": "^4.14.153",
+		"@types/mocha": "^7.0.2",
+		"@typescript-eslint/eslint-plugin": "^3.0.2",
+		"@typescript-eslint/parser": "^3.0.2",
+		"cross-env": "^7.0.2",
+		"eslint": "^7.1.0",
+		"eslint-config-airbnb-base": "^14.1.0",
+		"eslint-plugin-import": "^2.20.2",
+		"jest-matcher-css": "^1.1.0",
+		"lodash": "^4.17.15",
+		"mocha": "^7.2.0",
+		"postcss": "^7.0.31",
+		"source-map": "^0.7.3",
+		"ts-node": "^8.10.2",
+		"typescript": "^3.9.3"
+	}
+}

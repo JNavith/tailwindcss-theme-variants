@@ -1,0 +1,74 @@
+{
+    "env": {
+        "commonjs": true,
+        "es2020": true,
+        "node": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+        "airbnb-base",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript"
+    ],
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "@typescript-eslint/no-unused-vars": ["warn", {
+            "argsIgnorePattern": "^_"
+        }],
+        "arrow-parens": "warn",
+        "class-methods-use-this": "off",
+        "implicit-arrow-linebreak": "warn",
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "ts": "never"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": "off",
+        "indent": [
+            "warn",
+            "tab"
+        ],
+        "max-len": [
+            "off"
+        ],
+        "no-console": "off",
+        "no-else-return": "warn",
+        "no-empty": "warn",
+        "no-param-reassign": [
+            "error",
+            {
+                "props": false
+            }
+        ],
+        "no-tabs": [
+            "warn",
+            {
+                "allowIndentationTabs": true
+            }
+        ],
+        "no-trailing-spaces": "warn",
+        "object-curly-newline": "warn",
+        "quote-props": "warn",
+        "quotes": [
+            "warn",
+            "double"
+        ]
+    }
+}
