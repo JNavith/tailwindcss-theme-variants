@@ -54,7 +54,7 @@ export interface PostCSS {
     atRule(defaults?: AtRuleNewProps): AtRule;
     decl(defaults?: DeclarationNewProps): Declaration;
     rule(defaults?: RuleNewProps): Rule;
-    root(defaults?: any): Root;
+    root(defaults?: any): Root; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export type PluginTools = {
