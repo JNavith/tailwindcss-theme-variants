@@ -89,3 +89,7 @@ TODO
 ## License and Contributing
 
 MIT licensed. There are no contributing guidelines. Just do whatever you want to point out an issue or feature request and I'll work with it.
+
+---
+
+*Repository preview image generated with [GitHub Social Preview](https://social-preview.pqt.dev/)*
