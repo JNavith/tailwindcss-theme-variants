@@ -152,12 +152,16 @@ Where each parameter means:
 - `baseSelector` (default `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
     
 
-- `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. You can either manually select a theme by giving a string like `"
+- `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. You can either manually select a theme by giving a string like `"solarized-dark"` or implicitly select the first one listed in `themes` by giving `true`.
 
 
-- `rename` (default is a function that gives back exactly what was passed as in `rename("red") === "red"`, i.e. no renaming actually takes place): a function for renaming every theme, which changes the name of the generated variants. The most usual way to use this is to add a prefix or suffix to reduce duplication. For example, you can ``rename: (themeName) => `${themeName}-theme` `` to make `themes: { red, green, blue }` have corresponding variants `red-theme`, `green-theme`, and `blue-theme`. This also means that their generated class names are like `red-theme\:bg-green-300` instead of just `red\:bg-green-300`.
+- `rename` (default is a function that gives back exactly what was passed, as in `rename("red") === "red"`, i.e. no renaming actually takes place): a function for renaming every theme, which changes the name of the generated variants. 
 
-- `variants` (default is nothing): an object mapping the name of extra variants to a function that explains what has to be done to the selector for it to be active. For example, the importable `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The importable `groupHover` (which you are recommended to name `"group-hover"` for consistency) variant returns `` `.group:hover ${selector}` ``
+  The most usual way to use this is to add a prefix or suffix to reduce duplication. For example, you can ``rename: (themeName) => `${themeName}-theme` `` to make `themes: { red, green, blue }` have corresponding variants `red-theme`, `green-theme`, and `blue-theme`. This also means that their generated class names are like `red-theme\:bg-green-300` instead of just `red\:bg-green-300`.
+
+- `variants` (default is nothing): an object mapping the name of extra variants to a function that explains what has to be done to the selector for it to be active. 
+
+  For example, the importable `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The importable `groupHover` (which you are recommended to name `"group-hover"` for consistency) variant returns `` `.group:hover ${selector}` ``
 
 ## Examples
 💡 At the time of writing, this documentation is a work in progress. For all examples, where I've done my best to stretch the plugin to its limits (especially towards the end of the file), see the test suite in [`tests/index.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests/index.ts#L46).
@@ -188,6 +192,84 @@ MIT licensed. There are no contributing guidelines. Just do whatever you want to
 
 ## Alternatives
 TODO: theming plugin comparison table
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th><a href="https://tailwindcss.com/docs/breakpoints/#dark-mode">Native screens</a></th>
+            <th><a href="https://github.com/ChanceArthur/tailwindcss-dark-mode">tailwindcss-dark-mode</a></th>
+            <th><a href="https://github.com/danestves/tailwindcss-darkmode">tailwindcss-darkmode</a></th>
+            <th><a href="https://github.com/javifm86/tailwindcss-prefers-dark-mode">tailwindcss-prefers-dark-mode</a></th>
+            <th><a href="https://github.com/crswll/tailwindcss-theme-swapper">tailwindcss-theme-swapper</a></th>
+            <th><a href="https://github.com/SirNavith/tailwindcss-theme-variants">tailwindcss-theme-variants</a></th>
+            <th><a href="https://github.com/innocenzi/tailwindcss-theming">tailwindcss-theming</a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Controllable with selectors (classes or data attributes)</th>
+            <td>❌</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <th>Responsive</th>
+            <td>❌</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td></td>
+            <td></td>
+            <td>✅</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
+            <td>❌</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>✅</td>
+            <td>❌</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
+            <td>✅</td>
+            <td>With JavaScript</td>
+            <td>❌</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: light</code></a></th>
+            <td>✅</td>
+            <td>With JavaScript</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Other thing</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
 
 ---
 

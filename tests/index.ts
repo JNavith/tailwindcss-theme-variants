@@ -107,7 +107,7 @@ describe("tailwindcss-theme-variants", () => {
 					background-color: #00FF00;
 				}
 
-				html:not(.theme-light):not(.theme-dark) .light\\:bg-green {
+				html:not(.theme-dark) .light\\:bg-green {
 					background-color: #00FF00;
 				}
 				
@@ -180,16 +180,16 @@ describe("tailwindcss-theme-variants", () => {
 				],
 			}),
 			`
-				.bg-pink{
+				.bg-pink {
 					background-color: #FF00FF;
 				}
 
-				html:not(.theme-dark) .dark\\:bg-pink{
+				html .dark\\:bg-pink {
 					background-color: #FF00FF;
 				}
 
 				@media (prefers-color-scheme: dark) {
-					html:not(.theme-dark) .dark\\:bg-pink {
+					html .dark\\:bg-pink {
 						background-color: #FF00FF;
 					}
 				}
@@ -445,11 +445,11 @@ describe("tailwindcss-theme-variants", () => {
 				}
 
 
-				:root:not(.low-contrast):not(.high-contrast) .high-contrast\\:text-orange {
+				:root:not(.low-contrast) .high-contrast\\:text-orange {
 					color: #F80;
 				}
 
-				:root:not(.low-contrast):not(.high-contrast) .high-contrast\\:text-cyan {
+				:root:not(.low-contrast) .high-contrast\\:text-cyan {
 					color: #0FF;
 				}
 
@@ -463,11 +463,11 @@ describe("tailwindcss-theme-variants", () => {
 				}
 
 
-				:root:not(.low-contrast):not(.high-contrast) .high-contrast\\:even\\:text-orange:nth-child(even) {
+				:root:not(.low-contrast) .high-contrast\\:even\\:text-orange:nth-child(even) {
 					color: #F80;
 				}
 
-				:root:not(.low-contrast):not(.high-contrast) .high-contrast\\:even\\:text-cyan:nth-child(even) {
+				:root:not(.low-contrast) .high-contrast\\:even\\:text-cyan:nth-child(even) {
 					color: #0FF;
 				}
 
@@ -495,7 +495,7 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				corePlugins: ["textColor"],
 				variants: {
-					textColor: ["amoled", "amoled:responsive"],
+					textColor: ["responsive", "amoled"],
 				},
 				plugins: [
 					thisPlugin({
@@ -516,19 +516,31 @@ describe("tailwindcss-theme-variants", () => {
 				}
 
 				@media (min-width: 200px) {
-					.themed.amoled .amoled\\:sm\\:text-teal {
+					.sm\\:text-teal {
+						color: #0FA;
+					}
+
+					.themed.amoled .sm\\:amoled\\:text-teal {
 						color: #0FA;
 					}
 				}
 
 				@media (min-width: 400px) {
-					.themed.amoled .amoled\\:md\\:text-teal {
+					.md\\:text-teal {
+						color: #0FA;
+					}
+
+					.themed.amoled .md\\:amoled\\:text-teal {
 						color: #0FA;
 					}
 				}
 
 				@media (min-width: 600px) {
-					.themed.amoled .amoled\\:lg\\:text-teal {
+					.lg\\:text-teal {
+						color: #0FA;
+					}
+
+					.themed.amoled .lg\\:amoled\\:text-teal {
 						color: #0FA;
 					}
 				}
@@ -548,7 +560,7 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				corePlugins: ["borderColor"],
 				variants: {
-					borderColor: ["winter", "winter:responsive", "winter:responsive:focus", "winter:responsive:group-hover"],
+					borderColor: ["responsive", "winter", "winter:focus", "winter:group-hover"],
 				},
 				plugins: [
 					thisPlugin({
@@ -571,40 +583,46 @@ describe("tailwindcss-theme-variants", () => {
 					border-color: #678;
 				}
 
-				@media (min-width: 300px) {
-					:root.theme.winter .winter\\:mobile\\:border-gray {
-						border-color: #678;
-					}
+				:root.theme.winter .winter\\:focus\\:border-gray:focus {
+					border-color: #678;
 				}
 
-				@media (min-width: 500px) {
-					:root.theme.winter .winter\\:desktop\\:border-gray {
-						border-color: #678;
-					}
+				:root.theme.winter .group:hover .winter\\:group-hover\\:border-gray {
+					border-color: #678;
 				}
-
-
-				@media (min-width: 300px)  {
-					:root.theme.winter .winter\\:mobile\\:focus\\:border-gray:focus {
-						border-color: #678;
-					}
-				}
-
-				@media (min-width: 500px) {
-					:root.theme.winter .winter\\:desktop\\:focus\\:border-gray:focus {
-						border-color: #678;
-					}
-				}
-
 
 				@media (min-width: 300px) {
-					:root.theme.winter .group:hover .winter\\:mobile\\:group-hover\\:border-gray {
+					.mobile\\:border-gray {
+						border-color: #678;
+					}
+
+					:root.theme.winter .mobile\\:winter\\:border-gray {
+						border-color: #678;
+					}
+
+					:root.theme.winter .mobile\\:winter\\:focus\\:border-gray:focus {
+						border-color: #678;
+					}
+
+					:root.theme.winter .group:hover .mobile\\:winter\\:group-hover\\:border-gray {
 						border-color: #678;
 					}
 				}
 
 				@media (min-width: 500px) {
-					:root.theme.winter .group:hover .winter\\:desktop\\:group-hover\\:border-gray {
+					.desktop\\:border-gray {
+						border-color: #678;
+					}
+
+					:root.theme.winter .desktop\\:winter\\:border-gray {
+						border-color: #678;
+					}
+
+					:root.theme.winter .desktop\\:winter\\:focus\\:border-gray:focus {
+						border-color: #678;
+					}
+
+					:root.theme.winter .group:hover .desktop\\:winter\\:group-hover\\:border-gray {
 						border-color: #678;
 					}
 				}
@@ -624,7 +642,7 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				corePlugins: ["backgroundColor"],
 				variants: {
-					backgroundColor: ["white", "white:responsive"],
+					backgroundColor: ["responsive", "white"],
 				},
 				plugins: [
 					thisPlugin({
@@ -650,29 +668,33 @@ describe("tailwindcss-theme-variants", () => {
 				}
 
 				@media (min-width: 100px) {
+					.tiny\\:bg-dark-gray {
+						background-color: #123;
+					}
+
 					@media (prefers-color-scheme: light) {
-						.white\\:tiny\\:bg-dark-gray {
+						.tiny\\:white\\:bg-dark-gray {
 							background-color: #123;
 						}
 					}
-				}
 
-				@media (min-width: 100px) {
-					:root.white .white\\:tiny\\:bg-dark-gray {
+					:root.white .tiny\\:white\\:bg-dark-gray {
 						background-color: #123;
 					}
 				}
 
 				@media (min-width: 900px) {
+					.huge\\:bg-dark-gray {
+						background-color: #123;
+					}
+
 					@media (prefers-color-scheme: light) {
-						.white\\:huge\\:bg-dark-gray {
+						.huge\\:white\\:bg-dark-gray {
 							background-color: #123;
 						}
 					}
-				}
 
-				@media (min-width: 900px) {
-					:root.white .white\\:huge\\:bg-dark-gray {
+					:root.white .huge\\:white\\:bg-dark-gray {
 						background-color: #123;
 					}
 				}
@@ -691,7 +713,7 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				corePlugins: ["textColor"],
 				variants: {
-					textColor: ["theme-light:responsive", "theme-dark:responsive"],
+					textColor: ["responsive", "theme-light", "theme-dark"],
 				},
 				plugins: [
 					thisPlugin({
@@ -710,36 +732,56 @@ describe("tailwindcss-theme-variants", () => {
 					color: #640;
 				}
 
-				@media (min-width: 600px) {
-					html:not(.light-theme):not(.dark-theme) .theme-light\\:text-brown {
+				html:not(.dark-theme) .theme-light\\:text-brown {
+					color: #640;
+				}
+
+				@media (prefers-color-scheme: light) {
+					html:not(.dark-theme) .theme-light\\:text-brown {
 						color: #640;
 					}
 				}
 
+				html.light-theme .theme-light\\:text-brown {
+					color: #640;
+				}
+
+				@media (prefers-color-scheme: dark) {
+					html:not(.light-theme) .theme-dark\\:text-brown {
+						color: #640;
+					}
+				}
+
+				html.dark-theme .theme-dark\\:text-brown {
+					color: #640;
+				}
+
 				@media (min-width: 600px) {
+					.middle\\:text-brown {
+						color: #640;
+					}
+					
+					html:not(.dark-theme) .middle\\:theme-light\\:text-brown {
+						color: #640;
+					}
+
 					@media (prefers-color-scheme: light) {
-						html:not(.light-theme):not(.dark-theme) .theme-light\\:middle\\:text-brown {
+						html:not(.dark-theme) .middle\\:theme-light\\:text-brown {
 							color: #640;
 						}
 					}
-				}
 
-				@media (min-width: 600px) {
-					html.light-theme .theme-light\\:middle\\:text-brown {
+					html.light-theme .middle\\:theme-light\\:text-brown {
 						color: #640;
 					}
-				}
 
-				@media (min-width: 600px) {
 					@media (prefers-color-scheme: dark) {
-						html:not(.light-theme):not(.dark-theme) .theme-dark\\:middle\\:text-brown {
+						html:not(.light-theme) .middle\\:theme-dark\\:text-brown {
 							color: #640;
 						}
 					}
-				}
 
-				@media (min-width: 600px) {
-					html.dark-theme .theme-dark\\:middle\\:text-brown {
+					html.dark-theme .middle\\:theme-dark\\:text-brown {
 						color: #640;
 					}
 				}
@@ -760,7 +802,7 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				corePlugins: ["stroke"],
 				variants: {
-					stroke: flatMap(["disabled", "responsive:odd", "responsive:disabled"], (suffix: string): string[] => [`time-day:${suffix}`, `time-night:${suffix}`]),
+					stroke: ["responsive", ...flatMap(["disabled", "odd"], (stackedVariant: string): string[] => [`time-day:${stackedVariant}`, `time-night:${stackedVariant}`])],
 				},
 				plugins: [
 					thisPlugin({
@@ -784,7 +826,7 @@ describe("tailwindcss-theme-variants", () => {
 				}
 
 				@media (prefers-color-scheme: light) {
-					.world:not(.sun-out):not(.moon-out) .time-day\\~disabled\\~stroke-cream:disabled {
+					.world:not(.moon-out) .time-day\\~disabled\\~stroke-cream:disabled {
 						stroke: #FED;
 					}
 				}
@@ -793,7 +835,7 @@ describe("tailwindcss-theme-variants", () => {
 					stroke: #FED;
 				}
 
-				.world:not(.sun-out):not(.moon-out) .time-night\\~disabled\\~stroke-cream:disabled {
+				.world:not(.sun-out) .time-night\\~disabled\\~stroke-cream:disabled {
 					stroke: #FED;
 				}
 
@@ -801,106 +843,104 @@ describe("tailwindcss-theme-variants", () => {
 					stroke: #FED;
 				}
 
+				@media (prefers-color-scheme: light) {
+					.world:not(.moon-out) .time-day\\~odd\\~stroke-cream:nth-child(odd) {
+						stroke: #FED;
+					}
+				}
+
+				.world.sun-out .time-day\\~odd\\~stroke-cream:nth-child(odd) {
+					stroke: #FED;
+				}
+
+				.world:not(.sun-out) .time-night\\~odd\\~stroke-cream:nth-child(odd) {
+					stroke: #FED;
+				}
+
+				.world.moon-out .time-night\\~odd\\~stroke-cream:nth-child(odd) {
+					stroke: #FED;
+				}
+
 				@media (min-width: 400px) {
+					.small\\~stroke-cream {
+						stroke: #FED;
+					}
+
 					@media (prefers-color-scheme: light) {
-						.world:not(.sun-out):not(.moon-out) .time-day\\~small\\~odd\\~stroke-cream:nth-child(odd) {
+						.world:not(.moon-out) .small\\~time-day\\~disabled\\~stroke-cream:disabled {
 							stroke: #FED;
 						}
 					}
-				}
 
-				@media (min-width: 400px) {
-					.world.sun-out .time-day\\~small\\~odd\\~stroke-cream:nth-child(odd) {
+					.world.sun-out .small\\~time-day\\~disabled\\~stroke-cream:disabled {
 						stroke: #FED;
 					}
-				}
 
-				@media (min-width: 1300px) {
+					.world:not(.sun-out) .small\\~time-night\\~disabled\\~stroke-cream:disabled {
+						stroke: #FED;
+					}
+
+					.world.moon-out .small\\~time-night\\~disabled\\~stroke-cream:disabled {
+						stroke: #FED;
+					}
+
 					@media (prefers-color-scheme: light) {
-						.world:not(.sun-out):not(.moon-out) .time-day\\~large\\~odd\\~stroke-cream:nth-child(odd) {
+						.world:not(.moon-out) .small\\~time-day\\~odd\\~stroke-cream:nth-child(odd) {
 							stroke: #FED;
 						}
 					}
-				}
 
-				@media (min-width: 1300px) {
-					.world.sun-out .time-day\\~large\\~odd\\~stroke-cream:nth-child(odd) {
+					.world.sun-out .small\\~time-day\\~odd\\~stroke-cream:nth-child(odd) {
 						stroke: #FED;
 					}
-				}
 
-				@media (min-width: 400px) {
-					.world:not(.sun-out):not(.moon-out) .time-night\\~odd\\~stroke-cream:nth-child(odd) {
+					.world:not(.sun-out) .small\\~time-night\\~odd\\~stroke-cream:nth-child(odd) {
 						stroke: #FED;
 					}
-				}
-
-				@media (min-width: 400px) {
-					.world.moon-out .time-night\\~small\\~odd\\~stroke-cream:nth-child(odd) {
+					
+					.world.moon-out .small\\~time-night\\~odd\\~stroke-cream:nth-child(odd) {
 						stroke: #FED;
 					}
 				}
 
 				@media (min-width: 1300px) {
-					.world:not(.sun-out):not(.moon-out) .time-night\\~odd\\~stroke-cream:nth-child(odd) {
+					.large\\~stroke-cream {
 						stroke: #FED;
 					}
-				}
 
-				@media (min-width: 1300px) {
-					.world.moon-out .time-night\\~large\\~odd\\~stroke-cream:nth-child(odd) {
-						stroke: #FED;
-					}
-				}
-
-				@media (min-width: 400px) {
 					@media (prefers-color-scheme: light) {
-						.world:not(.sun-out):not(.moon-out) .time-day\\~small\\~disabled\\~stroke-cream:disabled {
+						.world:not(.moon-out) .large\\~time-day\\~disabled\\~stroke-cream:disabled {
 							stroke: #FED;
 						}
 					}
-				}
 
-				@media (min-width: 400px) {
-					.world.sun-out .time-day\\~small\\~disabled\\~stroke-cream:disabled {
+					.world.sun-out .large\\~time-day\\~disabled\\~stroke-cream:disabled {
 						stroke: #FED;
 					}
-				}
 
-				@media (min-width: 1300px) {
+					.world:not(.sun-out) .large\\~time-night\\~disabled\\~stroke-cream:disabled {
+						stroke: #FED;
+					}
+
+					.world.moon-out .large\\~time-night\\~disabled\\~stroke-cream:disabled {
+						stroke: #FED;
+					}
+
 					@media (prefers-color-scheme: light) {
-						.world:not(.sun-out):not(.moon-out) .time-day\\~large\\~disabled\\~stroke-cream:disabled {
+						.world:not(.moon-out) .large\\~time-day\\~odd\\~stroke-cream:nth-child(odd) {
 							stroke: #FED;
 						}
 					}
-				}
 
-				@media (min-width: 1300px) {
-					.world.sun-out .time-day\\~large\\~disabled\\~stroke-cream:disabled {
+					.world.sun-out .large\\~time-day\\~odd\\~stroke-cream:nth-child(odd) {
 						stroke: #FED;
 					}
-				}
 
-				@media (min-width: 400px) {
-					.world:not(.sun-out):not(.moon-out) .time-night\\~disabled\\~stroke-cream:disabled {
+					.world:not(.sun-out) .large\\~time-night\\~odd\\~stroke-cream:nth-child(odd) {
 						stroke: #FED;
 					}
-				}
 
-				@media (min-width: 400px) {
-					.world.moon-out .time-night\\~small\\~disabled\\~stroke-cream:disabled {
-						stroke: #FED;
-					}
-				}
-
-				@media (min-width: 1300px) {
-					.world:not(.sun-out):not(.moon-out) .time-night\\~disabled\\~stroke-cream:disabled {
-						stroke: #FED;
-					}
-				}
-
-				@media (min-width: 1300px) {
-					.world.moon-out .time-night\\~large\\~disabled\\~stroke-cream:disabled {
+					.world.moon-out .large\\~time-night\\~odd\\~stroke-cream:nth-child(odd) {
 						stroke: #FED;
 					}
 				}
