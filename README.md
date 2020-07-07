@@ -223,9 +223,9 @@ TODO: theming plugin comparison table
             <td>✅</td>
             <td>✅</td>
             <td></td>
-            <td></td>
             <td>✅</td>
-            <td></td>
+            <td>✅</td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
