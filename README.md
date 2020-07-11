@@ -223,9 +223,9 @@ TODO: theming plugin comparison table
             <td>✅</td>
             <td>✅</td>
             <td></td>
-            <td></td>
             <td>✅</td>
-            <td></td>
+            <td>✅</td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
@@ -245,7 +245,7 @@ TODO: theming plugin comparison table
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: light</code></a></th>
@@ -255,7 +255,7 @@ TODO: theming plugin comparison table
             <td>❌</td>
             <td>✅</td>
             <td>✅</td>
-            <td></td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Other thing</th>
