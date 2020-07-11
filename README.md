@@ -13,7 +13,7 @@ npm install --save-dev tailwindcss-theme-variants
 With this Tailwind configuration,
 
 ```js
-const { default: tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
+const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -64,7 +64,7 @@ this CSS is generated:
 You may rather choose to tie your theme selection to matched media queries, like [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme):
 
 ```js
-const { default: tailwindcssThemeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
+const { tailwindcssThemeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -120,7 +120,7 @@ Which generates this CSS:
 This plugin expects configuration of the form
 
 ```ts
-interface ThisPluginOptions {
+{
     themes: {
         [name: string]: {
             // At least one is required

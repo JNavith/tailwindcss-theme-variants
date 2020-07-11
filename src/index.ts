@@ -94,6 +94,7 @@ const thisPlugin: ThisPlugin = plugin.withOptions(({
 	});
 });
 
+export const tailwindcssThemeVariants = thisPlugin;
 export default thisPlugin;
 
 export {
