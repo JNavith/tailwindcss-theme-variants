@@ -159,7 +159,7 @@ Where each parameter means:
 
   The most usual way to use this is to add a prefix or suffix to reduce duplication. For example, you can ``rename: (themeName) => `${themeName}-theme` `` to make `themes: { red, green, blue }` have corresponding variants `red-theme`, `green-theme`, and `blue-theme`. This also means that their generated class names are like `red-theme\:bg-green-300` instead of just `red\:bg-green-300`.
 
-- `variants` (default is nothing): an object mapping the name of extra variants to a function that explains what has to be done to the selector for it to be active. 
+- `variants` (default is nothing): an object mapping the name of a variant to a function that gives a selector for when that variant is active. 
 
   For example, the importable `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The importable `groupHover` (which you are recommended to name `"group-hover"` for consistency) variant returns `` `.group:hover ${selector}` ``
 
