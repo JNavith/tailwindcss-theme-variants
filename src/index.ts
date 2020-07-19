@@ -2,7 +2,7 @@ import { AtRule } from "postcss";
 import plugin from "tailwindcss/plugin";
 
 import { ThisPlugin, ThisPluginOptions, PluginTools } from "./types";
-
+import { addParent } from "./selectors";
 
 const nameVariant = (renamedTheme: string, variantName: string): string => {
 	if (variantName === "") {
@@ -12,7 +12,7 @@ const nameVariant = (renamedTheme: string, variantName: string): string => {
 };
 
 const thisPlugin: ThisPlugin = plugin.withOptions(({
-	themes, baseSelector = ":root", fallback = false, rename = (themeName: string): string => themeName, variants = {},
+	themes, baseSelector, fallback = false, rename = (themeName: string): string => themeName, variants = {},
 }: ThisPluginOptions) => ({
 	addVariant, e, postcss,
 }: PluginTools): void => {
@@ -33,7 +33,14 @@ const thisPlugin: ThisPlugin = plugin.withOptions(({
 		}
 	}
 
-	// Use a dummy default variant first
+	if (baseSelector === undefined) {
+		// Implicitly disable `baseSelector` on behalf of the person only using media queries to set their themes
+		// Otherwise use :root as the default `baseSelector`
+		// eslint-disable-next-line no-param-reassign
+		baseSelector = allThemes.some(([_name, { selector }]) => selector) ? ":root" : "";
+	}
+
+	// Use a normal default variant first
 	Object.entries({ "": (selector: string): string => selector, ...variants }).forEach(([variantName, variantFunction]) => {
 		allThemes.forEach(([themeName, { mediaQuery, selector }]) => {
 			const namedVariant = nameVariant(rename(themeName), variantName);
@@ -51,7 +58,7 @@ const thisPlugin: ThisPlugin = plugin.withOptions(({
 					containerFallBack.walkRules((rule) => {
 						const namedSelector = nameSelector(rule.selector);
 						const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
-						rule.selector = `${baseSelector}${inactiveThemes.join("")} ${namedSelector}`;
+						rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
 					});
 
 					container.append(containerFallBack);
@@ -66,7 +73,7 @@ const thisPlugin: ThisPlugin = plugin.withOptions(({
 						const namedSelector = nameSelector(rule.selector);
 						if (fallback && baseSelector !== "") {
 							const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
-							rule.selector = `${baseSelector}${inactiveThemes.join("")} ${namedSelector}`;
+							rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
 						} else {
 							rule.selector = namedSelector;
 						}
@@ -84,7 +91,7 @@ const thisPlugin: ThisPlugin = plugin.withOptions(({
 					normalScreenContainer.walkRules((rule) => {
 						const namedSelector = nameSelector(rule.selector);
 						const activator = `${baseSelector}${selector}`;
-						rule.selector = `${activator} ${namedSelector}`;
+						rule.selector = addParent(namedSelector, activator);
 					});
 
 					container.append(normalScreenContainer);
@@ -97,14 +104,5 @@ const thisPlugin: ThisPlugin = plugin.withOptions(({
 export const tailwindcssThemeVariants = thisPlugin;
 export default thisPlugin;
 
-export {
-	active, disabled, even, first, focus, focusWithin, hover, last, odd, visited,
-	groupActive, groupFocus, groupFocusWithin, groupHover,
-} from "./variants";
-
-export {
-	prefersAnyScheme, prefersDark, prefersLight,
-	prefersAnyMotion, prefersReducedMotion,
-	prefersAnyTransparency, prefersReducedTransparency,
-	prefersAnyContrast, prefersHighContrast, prefersLowContrast,
-} from "./media-queries";
+export * from "./media-queries";
+export * from "./variants";

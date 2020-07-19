@@ -50,3 +50,12 @@ export const distill = (selectors: string[]): [string, string[]] => {
 	const different = flatten([Array.from(firstDifferents), ...otherDifferents]);
 	return [common, different];
 };
+
+export const addParent = (selector: string, parent: string): string => {
+	if (!parent) return selector;
+
+	const parsedSelector = parse(selector);
+	const parts = parsedSelector.split((node) => node.type === "selector" || node.type === "combinator");
+	const unparsedParts = parts.map((part) => unparse(part[0])).flat();
+	return unparsedParts.map((part) => `${parent} ${part.trim()}`).join(", ");
+};

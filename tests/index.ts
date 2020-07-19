@@ -6,9 +6,9 @@ import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 
 import thisPlugin, {
-	active, disabled, even, first, focus, groupHover, groupFocus, hover, last, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, visited,
+	active, disabled, even, first, focus, groupHover, groupFocus, hover, last, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, selection, visited,
 } from "../src/index";
-import { distill } from "../src/selectors";
+import { distill, addParent } from "../src/selectors";
 import { TailwindCSSConfig } from "../src/types";
 
 const generatePluginCss = (config: TailwindCSSConfig): Promise<string> => postcss(
@@ -23,7 +23,7 @@ const generatePluginCss = (config: TailwindCSSConfig): Promise<string> => postcs
 }).then((result) => result.css);
 
 const assertCSS = (actual: string, expected: string): void => {
-	const { pass, message } = cssMatcher(actual, expected);
+	const { pass, message }: {pass: boolean, message: () => string} = cssMatcher(actual, expected);
 	assert.ok(pass, message());
 };
 
@@ -42,6 +42,27 @@ describe("tailwindcss-theme-variants", () => {
 		});
 	});
 
+	describe("#addParent()", () => {
+		it("adds `a` to `b`", () => {
+			assert.equal(addParent("a", "b"), "b a");
+		});
+
+		it("adds `.parent` to `.child`", () => {
+			assert.equal(addParent(".child", ".parent"), ".parent .child");
+		});
+
+		it("adds nothing to `.parentless`", () => {
+			assert.equal(addParent(".parentless", ""), ".parentless");
+		});
+
+		it("adds `#parent` to every `.child{n}`", () => {
+			assert.equal(addParent(".child1, .child2, .child3", "#parent"), "#parent .child1, #parent .child2, #parent .child3");
+		});
+
+		it("adds `grandparent [parent]` to `child:hover` and `child .grandchild`", () => {
+			assert.equal(addParent("child:hover, child .grandchild", "grandparent [parent]"), "grandparent [parent] child:hover, grandparent [parent] child .grandchild");
+		});
+	});
 
 	describe("#thisPlugin()", () => {
 		it("works in the most basic way without fallback", async () => {
@@ -1162,7 +1183,6 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-
 		it("supports being called more than once with different options", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -1217,30 +1237,30 @@ describe("tailwindcss-theme-variants", () => {
 					}
 				}
 
-				:root .light-theme\\:bg-berry {
+				.light-theme\\:bg-berry {
 					background-color: #B37;
 				}
 
-				:root .light-theme\\:bg-bush {
+				.light-theme\\:bg-bush {
 					background-color: #073;
 				}
 
 				@media (prefers-color-scheme: light) {
-					:root .light-theme\\:bg-berry {
+					.light-theme\\:bg-berry {
 						background-color: #B37
 					}
 
-					:root .light-theme\\:bg-bush {
+					.light-theme\\:bg-bush {
 						background-color: #073
 					}
 				}
 
 				@media (prefers-color-scheme: dark) {
-					:root .dark-theme\\:bg-berry {
+					.dark-theme\\:bg-berry {
 						background-color: #B37
 					}
 
-					:root .dark-theme\\:bg-bush {
+					.dark-theme\\:bg-bush {
 						background-color: #073
 					}
 				}
@@ -1265,6 +1285,100 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
+		it("supports the new provided selection variant", async () => {
+			assertCSS(await generatePluginCss({
+				theme: {
+					backgroundColor: {
+						"red-500": "#F56565",
+					},
+				},
+				corePlugins: ["backgroundColor"],
+				variants: {
+					backgroundColor: ["light:selection", "dark:selection"],
+				},
+
+				plugins: [
+					thisPlugin({
+						themes: {
+							light: {
+								selector: ".light",
+							},
+							dark: {
+								selector: ".dark",
+							},
+						},
+						variants: {
+							selection,
+						},
+					}),
+				],
+			}),
+			`
+				.bg-red-500 {
+					background-color: #F56565;
+				}
+
+				:root.light .light\\:selection\\:bg-red-500::selection, :root.light .light\\:selection\\:bg-red-500 ::selection {
+					background-color: #F56565;
+				}
+
+				:root.dark .dark\\:selection\\:bg-red-500::selection, :root.dark .dark\\:selection\\:bg-red-500 ::selection {
+					background-color: #F56565;
+				}
+			`);
+		});
+
+		it("supports the new provided selection variant with fallback without an implicitly disabled baseSelector", async () => {
+			assertCSS(await generatePluginCss({
+				theme: {
+					textColor: {
+						"gray-200": "#EDF2F7",
+					},
+				},
+				corePlugins: ["textColor"],
+				variants: {
+					textColor: ["light:selection", "dark:selection"],
+				},
+
+				plugins: [
+					thisPlugin({
+						fallback: true,
+						themes: {
+							light: {
+								mediaQuery: prefersLight,
+							},
+							dark: {
+								mediaQuery: prefersDark,
+							},
+						},
+						variants: {
+							selection,
+						},
+					}),
+				],
+			}),
+			`
+				.text-gray-200 {
+					color: #EDF2F7;
+				}
+
+				.light\\:selection\\:text-gray-200::selection, .light\\:selection\\:text-gray-200 ::selection {
+					color: #EDF2F7;
+				}
+			
+				@media (prefers-color-scheme: light) {
+					.light\\:selection\\:text-gray-200::selection, .light\\:selection\\:text-gray-200 ::selection {
+						color: #EDF2F7;
+					}
+				}
+				
+				@media (prefers-color-scheme: dark) {
+					.dark\\:selection\\:text-gray-200::selection, .dark\\:selection\\:text-gray-200 ::selection {
+						color: #EDF2F7;
+					}
+				}
+			`);
+		});
 
 		it("works the way the basic usage example with selectors says it will", async () => {
 			assertCSS(await generatePluginCss({

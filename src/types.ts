@@ -22,15 +22,22 @@ export interface NestedObject {
 	[k: string]: string | NestedObject;
 }
 
-export interface AddComponentsOptions {
+export interface AddComponentsOptionsObject {
 	respectPrefix?: boolean;
+	variants?: VariantsValue;
 }
 
-export interface AddUtilitiesOptions {
+export type AddComponentsOptions = AddComponentsOptionsObject | VariantsValue;
+
+export type VariantsValue = VariantsObject[keyof VariantsObject];
+
+export interface AddUtilitiesOptionsObject {
 	respectPrefix?: boolean;
 	respectImportant?: boolean;
-	variants?: VariantsObject[keyof VariantsObject];
+	variants?: VariantsValue;
 }
+
+export type AddUtilitiesOptions = AddUtilitiesOptionsObject | VariantsValue;
 
 export interface ModifySelectorsOptions {
 	className: string;
