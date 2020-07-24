@@ -1,3 +1,4 @@
+import { TailwindCSSConfig } from "@navith/tailwindcss-plugin-author-types";
 import assert from "assert";
 import cssMatcher from "jest-matcher-css";
 import { flatMap, merge } from "lodash";
@@ -9,7 +10,6 @@ import thisPlugin, {
 	active, disabled, even, first, focus, groupHover, groupFocus, hover, last, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, selection, visited,
 } from "../src/index";
 import { distill, addParent } from "../src/selectors";
-import { TailwindCSSConfig } from "../src/types";
 
 const generatePluginCss = (config: TailwindCSSConfig): Promise<string> => postcss(
 	tailwindcss(

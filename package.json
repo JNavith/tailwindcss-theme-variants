@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"description": "JavaScript- or media-query-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -28,14 +28,15 @@
 	},
 	"dependencies": {
 		"postcss-selector-parser": "^6.0.2",
-		"tailwindcss": "^1.5.1"
+		"tailwindcss": "^1.5.2"
 	},
 	"devDependencies": {
+		"@navith/tailwindcss-plugin-author-types": "^0.0.4",
 		"@types/assert": "^1.5.1",
-		"@types/lodash": "^4.14.157",
+		"@types/lodash": "^4.14.158",
 		"@types/mocha": "^8.0.0",
-		"@typescript-eslint/eslint-plugin": "^3.6.1",
-		"@typescript-eslint/parser": "^3.6.1",
+		"@typescript-eslint/eslint-plugin": "^3.7.0",
+		"@typescript-eslint/parser": "^3.7.0",
 		"cross-env": "^7.0.2",
 		"eslint": "^7.5.0",
 		"eslint-config-airbnb-base": "^14.2.0",

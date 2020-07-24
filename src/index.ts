@@ -1,7 +1,8 @@
 import { AtRule } from "postcss";
 import plugin from "tailwindcss/plugin";
 
-import { ThisPlugin, ThisPluginOptions, PluginTools } from "./types";
+import { PluginTools } from "@navith/tailwindcss-plugin-author-types";
+import { ThisPlugin, ThisPluginOptions } from "./types";
 import { addParent } from "./selectors";
 
 const nameVariant = (renamedTheme: string, variantName: string): string => {
