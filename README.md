@@ -219,19 +219,19 @@ Which will change the generated CSS to activate `light` earlier than any media q
 }
 
 /* New addition */
-.light\\:bg-teal-500 {
+.light\:bg-teal-500 {
     background-color: #38B2AC;
 }
 /* End new addition */
 
 @media (prefers-color-scheme: light) {
-    .light\\:bg-teal-500 {
+    .light\:bg-teal-500 {
         background-color: #38B2AC;
     }
 }
 
 @media (prefers-color-scheme: dark) {
-    .dark\\:bg-teal-500 {
+    .dark\:bg-teal-500 {
         background-color: #38B2AC;
     }
 }
@@ -275,15 +275,15 @@ This generates:
     background-color: #1A202C;
 }
 
-:root.light-theme .light\\:bg-gray-900 {
+:root.light-theme .light\:bg-gray-900 {
     background-color: #1A202C;
 }
 
-:root:not(.light-theme) .dark\\:bg-gray-900 {
+:root:not(.light-theme) .dark\:bg-gray-900 {
     background-color: #1A202C;
 }
 
-:root.dark-theme .dark\\:bg-gray-900 {
+:root.dark-theme .dark\:bg-gray-900 {
     background-color: #1A202C;
 }
 ```
