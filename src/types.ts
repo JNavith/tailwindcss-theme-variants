@@ -14,16 +14,16 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 
 export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQuery>;
 
-export interface ThisPluginOptions {
-    themes: {
-        [name: string]: ThisPluginTheme;
-    };
-    baseSelector?: string;
-    fallback?: string | boolean;
-    rename?: (themeName: string) => string;
-    variants?: {
-        [name: string]: (selector: string) => string;
-    };
+export type Themes = { [name: string]: ThisPluginTheme };
+
+export interface ThisPluginOptions<GivenThemes extends Themes> {
+	themes: GivenThemes;
+	baseSelector?: string;
+	fallback?: (keyof GivenThemes) | boolean;
+	rename?: (themeName: keyof GivenThemes) => string;
+	variants?: {
+		[name: string]: (selector: string) => string;
+	};
 }
 
-export type ThisPlugin = (options: ThisPluginOptions) => WrappedPlugin;
+export type ThisPlugin<GivenThemes extends Themes> = (options: ThisPluginOptions<GivenThemes>) => WrappedPlugin;

@@ -1463,5 +1463,99 @@ describe("tailwindcss-theme-variants", () => {
 				}
 			`);
 		});
+
+		it("works the way the basic usage example with media queries with explicit fallback says it will", async () => {
+			assertCSS(await generatePluginCss({
+				theme: {
+					backgroundColor: {
+						"teal-500": "#38B2AC",
+					},
+				},
+				corePlugins: ["backgroundColor"],
+				variants: {
+					backgroundColor: ["light", "dark"],
+				},
+
+				plugins: [
+					thisPlugin({
+						themes: {
+							light: {
+								mediaQuery: prefersLight,
+							},
+							dark: {
+								mediaQuery: prefersDark,
+							},
+						},
+						fallback: "light",
+					}),
+				],
+			}),
+			`
+				.bg-teal-500 {
+					background-color: #38B2AC;
+				}
+
+				.light\\:bg-teal-500 {
+					background-color: #38B2AC;
+				}
+
+				@media (prefers-color-scheme: light) {
+					.light\\:bg-teal-500 {
+						background-color: #38B2AC;
+					}
+				}
+
+				@media (prefers-color-scheme: dark) {
+					.dark\\:bg-teal-500 {
+						background-color: #38B2AC;
+					}
+				}
+			`);
+		});
+
+		it("works the way the basic usage example with selectors with explicit fallback says it will", async () => {
+			assertCSS(await generatePluginCss({
+				theme: {
+					backgroundColor: {
+						"gray-900": "#1A202C",
+					},
+				},
+				corePlugins: ["backgroundColor"],
+				variants: {
+					backgroundColor: ["light", "dark"],
+				},
+
+				plugins: [
+					thisPlugin({
+						themes: {
+							light: {
+								selector: ".light-theme",
+							},
+							dark: {
+								selector: ".dark-theme",
+							},
+						},
+						fallback: "dark",
+					}),
+				],
+			}),
+			`
+				.bg-gray-900 {
+					background-color: #1A202C;
+				}
+
+				:root.light-theme .light\\:bg-gray-900 {
+					background-color: #1A202C;
+				}
+
+				:root:not(.light-theme) .dark\\:bg-gray-900 {
+					background-color: #1A202C;
+				}
+
+				:root.dark-theme .dark\\:bg-gray-900 {
+					background-color: #1A202C;
+				}
+			`);
+		});
 	});
 });

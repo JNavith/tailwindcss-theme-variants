@@ -112,7 +112,7 @@ Which generates this CSS:
 }
 ```
 
-💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. As you see above, `light` came first, then `dark` in `backgroundColor`'s `variants`, so we also list `light` before `dark` in `tailwindcssThemeVariants`'s `themes` option.
+💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `tailwindcssThemeVariants`'s `themes` option.
 
 
 ## Full configuration
@@ -167,11 +167,154 @@ Where each parameter means:
 💡 At the time of writing, this documentation is a work in progress. For all examples, where I've done my best to stretch the plugin to its limits (especially towards the end of the file), see the test suite in [`tests/index.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests/index.ts#L46).
 
 ### Fallback
-TODO
+#### Media queries
+With the same media-query-activated themes above,
+```js
+themes: {
+    light: {
+        mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
+    },
+    dark: {
+        mediaQuery: prefersDark /* "@media (prefers-color-scheme: dark)" */,
+    },
+},
+```
+we can create a table to show what the active theme will be under all possible conditions:
+
+<table>
+<tr align="center">
+<th align="left">Matching media query</th>
+<th>Neither</th>
+<th><code>prefers-color-scheme: light</code></th>
+<th><code>prefers-color-scheme: dark</code></th>
+</tr>
+
+<tr align="center">
+<th align="left">Active theme</th>
+<td>None</td>
+<td><code>light</code></td>
+<td><code>dark</code></td>
+</tr>
+</table>
+
+**The whole point of the fallback feature is to address that *None* case.** It could mean that the visitor is using a browser that doesn't [support `prefers-color-scheme`](https://caniuse.com/#search=prefers-color-scheme), such as IE11. Instead of leaving them on an unthemed site, we can "push" them into a particular theme by specifying `fallback`.
+
+```js
+themes: {
+    light: {
+        mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
+    },
+    dark: {
+        mediaQuery: prefersDark /* "@media (prefers-color-scheme: dark)" */,
+    },
+},
+// New addition
+fallback: "light",
+```
+
+Which will change the generated CSS to activate `light` earlier than any media queries, so they can still override that declaration by being later in the file. **You could think of `light` as the *default theme*** in this case.
+```css
+.bg-teal-500 {
+    background-color: #38B2AC;
+}
+
+/* New addition */
+.light\\:bg-teal-500 {
+    background-color: #38B2AC;
+}
+/* End new addition */
+
+@media (prefers-color-scheme: light) {
+    .light\\:bg-teal-500 {
+        background-color: #38B2AC;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .dark\\:bg-teal-500 {
+        background-color: #38B2AC;
+    }
+}
+```
+
+Which, in turn, changes the active theme table to:
+<table>
+<tr align="center">
+<th align="left">Matching media query</th>
+<th>Neither</th>
+<th><code>prefers-color-scheme: light</code></th>
+<th><code>prefers-color-scheme: dark</code></th>
+</tr>
+
+<tr align="center">
+<th align="left">Active theme</th>
+<td><code>light</code></td>
+<td><code>light</code></td>
+<td><code>dark</code></td>
+</tr>
+</table>
+
+#### Selectors
+💡 `fallback` also works for selector-activated themes, which would be useful for visitors without JavaScript enabled (if that's how you've chosen to set the theme).
+
+```js
+themes: {
+    light: {
+        selector: ".light-theme",
+    },
+    dark: {
+        selector: ".dark-theme",
+    },
+},
+fallback: "dark",
+```
+
+This generates:
+```css
+.bg-gray-900 {
+    background-color: #1A202C;
+}
+
+:root.light-theme .light\\:bg-gray-900 {
+    background-color: #1A202C;
+}
+
+:root:not(.light-theme) .dark\\:bg-gray-900 {
+    background-color: #1A202C;
+}
+
+:root.dark-theme .dark\\:bg-gray-900 {
+    background-color: #1A202C;
+}
+```
+
+Which has the active theme table:
+<table>
+<tr>
+<th align="left">Matching selector</th>
+<th align="left">Active theme</th>
+</tr>
+
+<tr>
+<th align="left">Neither</th>
+<td align="center"><code>dark</code></td>
+</tr>
+
+<tr>
+<th align="left"><code>:root.light-theme</code></th>
+<td align="center"><code>light</code></td>
+</tr>
+
+<tr>
+<th align="left"><code>:root.dark-theme</code></th>
+<td align="center"><code>dark</code></td>
+</tr>
+</table>
+
 
 ### Stacked variants
 
-💡 All of Tailwind CSS's core variants are bundled for use with the plugin. You can see the full list in [`src/variants.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
+All of Tailwind CSS's core variants are bundled for use with the plugin. You can see the full list in [`src/variants.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
 
 TODO
 
