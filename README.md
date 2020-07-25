@@ -59,17 +59,17 @@ this CSS is generated:
 
 💡 You can choose more than just classes for your selectors. Other, good options include data attributes, like `[data-padding=compact]`. You *can* go as crazy as `.class[data-theme=light]:dir(rtl)`, for example, but at that point you need to be careful with specificity!
 
-After also enabling `"light"` and `"dark"` variants for `textColor` and bringing in more colors from the [default palette](https://tailwindcss.com/docs/customizing-colors/#default-color-palette), we can create a simple themed button like this:
+After also enabling `"light"` and `"dark"` variants for `textColor` and bringing in more colors from the [default palette](https://tailwindcss.com/docs/customizing-colors/#default-color-palette), we can implement a simple themed button in HTML like this:
 
 ```html
 <html class="light-theme"> <!-- Change to dark-theme -->
     <button class="light:bg-teal-200 dark:bg-teal-800 light:text-teal-700 dark:text-teal-100">
         Sign up
     </button>
-    <!-- Results in dark text on light background in the light theme -->
-    <!-- And light text on dark background in the dark theme -->
 </html>
 ```
+
+This will result in dark text on a light background in the light theme, and light text on a dark background in the dark theme.
 
 ## Using media queries to choose the active theme
 
@@ -346,8 +346,8 @@ variants: {
 You could create a simple card that uses contrast pleasant for fully sighted visitors, but intelligently switches to functional high contrast for those who specify it:
 ```html
 <div class="bg-white text-gray-800 high-contrast:text-black">
-    <p>Let me tell you all about...</p>
-    <p>... this great idea I have!</p>
+    <h1>Let me tell you all about...</h1>
+    <h2>... this great idea I have!</h2>
 
     <a href="text-blue-500 high-contrast:text-blue-700 hover:text-blue-600 high-contrast:hover:text-blue-900">
         See more
@@ -358,11 +358,40 @@ You could create a simple card that uses contrast pleasant for fully sighted vis
 ### Responsive variants
 Responsive variants let you distinguish the current breakpoint per theme, letting you say `lg:green-theme:border-green-200` to have a `green-200` border only when the breakpoint is `lg` (or larger) and the `green-theme` is active, for instance.
 
-Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration.
+⚠️ Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration.
 
-TODO
+```js
+const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
 
-#### Responsive variants with extra stacked variants
+module.exports = {
+    theme: {
+        // Your Tailwind CSS theme configuration
+    },
+    variants: {
+        textColor: ["responsive", "day", "night"]
+    },
+    plugins: [
+        tailwindcssThemeVariants({
+            themes: {
+                day: { selector: "[data-time=day]" },
+                night: { selector: "[data-time=night]" },
+            },
+        }),
+    ],
+};
+```
+
+With this, we could make the landing page's title line change color at different screen sizes "within" each theme:
+```html
+<h1 class="day:text-black          night:text-white
+           sm:day:text-orange-800  sm:night:text-yellow-100
+           lg:day:text-orange-600  lg:night:text-yellow-300">
+    
+    The best thing that has ever happened. Ever.
+</h1>
+```
+
+#### Extra stacked variants
 TODO
 
 ## Using both selectors and media queries
@@ -370,15 +399,13 @@ TODO
 
 TODO: Show active theme tables for every example
 
+⚠️ If you are stacking more variants while using both selectors and media queries to define when themes should be active, then TODO: 
+
 ### Fallback
 TODO
 
 ## Call the plugin more than once for multiple groups
 TODO
-
-# License and Contributing
-
-MIT licensed. There are no contributing guidelines. Just do whatever you want to point out an issue or feature request and I'll work with it.
 
 # Alternatives
 TODO: theming plugin comparison table
@@ -459,6 +486,10 @@ TODO: theming plugin comparison table
         </tr>
     </tbody>
 </table>
+
+# License and Contributing
+
+MIT licensed. There are no contributing guidelines. Just do whatever you want to point out an issue or feature request and I'll work with it.
 
 
 ---

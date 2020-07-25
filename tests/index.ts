@@ -1328,7 +1328,7 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-		it("supports the new provided selection variant with fallback without an implicitly disabled baseSelector", async () => {
+		it("supports the new provided selection variant with fallback without a baseSelector (because it was implicitly disabled)", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
 					textColor: {
