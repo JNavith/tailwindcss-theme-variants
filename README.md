@@ -1,5 +1,7 @@
 This Tailwind CSS plugin registers variants for theming without needing custom properties. It has support for responsive variants, extra stacked variants, media queries, and falling back to a particular theme when none matches.
 
+You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to one.
+
 # Installation
 
 ```sh
@@ -176,11 +178,11 @@ Where each parameter means:
 
 
 # Examples
-💡 At the time of writing, this documentation is a work in progress. For all examples, where I've done my best to stretch the plugin to its limits (especially towards the end of the file), see the test suite in [`tests/index.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests/index.ts#L46).
+💡 At the time of writing, this documentation is a work in progress. For all examples, where I've done my best to stretch the plugin to its limits (especially towards the end of the file), see the test suite in [`tests/index.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests/index.ts#L67).
 
 ## Fallback
 ### Media queries
-With the same media-query-activated themes above,
+With the same media-query-activated themes as [above](#using-media-queries-to-choose-the-active-theme),
 ```js
 themes: {
     light: {
@@ -266,7 +268,7 @@ Which, in turn, changes the active theme table to:
 </tr>
 </table>
 
-💡 Even though `background-color` is used in every example, theme variants are available for *any* utility. 
+💡 Even though `background-color` has been used in every example, theme variants are available for *any* utility. 
 
 ### Selectors
 💡 `fallback` also works for selector-activated themes, which would be useful for visitors without JavaScript enabled—if that's how your themes are selected.
@@ -331,7 +333,7 @@ Which has the active theme table:
 
 By specifying `variants` in this plugin's options, you can "stack" extra variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
 
-Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) (which you can import as `prefersHighContrast`) with the `:hover` variant (which you can import as `hover`).
+Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) (which you can import as `prefersHighContrast`) with the `:hover` variant (which you can import as `hover`):
 ```js
 themes: {
     light: {
@@ -345,7 +347,7 @@ variants: {
 
 You could create a simple card that uses contrast pleasant for fully sighted visitors, but intelligently switches to functional high contrast for those who specify it:
 ```html
-<div class="bg-white text-gray-800 high-contrast:text-black">
+<div class="bg-gray-100 high-contrast:bg-white text-gray-800 high-contrast:text-black">
     <h1>Let me tell you all about...</h1>
     <h2>... this great idea I have!</h2>
 
@@ -358,7 +360,7 @@ You could create a simple card that uses contrast pleasant for fully sighted vis
 ### Responsive variants
 Responsive variants let you distinguish the current breakpoint per theme, letting you say `lg:green-theme:border-green-200` to have a `green-200` border only when the breakpoint is `lg` (or larger) and the `green-theme` is active, for instance.
 
-⚠️ Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration.
+⚠️ Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration. Also, because this feature is provided by Tailwind CSS rather than this plugin, you have to specify `breakpoint:` **before** the `theme-name:` instead of after like in stacked variants).
 
 ```js
 const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
@@ -391,13 +393,82 @@ With this, we could make the landing page's title line change color at different
 </h1>
 ```
 
+We could also make a group of themes for data density, like you can [configure in GMail](https://www.solveyourtech.com/switch-compact-view-gmail/):
+
+
+```js
+const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
+
+module.exports = {
+    theme: {
+        // Your Tailwind CSS theme configuration
+    },
+    variants: {
+        padding: ["responsive", "comfortable", "compact"]
+    },
+    plugins: [
+        tailwindcssThemeVariants({
+            themes: {
+                comfortable: { selector: "[data-density=comfortable]" },
+                compact: { selector: "[data-density=compact]" },
+            },
+            // Fall back to the first theme listed (comfortable) when density is not configured
+            fallback: true,
+        }),
+    ],
+};
+```
+
+This will allow us to configure the padding for each theme for each breakpoint, of a list of emails in the inbox (so original!):
+```html
+<li class="comfortable:p-2     compact:p-0
+           md:comfortable:p-4  md:compact:p-1
+           xl:comfortable:p-6  xl:compact:p-2">
+    
+    FWD: FWD: The real truth behind...
+</li>
+```
+
 #### Extra stacked variants
+You can still stack extra variants even while using responsive variants.
+
 TODO
 
 ## Using both selectors and media queries
 TODO
 
 TODO: Show active theme tables for every example
+Such as:
+<table>
+<tr>
+<th align="left">Match</th>
+<th align="left">Neither</th>
+<th align="left"><code>prefers-color-scheme: light</code></th>
+<th align="left"><code>prefers-color-scheme: dark</code></th>
+</tr>
+
+<tr>
+<th align="left">Neither</th>
+<td align="center">None</td>
+<td align="center"><code>cyan</code></td>
+<td align="center"><code>navy</code></td>
+</tr>
+
+<tr>
+<th align="left"><code>:root.day</code></th>
+<td align="center"><code>cyan</code></td>
+<td align="center"><code>cyan</code></td>
+<td align="center"><code>cyan</code></td>
+</tr>
+
+<tr>
+<th align="left"><code>:root.night</code></th>
+<td align="center"><code>navy</code></td>
+<td align="center"><code>navy</code></td>
+<td align="center"><code>navy</code></td>
+</tr>
+</table>
+
 
 ⚠️ If you are stacking more variants while using both selectors and media queries to define when themes should be active, then TODO: 
 
@@ -405,6 +476,9 @@ TODO: Show active theme tables for every example
 TODO
 
 ## Call the plugin more than once for multiple groups
+TODO
+
+## The ultimate example: how I use every feature together in production
 TODO
 
 # Alternatives
