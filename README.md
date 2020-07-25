@@ -1,14 +1,14 @@
 This Tailwind CSS plugin registers variants for theming without needing custom properties. It has support for responsive variants, extra stacked variants, media queries, and falling back to a particular theme when none matches.
 
-## Installation
+# Installation
 
 ```sh
 npm install --save-dev tailwindcss-theme-variants
 ```
 
-## Basic usage
+# Basic usage
 
-### Using selectors to choose the active theme
+## Using selectors to choose the active theme
 
 With this Tailwind configuration,
 
@@ -59,7 +59,19 @@ this CSS is generated:
 
 💡 You can choose more than just classes for your selectors. Other, good options include data attributes, like `[data-padding=compact]`. You *can* go as crazy as `.class[data-theme=light]:dir(rtl)`, for example, but at that point you need to be careful with specificity!
 
-### Using media queries to choose the active theme
+After also enabling `"light"` and `"dark"` variants for `textColor` and bringing in more colors from the [default palette](https://tailwindcss.com/docs/customizing-colors/#default-color-palette), we can create a simple themed button like this:
+
+```html
+<html class="light-theme"> <!-- Change to dark-theme -->
+    <button class="light:bg-teal-200 dark:bg-teal-800 light:text-teal-700 dark:text-teal-100">
+        Sign up
+    </button>
+    <!-- Results in dark text on light background in the light theme -->
+    <!-- And light text on dark background in the dark theme -->
+</html>
+```
+
+## Using media queries to choose the active theme
 
 You may rather choose to tie your theme selection to matched media queries, like [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme):
 
@@ -114,8 +126,7 @@ Which generates this CSS:
 
 💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `tailwindcssThemeVariants`'s `themes` option.
 
-
-## Full configuration
+# Full configuration
 
 This plugin expects configuration of the form
 
@@ -149,7 +160,7 @@ Where each parameter means:
    - `mediaQuery`: a media query that has to be active for this theme to be active. For instance, if the `reduced-motion` theme has `mediaQuery` `"@media (prefers-reduced-motion: reduce)"` (importable as `prefersReducedMotion`), then the `reduced-motion` variant(s) will be active.
 
 
-- `baseSelector` (default `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
+- `baseSelector` (default `":root"` if you use any selectors to activate themes, otherwise `""`): the selector that each theme's `selector` will be applied to to determine the active theme.
     
 
 - `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. You can either manually select a theme by giving a string like `"solarized-dark"` or implicitly select the first one listed in `themes` by giving `true`.
@@ -163,11 +174,12 @@ Where each parameter means:
 
   For example, the importable `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The importable `groupHover` (which you are recommended to name `"group-hover"` for consistency) variant returns `` `.group:hover ${selector}` ``
 
-## Examples
+
+# Examples
 💡 At the time of writing, this documentation is a work in progress. For all examples, where I've done my best to stretch the plugin to its limits (especially towards the end of the file), see the test suite in [`tests/index.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests/index.ts#L46).
 
-### Fallback
-#### Media queries
+## Fallback
+### Media queries
 With the same media-query-activated themes above,
 ```js
 themes: {
@@ -254,8 +266,10 @@ Which, in turn, changes the active theme table to:
 </tr>
 </table>
 
-#### Selectors
-💡 `fallback` also works for selector-activated themes, which would be useful for visitors without JavaScript enabled (if that's how you've chosen to set the theme).
+💡 Even though `background-color` is used in every example, theme variants are available for *any* utility. 
+
+### Selectors
+💡 `fallback` also works for selector-activated themes, which would be useful for visitors without JavaScript enabled—if that's how your themes are selected.
 
 ```js
 themes: {
@@ -312,28 +326,61 @@ Which has the active theme table:
 </table>
 
 
-### Stacked variants
+## Stacked variants
+💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
 
-All of Tailwind CSS's core variants are bundled for use with the plugin. You can see the full list in [`src/variants.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
+By specifying `variants` in this plugin's options, you can "stack" extra variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
 
-TODO
-
+Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) (which you can import as `prefersHighContrast`) with the `:hover` variant (which you can import as `hover`).
 ```js
-TODO
+themes: {
+    light: {
+        mediaQuery: prefersHighContrast /* "@media (prefers-contrast: high)" */,
+    },
+},
+variants: {
+    "hover": hover /* (selector) => `${selector}:hover` */,
+},
 ```
 
-### 
+You could create a simple card that uses contrast pleasant for fully sighted visitors, but intelligently switches to functional high contrast for those who specify it:
+```html
+<div class="bg-white text-gray-800 high-contrast:text-black">
+    <p>Let me tell you all about...</p>
+    <p>... this great idea I have!</p>
 
-### Using both selectors and media queries
+    <a href="text-blue-500 high-contrast:text-blue-700 hover:text-blue-600 high-contrast:hover:text-blue-900">
+        See more
+    </a>
+</div>
+```
+
+### Responsive variants
+Responsive variants let you distinguish the current breakpoint per theme, letting you say `lg:green-theme:border-green-200` to have a `green-200` border only when the breakpoint is `lg` (or larger) and the `green-theme` is active, for instance.
+
+Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration.
+
+TODO
+
+#### Responsive variants with extra stacked variants
+TODO
+
+## Using both selectors and media queries
 TODO
 
 TODO: Show active theme tables for every example
 
-## License and Contributing
+### Fallback
+TODO
+
+## Call the plugin more than once for multiple groups
+TODO
+
+# License and Contributing
 
 MIT licensed. There are no contributing guidelines. Just do whatever you want to point out an issue or feature request and I'll work with it.
 
-## Alternatives
+# Alternatives
 TODO: theming plugin comparison table
 
 <table>
