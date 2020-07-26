@@ -20,7 +20,6 @@ export interface ThisPluginOptions<GivenThemes extends Themes> {
 	themes: GivenThemes;
 	baseSelector?: string;
 	fallback?: (keyof GivenThemes) | boolean;
-	rename?: (themeName: keyof GivenThemes) => string;
 	variants?: {
 		[name: string]: (selector: string) => string;
 	};

@@ -5,15 +5,15 @@ import { PluginTools } from "@navith/tailwindcss-plugin-author-types";
 import { Themes, ThisPluginOptions } from "./types";
 import { addParent } from "./selectors";
 
-const nameVariant = (renamedTheme: string, variantName: string): string => {
+const nameVariant = (themeName: string, variantName: string): string => {
 	if (variantName === "") {
-		return renamedTheme;
+		return themeName;
 	}
-	return `${renamedTheme}:${variantName}`;
+	return `${themeName}:${variantName}`;
 };
 
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes>({
-	themes, baseSelector, fallback = false, rename = (themeName: keyof GivenThemes) => themeName.toString(), variants = {},
+	themes, baseSelector, fallback = false, variants = {},
 }: ThisPluginOptions<GivenThemes>) => ({ addVariant, e, postcss }: PluginTools): void => {
 		const allThemes = Object.entries(themes);
 		if (allThemes.length === 0) {
@@ -42,7 +42,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes>({
 		// Use a normal default variant first
 		Object.entries({ "": (selector: string): string => selector, ...variants }).forEach(([variantName, variantFunction]) => {
 			allThemes.forEach(([themeName, { mediaQuery, selector }]) => {
-				const namedVariant = nameVariant(rename(themeName), variantName);
+				const namedVariant = nameVariant(themeName, variantName);
 
 				addVariant(namedVariant, ({ container, separator }) => {
 					const nameSelector = (ruleSelector: string): string => `${variantFunction(`.${e(`${namedVariant.replace(/:/g, separator)}${separator}`)}${ruleSelector.slice(1)}`)}`;

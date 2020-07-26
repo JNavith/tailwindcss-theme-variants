@@ -144,7 +144,6 @@ This plugin expects configuration of the form
 
     baseSelector?: string;
     fallback?: string | boolean;
-    rename?: (themeName: string) => string;
 
     variants?: {
         // The name of the variant -> what has to be done to the selector for the variant to be active
@@ -166,11 +165,6 @@ Where each parameter means:
     
 
 - `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. You can either manually select a theme by giving a string like `"solarized-dark"` or implicitly select the first one listed in `themes` by giving `true`.
-
-
-- `rename` (default is a function that gives back exactly what was passed, as in `rename("red") === "red"`, i.e. no renaming actually takes place): a function for renaming every theme, which changes the name of the generated variants. 
-
-  The most usual way to use this is to add a prefix or suffix to reduce duplication. For example, you can ``rename: (themeName) => `${themeName}-theme` `` to make `themes: { red, green, blue }` have corresponding variants `red-theme`, `green-theme`, and `blue-theme`. This also means that their generated class names are like `red-theme\:bg-green-300` instead of just `red\:bg-green-300`.
 
 - `variants` (default is nothing): an object mapping the name of a variant to a function that gives a selector for when that variant is active. 
 

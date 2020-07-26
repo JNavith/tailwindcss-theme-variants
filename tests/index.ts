@@ -722,7 +722,7 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-		it("supports prefixing theme name with unstacked responsive variants and user-defined media queries and boolean fallback", async () => {
+		it("supports unstacked responsive variants and user-defined media queries and boolean fallback", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
 					textColor: {
@@ -740,10 +740,9 @@ describe("tailwindcss-theme-variants", () => {
 					thisPlugin({
 						baseSelector: "html",
 						fallback: true,
-						rename: (themeName: string): string => `theme-${themeName}`,
 						themes: {
-							light: { selector: ".light-theme", mediaQuery: prefersLight },
-							dark: { selector: ".dark-theme", mediaQuery: prefersDark },
+							"theme-light": { selector: ".light-theme", mediaQuery: prefersLight },
+							"theme-dark": { selector: ".dark-theme", mediaQuery: prefersDark },
 						},
 					}),
 				],
@@ -809,7 +808,7 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-		it("(OMG) supports prefixing theme name with stacked responsive variants and partial use of user-defined media queries and string fallback and custom separator", async () => {
+		it("(OMG) supports stacked responsive variants and partial use of user-defined media queries and string fallback and custom separator", async () => {
 			assertCSS(await generatePluginCss({
 				separator: "~",
 				theme: {
@@ -828,11 +827,10 @@ describe("tailwindcss-theme-variants", () => {
 				plugins: [
 					thisPlugin({
 						baseSelector: ".world",
-						rename: (themeName: string): string => `time-${themeName}`,
-						fallback: "night",
+						fallback: "time-night",
 						themes: {
-							day: { selector: ".sun-out", mediaQuery: prefersLight },
-							night: { selector: ".moon-out" },
+							"time-day": { selector: ".sun-out", mediaQuery: prefersLight },
+							"time-night": { selector: ".moon-out" },
 						},
 						variants: {
 							disabled,
@@ -968,7 +966,7 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-		it("supports renaming with a suffix and user-defined variants", async () => {
+		it("supports user-defined variants", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
 					backgroundColor: {
@@ -982,10 +980,9 @@ describe("tailwindcss-theme-variants", () => {
 				plugins: [
 					thisPlugin({
 						baseSelector: "body",
-						rename: (themeName: string) => `${themeName}-theme`,
 						themes: {
-							"solarized-light": { selector: ".solarized-light" },
-							"solarized-dark": { selector: ".solarized-dark" },
+							"solarized-light-theme": { selector: ".solarized-light" },
+							"solarized-dark-theme": { selector: ".solarized-dark" },
 						},
 						variants: {
 							visited,
@@ -1076,11 +1073,10 @@ describe("tailwindcss-theme-variants", () => {
 					thisPlugin({
 						baseSelector: "",
 						fallback: true,
-						rename: (themeName: string) => `${themeName}-contrast`,
 						themes: {
-							normal: { mediaQuery: prefersAnyContrast },
-							low: { mediaQuery: prefersLowContrast },
-							high: { mediaQuery: prefersHighContrast },
+							"normal-contrast": { mediaQuery: prefersAnyContrast },
+							"low-contrast": { mediaQuery: prefersLowContrast },
+							"high-contrast": { mediaQuery: prefersHighContrast },
 						},
 					}),
 				],
@@ -1128,10 +1124,9 @@ describe("tailwindcss-theme-variants", () => {
 				plugins: [
 					thisPlugin({
 						baseSelector: "",
-						rename: (themeName: string): string => `${themeName}-motion`,
 						themes: {
-							normal: { mediaQuery: prefersAnyMotion },
-							reduced: { mediaQuery: prefersReducedMotion },
+							"normal-motion": { mediaQuery: prefersAnyMotion },
+							"reduced-motion": { mediaQuery: prefersReducedMotion },
 						},
 						variants: {
 							first,
@@ -1203,17 +1198,15 @@ describe("tailwindcss-theme-variants", () => {
 				plugins: [
 					thisPlugin({
 						fallback: true,
-						rename: (themeName: string): string => `${themeName}-theme`,
 						themes: {
-							light: { mediaQuery: prefersLight },
-							dark: { mediaQuery: prefersDark },
+							"light-theme": { mediaQuery: prefersLight },
+							"dark-theme": { mediaQuery: prefersDark },
 						},
 					}),
 					thisPlugin({
 						baseSelector: "",
-						rename: (themeName: string): string => `${themeName}-motion`,
 						themes: {
-							reduced: { mediaQuery: prefersReducedMotion },
+							"reduced-motion": { mediaQuery: prefersReducedMotion },
 						},
 					}),
 				],
