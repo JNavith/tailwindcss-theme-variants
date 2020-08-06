@@ -716,7 +716,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
 
 ### Legend
 
-TODO: add `@variants` in CSS support? need to research
+TODO: add `@variants` in CSS support? need to research. TODO: support for prefers-reduced-motion now that that's in tailwind core (or does that being available make it less useful for plugins to support?); so then how about prefers-reduced-transparency? arbitrary media queries?
 
 **Classes can be `@apply`ed**: 
 [Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
@@ -731,16 +731,27 @@ TODO: add `@variants` in CSS support? need to research
 ```
 This may require nesting support, provided by [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting) (part of [`postcss-preset-env`](https://github.com/csstools/postcss-preset-env)).
 
-You can nest under whatever selector(s) the theme plugin uses to control themes TODO
-
+As for theme plugins that are controlled with CSS selectors like classes and data attributes, you can nest whatever selector that may be (in this example `.theme-dark`) inside of the component's block, similarly to `@screen`:
+```css
+.btn-blue {
+    @apply bg-blue-100 text-blue-800;
+    /* Wouldn't have worked: @apply dark:bg-blue-700 dark:text-white */
+    .theme-dark & {
+        @apply bg-blue-700 text-white;
+    }
+}
+```
 
 **Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
 
 **Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
 
-**Supports `prefer-color-scheme`**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like can be seen in the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) that some theme plugins recommend.
+**Supports `prefer-color-scheme`**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like can be seen in the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) that some theme plugins recommend. This approach still comes with the caveats that
+1. JavaScriptless visitors will not have the site's theme reflect their preferred one
+2. It could still be possible for a flash of unthemed content to appear before the appropriate theme is activated
+3. Your site will immediately jump between light and dark instead of smoothly transitioning with the rest of the screen on macOS
 
-**[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)**: cannot use selectors and media queries at the same time; it's one or the other.
+**[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
 
 # License and Contributing
 
