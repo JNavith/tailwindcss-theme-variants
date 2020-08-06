@@ -1,13 +1,15 @@
 This Tailwind CSS plugin registers variants for theming *without needing custom properties*. It has support for 
-* Controlling themes with media queries
-* Controlling themes with selectors (such as classes and data attributes)
+* Controlling themes with 
+  * Media queries
+  * Selectors (such as classes and data attributes)
+  * Or both at the same time!
 * Responsive variants
 * Extra stacked variants
-* Falling back to a particular theme when none matches.
+* Assigning a theme to fall back to when no other one is active
 
 You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. 
 
-If you want your site to 
+If you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you**. You will probably be better off using a custom properties setup.
 
 # Installation
 
@@ -635,11 +637,11 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
     <tbody>
         <tr>
             <th>Classes can be <code>@apply</code>ed</th>
-            <td>❌*</td>
-            <td>❌**</td>
-            <td>❌**</td>
-            <td>❌**</td>
-            <td>❌**</td>
+            <td>🟡</td>
+            <td>🟡</td>
+            <td>🟡</td>
+            <td>🟡</td>
+            <td>🟡</td>
             <td>✅</td>
             <td>❌</td>
             <td>✅</td>
@@ -650,13 +652,13 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
-            <td>✅º</td>
+            <td>🟡</td>
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
         </tr>
         <tr>
-            <th>Responsive†</th>
+            <th>Responsive</th>
             <td>❌</td>
             <td>✅</td>
             <td>✅</td>
@@ -667,7 +669,7 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
             <td>✅</td>
         </tr>
         <tr>
-            <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>‡</th>
+            <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
@@ -678,18 +680,18 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
             <td>✅</td>
         </tr>
         <tr>
-            <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a>★</th>
+            <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
             <td>✅</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
-            <td>✅º</td>
+            <td>🟡</td>
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
         </tr>
         <tr>
-            <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: light</code></a>★</th>
+            <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: light</code></a></th>
             <td>✅</td>
             <td>❌</td>
             <td>❌</td>
@@ -702,13 +704,17 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
     </tbody>
 </table>
 
-†**Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
+### Legend
 
-‡**Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
+TODO
 
-★`prefers-color-scheme`, like any media query, [can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Any plugin marked as not supporting `prefers-color-scheme` could "support" it by adding or removing classes or data attributes, such as with the [`prefers-dark.js` script](https://github.com/estevanmaito/tailwindcss-multi-theme/blob/master/prefers-dark.js).
+**Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
 
-*[Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
+**Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
+
+`prefers-color-scheme`, like any media query, [can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Any plugin marked as not supporting `prefers-color-scheme` could "support" it by adding or removing classes or data attributes, such as with the [`prefers-dark.js` script](https://github.com/estevanmaito/tailwindcss-multi-theme/blob/master/prefers-dark.js).
+
+[Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
 ```css
 .btn-blue {
     @apply bg-blue-100 text-blue-800;
@@ -720,9 +726,9 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
 ```
 This may require nesting support, provided by [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting) (part of [`postcss-preset-env`](https://github.com/csstools/postcss-preset-env)).
 
-**You can nest under whatever selector(s) the theme plugin uses to control themes
+You can nest under whatever selector(s) the theme plugin uses to control themes TODO
 
-º[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode) cannot use selectors and media queries at the same time; it's one or the other.
+[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode) cannot use selectors and media queries at the same time; it's one or the other.
 
 # License and Contributing
 
