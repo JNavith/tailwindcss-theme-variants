@@ -1,15 +1,16 @@
-This Tailwind CSS plugin registers variants for theming *without needing custom properties*. It has support for 
+# 🌗 Tailwind CSS Theme Variants
+**This Tailwind CSS plugin registers variants for theming *without needing custom properties***. It has support for 
 * Controlling themes with 
-  * Media queries
-  * Selectors (such as classes and data attributes)
+  * **Media queries**, like `prefers-color-scheme`
+  * **CSS selectors**, like classes and data attributes
   * Or both at the same time!
-* Responsive variants
-* Extra stacked variants
-* Assigning a theme to fall back to when no other one is active
+* **Responsive** variants
+* **Stacking** on extra **variants**, like `hover` so you can change a link's hover color depending on the theme
+* **Falling back** to a certain theme when no other one could become active, like if a visitor's browser doesn't support JavaScript or the new `prefers-` media queries
 
-You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. 
+You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of that length is made up of long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
 
-If you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you**. You will probably be better off using a custom properties setup.
+However, if you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you**. You will probably be better off using a custom properties setup; refer back to [that table 👇](#alternatives).
 
 # Installation
 
@@ -61,7 +62,7 @@ this CSS is generated:
 
 /* If you're having trouble understanding,
    imagine it said html instead of :root,
-   like in the example below */
+   like in the example HTML below */
 
 :root.light-theme .light\:bg-gray-900 {
     background-color: #1A202C;
@@ -82,9 +83,9 @@ After also enabling `"light"` and `"dark"` variants for `textColor` and bringing
 </html>
 ```
 
-This will result in dark text on a light background in the light theme, and light text on a dark background in the dark theme.
+This will result in dark blue text on a light blue background in the light theme, and light blue text on a dark blue background in the dark theme.
 
-💡 You can choose more than just classes for your selectors. Other, good options include data attributes, like `[data-padding=compact]`. You *can* go as crazy as `.class[data-theme=light]:dir(rtl)`, for example, but at that point you need to be careful with specificity!
+💡 You can choose more than just classes for your selectors. Other, good options include data attributes, like `[data-padding=compact]`. You *can* go as crazy as `.class[data-theme=light]:dir(rtl)`, for example, but I think that's a bad idea!
 
 
 ## Using media queries to choose the active theme
@@ -173,8 +174,7 @@ Where each parameter means:
 
    - `mediaQuery`: a media query that has to be active for this theme to be active. For instance, if the `reduced-motion` theme has `mediaQuery` `"@media (prefers-reduced-motion: reduce)"` (importable as `prefersReducedMotion`), then the `reduced-motion` variant(s) will be active whenever that media query matches: if the visitor's browser reports preferring reduced motion.
 
-
-- `baseSelector` (default `""` if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
+- `baseSelector` (default `""` (empty string) if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
 
 - `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. You can either manually select a theme by giving a string like `"solarized-dark"` or implicitly select the first one listed in `themes` by giving `true`. 
 
@@ -386,9 +386,7 @@ You could create a simple card that uses contrast pleasant for fully sighted vis
 ```
 
 #### Writing a custom variant function
-You might need to write a variant function yourself if it's not `export`ed with this plugin. 
-
-TODO hocus explanation
+You might need to write a variant function yourself if it's not `export`ed with this plugin. It's common to use the same styles on links and buttons when they are hovered over or focused on, so you may want to make things easier for yourself and reduce duplication by creating a `"hocus"` variant that activates for either `:hover` or `:focus`.
 
 ```js
 const { tailwindcssThemeVariants, hover, odd } = require("tailwindcss-theme-variants");
@@ -418,16 +416,29 @@ module.exports = {
             fallback: true, // prefers-reduced-transparency is not supported in any browsers yet
             variants: {
                 // The custom variant function, written by you
-                "hocus": (selector) => `${selector}:hover, ${selector}:focus`,
+                hocus: (selector) => `${selector}:hover, ${selector}:focus`,
             },
         }),
     ],
 };
 ```
 
-TODO hocus HTML
+With this, let's try making an icon button that's overlaid on top of an image in HTML. This button is generally translucent and becomes more opaque on hover or focus, but now can be made more visually distinct for visitors who need it.
+```html
+<div>
+    <button 
+        @click="..."
+        class="transparency-safe:opacity-25 transparency-safe:hocus:opacity-75
+               transparency-reduce:opacity-75 transparency-reduce:hocus:opacity-100">
 
+        <svg class="fill-current text-white bg-black positioning_classes...">
+            <!-- Path definitions... -->
+        </svg>
+    </button>
 
+    <img src="..." class="positioning_classes...">
+</div>
+```
 
 Another—complex—example: suppose you want to zebra stripe your tables, matching the current theme, and change it on hover:
 
@@ -478,7 +489,7 @@ We can then implement the themeable table in HTML (Svelte) like so:
     {#each people as person}
         <tr class="no-accent:bg-white               green-accent:bg-green-50             orange-accent:bg-orange-50
                    no-accent:hover:bg-gray-100      green-accent:hover:bg-green-100      orange-accent:hover:bg-orange-100
-                   no-accent:odd:bg-gray-100        green-accent:odd:bg-green-100        no-accent:orange-accent:odd:bg-orange-100
+                   no-accent:odd:bg-gray-100        green-accent:odd:bg-green-100        orange-accent:orange-accent:odd:bg-orange-100
                    no-accent:odd:hover:bg-gray-200  green-accent:odd:hover:bg-green-200  orange-accent:odd:hover:bg-orange-100
                   ">
 
@@ -491,9 +502,8 @@ We can then implement the themeable table in HTML (Svelte) like so:
 ```
 
 
-
 ### Responsive variants
-Responsive variants let you distinguish the current breakpoint per theme, letting you say `lg:green-theme:border-green-200` to have a `green-200` border only when the breakpoint is `lg` (or larger) and the `green-theme` is active, for instance.
+Responsive variants let you distinguish the current breakpoint per theme, letting you say `lg:green-theme:border-green-200` to have a `green-200` border only when the breakpoint is `lg` (or larger) **and** the `green-theme` is active, for instance.
 
 ⚠️ Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration. Also, because this feature is provided by Tailwind CSS rather than this plugin, you have to type `breakpoint:` **before** the `theme-name:` instead of after.
 
@@ -618,7 +628,7 @@ TODO
 TODO
 
 # Alternatives
-Both because there are many theme plugins for Tailwind CSS, and because "what's the right way to do theming" is a frequently asked question, we've compiled this table listing every theme plugin to compare their featuresets:
+Both because there are many theme plugins for Tailwind CSS, and because *what's the right way to do theming?* is a frequently asked question, we've compiled this table listing every theme plugin to compare their features and ultimately answer that question:
 
 <table>
     <thead>
@@ -706,14 +716,9 @@ Both because there are many theme plugins for Tailwind CSS, and because "what's 
 
 ### Legend
 
-TODO
+TODO: add `@variants` in CSS support? need to research
 
-**Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
-
-**Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
-
-`prefers-color-scheme`, like any media query, [can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia). Any plugin marked as not supporting `prefers-color-scheme` could "support" it by adding or removing classes or data attributes, such as with the [`prefers-dark.js` script](https://github.com/estevanmaito/tailwindcss-multi-theme/blob/master/prefers-dark.js).
-
+**Classes can be `@apply`ed**: 
 [Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
 ```css
 .btn-blue {
@@ -728,7 +733,14 @@ This may require nesting support, provided by [`postcss-nested`](https://github.
 
 You can nest under whatever selector(s) the theme plugin uses to control themes TODO
 
-[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode) cannot use selectors and media queries at the same time; it's one or the other.
+
+**Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
+
+**Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
+
+**Supports `prefer-color-scheme`**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like can be seen in the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) that some theme plugins recommend.
+
+**[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)**: cannot use selectors and media queries at the same time; it's one or the other.
 
 # License and Contributing
 
