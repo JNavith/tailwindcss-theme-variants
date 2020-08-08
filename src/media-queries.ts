@@ -1,4 +1,3 @@
-export const prefersAnyScheme = "@media (prefers-color-scheme: no-preference)";
 export const prefersDark = "@media (prefers-color-scheme: dark)";
 export const prefersLight = "@media (prefers-color-scheme: light)";
 
