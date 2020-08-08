@@ -15,28 +15,36 @@ const nameVariant = (themeName: string, variantName: string): string => {
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes>({
 	themes, baseSelector, fallback = false, variants = {},
 }: ThisPluginOptions<GivenThemes>) => ({ addVariant, e, postcss }: PluginTools): void => {
-		const allThemes = Object.entries(themes);
+		const allThemes = Object.entries(themes ?? {});
 		if (allThemes.length === 0) {
-			console.warn("tailwindcss-theme-variants: no themes were given in this plugin's configuration under the `themes` key, so no variants can be generated");
+			console.warn("tailwindcss-theme-variants: no themes were given in this plugin's configuration under the `themes` key, so no variants can be generated. this can be fixed by specifying a theme like `light: { selector: '.light' }` in `themes` of this plugin's configuration. see the README for more information");
 		}
 
 		if (fallback === true) {
 			fallback = allThemes[0][0]; // eslint-disable-line prefer-destructuring,no-param-reassign
 		}
 
-		if (fallback && allThemes.length === 1) {
-			if (baseSelector === "") {
-				console.warn(`tailwindcss-theme-variants: the \`${fallback}\` theme was selected for fallback, but it is the only one available, so it will always be active, which is unusual. this can be "fixed" by adding another theme to \`themes\` in this plugin's configuration, disabling \`fallback\` in this plugin's configuration, or setting a \`baseSelector\` in this plugin's configuration (there is no way to silence this warning)`);
-			} else {
-				console.warn(`tailwindcss-theme-variants: the \`${fallback}\` theme was selected for fallback, but it is the only one available, so it will always be active as long as \`${baseSelector}\` exists. this is an unusual pattern, so if you meant not to do this, it can be "fixed" by adding another theme to \`themes\` in this plugin's configuration, disabling \`fallback\` in this plugin's configuration, or changing \`baseSelector\` to \`""\` and setting this theme's \`selector\` to the current value of \`baseSelector\` (there is no way to silence this warning)`);
-			}
-		}
+		const usesAnySelectors = allThemes.some(([_name, { selector }]) => selector);
 
 		if (baseSelector === undefined) {
 			// Implicitly disable `baseSelector` on behalf of the person only using media queries to set their themes
 			// Otherwise use :root as the default `baseSelector`
 			// eslint-disable-next-line no-param-reassign
-			baseSelector = allThemes.some(([_name, { selector }]) => selector) ? ":root" : "";
+			baseSelector = usesAnySelectors ? ":root" : "";
+		}
+
+		if (fallback) {
+			if (allThemes.length === 1) {
+				if (baseSelector === "") {
+					console.warn(`tailwindcss-theme-variants: the "${fallback}" theme was selected for fallback, but it is the only one available, so it will always be active, which is unusual. this can be "fixed" by adding another theme to \`themes\` in this plugin's configuration, disabling \`fallback\` in this plugin's configuration, or setting a \`baseSelector\` in this plugin's configuration (there is no way to silence this warning)`);
+				} else {
+					console.warn(`tailwindcss-theme-variants: the "${fallback}" theme was selected for fallback, but it is the only one available, so it will always be active as long as \`${baseSelector}\` exists. this is an unusual pattern, so if you meant not to do this, it can be "fixed" by adding another theme to \`themes\` in this plugin's configuration, disabling \`fallback\` in this plugin's configuration, or changing \`baseSelector\` to \`""\` and setting this theme's \`selector\` to the current value of \`baseSelector\` (there is no way to silence this warning)`);
+				}
+			}
+
+			if (usesAnySelectors && baseSelector === "") {
+				console.warn(`tailwindcss-theme-variants: the "${fallback}" theme was selected for fallback, but you specified \`baseSelector: ""\` even though you use theme(s) that need a selector to activate, which will result in confusing and erroneous behavior of when themes activate. this can be fixed by disabling \`fallback\` in this plugin's configuration, or setting a \`baseSelector\` in this plugin's configuration (there is no way to silence this warning)`);
+			}
 		}
 
 		// Use a normal default variant first
