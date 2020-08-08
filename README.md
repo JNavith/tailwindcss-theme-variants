@@ -1,24 +1,25 @@
 # 🌗 Tailwind CSS Theme Variants
-**This Tailwind CSS plugin registers variants for theming *without needing custom properties***. It has support for 
+**This Tailwind CSS plugin registers variants for theming beyond just light and dark modes *without needing custom properties***. It has support for 
 * Controlling themes with 
-  * **Media queries**, like `prefers-color-scheme`
+  * **Media queries**, like [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme), `print`, or anything you want
   * **CSS selectors**, like classes and data attributes
   * Or both at the same time!
 * **Responsive** variants
 * **Stacking** on extra **variants**, like `hover` so you can change a link's hover color depending on the theme
 * **Falling back** to a certain theme when no other one could become active, like if a visitor's browser doesn't support JavaScript or the new `prefers-` media queries
+* As many themes and groups of themes as you want: light theme, dark theme, red theme, blue theme—just bring your own definitions! 
 
 You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of that length is made up of long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
 
 However, if you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you**. You will probably be better off using a custom properties setup; refer back to [that table 👇](#alternatives).
 
-# Installation
+# ⬇️ Installation
 
 ```sh
 npm install --save-dev tailwindcss-theme-variants
 ```
 
-# Basic usage
+# 🛠 Basic usage
 
 ## Using selectors to choose the active theme
 
@@ -143,7 +144,7 @@ Which generates this CSS:
 
 💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `tailwindcssThemeVariants`'s `themes` option. There is a planned feature that should make it unnecessary to remember this information, but until then, please follow this advice.
 
-# Full configuration
+# ⚙️ Full configuration
 
 This plugin expects configuration of the form
 
@@ -753,7 +754,8 @@ As for theme plugins that are controlled with CSS selectors like classes and dat
 
 **[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
 
-# License and Contributing
+
+# 📄 License and Contributing
 
 MIT licensed. There are no contributing guidelines. Just do whatever you want to point out an issue or feature request and I'll work with it.
 
