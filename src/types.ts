@@ -19,7 +19,7 @@ export type Themes = { [name: string]: ThisPluginTheme };
 export interface ThisPluginOptions<GivenThemes extends Themes> {
 	themes: GivenThemes;
 	baseSelector?: string;
-	fallback?: (keyof GivenThemes) | boolean;
+	fallback?: boolean;
 	variants?: {
 		[name: string]: (selector: string) => string;
 	};

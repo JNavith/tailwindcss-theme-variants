@@ -420,7 +420,7 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-		it("supports even child variants with string fallback", async () => {
+		it("supports even child variants with fallback", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
 					textColor: {
@@ -434,11 +434,11 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				plugins: [
 					thisPlugin({
-						fallback: "high-contrast",
 						themes: {
-							"low-contrast": { selector: ".low-contrast" },
 							"high-contrast": { selector: ".high-contrast" },
+							"low-contrast": { selector: ".low-contrast" },
 						},
+						fallback: true,
 						variants: {
 							even,
 						},
@@ -815,7 +815,7 @@ describe("tailwindcss-theme-variants", () => {
 			`);
 		});
 
-		it("(OMG) supports stacked responsive variants and partial use of user-defined media queries and string fallback and custom separator", async () => {
+		it("(OMG) supports stacked responsive variants and partial use of user-defined media queries and fallback and custom separator", async () => {
 			assertCSS(await generatePluginCss({
 				separator: "~",
 				theme: {
@@ -834,11 +834,11 @@ describe("tailwindcss-theme-variants", () => {
 				plugins: [
 					thisPlugin({
 						baseSelector: ".world",
-						fallback: "time-night",
 						themes: {
-							"time-day": { selector: ".sun-out", mediaQuery: prefersLight },
 							"time-night": { selector: ".moon-out" },
+							"time-day": { selector: ".sun-out", mediaQuery: prefersLight },
 						},
+						fallback: true,
 						variants: {
 							disabled,
 							odd,
@@ -1486,7 +1486,7 @@ describe("tailwindcss-theme-variants", () => {
 								mediaQuery: prefersDark,
 							},
 						},
-						fallback: "light",
+						fallback: true,
 					}),
 				],
 			}),
@@ -1528,14 +1528,14 @@ describe("tailwindcss-theme-variants", () => {
 				plugins: [
 					thisPlugin({
 						themes: {
-							light: {
-								selector: ".light-theme",
-							},
 							dark: {
 								selector: ".dark-theme",
 							},
+							light: {
+								selector: ".light-theme",
+							},
 						},
-						fallback: "dark",
+						fallback: true,
 					}),
 				],
 			}),

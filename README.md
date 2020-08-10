@@ -159,7 +159,7 @@ This plugin expects configuration of the form
     };
 
     baseSelector?: string;
-    fallback?: string | boolean;
+    fallback?: boolean;
 
     variants?: {
         [name: string]: (selector: string) => string;
@@ -177,9 +177,7 @@ Where each parameter means:
 
 - `baseSelector` (default `""` (empty string) if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
 
-- `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. You can either manually select a theme by giving a string like `"solarized-dark"` or implicitly select the first one listed in `themes` by giving `true`. 
-
-  ⚠️ Passing a string referring to a theme name is deprecated in favor of the `true`/`false` approach, and is planned to be removed.
+- `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. If you pass `true`, then the first theme you listed in `themes` will be the theme that is fallen back to. You can think of it as the *default* theme for your site.
 
 - `variants` (default is nothing): an object mapping the name of a variant to a function that gives a selector for when that variant is active. 
 
@@ -232,8 +230,8 @@ themes: {
     },
 },
 // New addition
-fallback: "light",
-// Because light is the first theme in the list, `true` would've worked too
+fallback: true,
+// Because `light` is the first theme in the list, that is what will be fallen back to
 ```
 
 Which will change the generated CSS to activate `light` earlier than any media queries, so they can still override that declaration by being later in the file. **You could think of `light` as the *default theme*** in this case.
@@ -287,17 +285,19 @@ Which, in turn, changes the active theme table to:
 
 ```js
 themes: {
-    light: {
-        selector: ".light-theme",
-    },
     dark: {
         selector: ".dark-theme",
     },
+    light: {
+        selector: ".light-theme",
+    },
 },
-fallback: "dark",
+fallback: true, // Fall back to `dark`
 ```
 
-This generates:
+**Fallback always chooses the first theme in your list of themes.** To choose a different theme, just change the order of `themes`.
+
+These options, with the same Tailwind config as before, will generate:
 ```css
 .bg-gray-900 {
     background-color: #1A202C;
