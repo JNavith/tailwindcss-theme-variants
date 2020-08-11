@@ -16,7 +16,8 @@ export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQ
 
 export type Themes = { [name: string]: ThisPluginTheme };
 
-export interface ThisPluginOptions<GivenThemes extends Themes> {
+export interface ThisPluginOptions<GivenThemes extends Themes, GroupName extends string> {
+	group?: GroupName extends (keyof GivenThemes) ? never : GroupName;
 	themes: GivenThemes;
 	baseSelector?: string;
 	fallback?: boolean;
@@ -25,4 +26,4 @@ export interface ThisPluginOptions<GivenThemes extends Themes> {
 	};
 }
 
-export type ThisPlugin<GivenThemes extends Themes> = (options: ThisPluginOptions<GivenThemes>) => WrappedPlugin;
+export type ThisPlugin<GivenThemes extends Themes, GroupName extends string> = (options: ThisPluginOptions<GivenThemes, GroupName>) => WrappedPlugin;
