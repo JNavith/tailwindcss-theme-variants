@@ -335,13 +335,9 @@ fallback: true, // Fall back to `dark`
 
 **Fallback always chooses the first theme in your list of themes.** To choose a different theme, just change the order of `themes`.
 
-These options, with the same Tailwind config as before, will generate:
+These options, with the same Tailwind config as before with `backgroundColor: ["dark", "light"]` (because that matches the order in `themes`) in `variants`, will generate:
 ```css
 .bg-gray-900 {
-    background-color: #1A202C;
-}
-
-:root.light-theme .light\:bg-gray-900 {
     background-color: #1A202C;
 }
 
@@ -350,6 +346,10 @@ These options, with the same Tailwind config as before, will generate:
 }
 
 :root.dark-theme .dark\:bg-gray-900 {
+    background-color: #1A202C;
+}
+
+:root.light-theme .light\:bg-gray-900 {
     background-color: #1A202C;
 }
 ```
@@ -859,6 +859,9 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
 
 ### Legend
 **Classes can be `@apply`ed**: 
+
+**As of Tailwind CSS 1.7, *any* class can be `@apply`ed with the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/releases/tag/v1.7.0#use-apply-with-variants-and-other-complex-classes).** The following information is applicable to versions of Tailwind before 1.7 or without `applyComplexClasses` enabled:
+
 [Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
 ```css
 .btn-blue {
