@@ -8,7 +8,7 @@ import { createSandbox } from "sinon";
 import tailwindcss from "tailwindcss";
 
 import thisPlugin, {
-	active, colorsInverted, colorsNotInverted, disabled, even, first, focus, groupHover, groupFocus, hover, last, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, print, screen, selection, visited
+	active, canHover, colorsInverted, colorsNotInverted, disabled, even, first, focus, groupHover, groupFocus, hover, last, noHover, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, print, screen, selection, visited
 } from "../src/index";
 import { distill, addParent } from "../src/selectors";
 
@@ -2231,6 +2231,73 @@ describe("tailwindcss-theme-variants", () => {
 						background-color: #fff;
 					}
 				}
+			`);
+		});
+
+		it("lets you experimentally @apply with media queries and selectors with grouping", async () => {
+			assertCSS(await generatePluginCss(
+				{
+					theme: {
+						boxShadow: {
+							"sm": "0 0 2px black",
+							"lg": "0 0 8px black",
+						},
+					},
+					corePlugins: ["boxShadow"],
+					variants: {
+						boxShadow: ["hoverability"],
+					},
+
+					plugins: [
+						thisPlugin({
+							group: "hoverability",
+							baseSelector: "html",
+							themes: {
+								"no-hover": {
+									selector: ".touch-screen",
+									mediaQuery: noHover,
+								},
+								"can-hover": {
+									selector: ".touchless-screen",
+									mediaQuery: canHover,
+								},
+							},
+						}),
+					],
+
+					experimental: {
+						applyComplexClasses: true,
+					},
+				},
+				`
+					button {
+						@apply no-hover:shadow-sm;
+						@apply can-hover:shadow-lg;
+					}
+				`,
+			),
+			`
+			
+				@media (hover: none) {
+					button {
+						box-shadow: 0 0 2px black;
+					}
+				}
+
+				html.touch-screen button {
+					box-shadow: 0 0 2px black
+				}
+
+				@media (hover: hover) {
+					button {
+						box-shadow: 0 0 8px black;
+					}
+				}
+
+				html.touchless-screen button {
+					box-shadow: 0 0 8px black;
+				}
+
 			`);
 		});
 	});
