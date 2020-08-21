@@ -17,6 +17,9 @@ const generatePluginCss = (config: TailwindCSSConfig): Promise<string> => postcs
 		merge({
 			theme: {},
 			corePlugins: false,
+			future: {
+				removeDeprecatedGapUtilities: true,
+			},
 		} as TailwindCSSConfig, config),
 	),
 ).process("@tailwind utilities", {
@@ -1807,16 +1810,16 @@ describe("tailwindcss-theme-variants", () => {
 				},
 				corePlugins: ["backgroundColor"],
 				variants: {
-					backgroundColor: ["light", "dark"],
+					backgroundColor: ["lightnocache", "darknocache"],
 				},
 
 				plugins: [
 					thisPlugin({
 						themes: {
-							light: {
+							lightnocache: {
 								mediaQuery: prefersLight,
 							},
-							dark: {
+							darknocache: {
 								mediaQuery: prefersDark,
 							},
 						},
@@ -1829,18 +1832,18 @@ describe("tailwindcss-theme-variants", () => {
 					background-color: #38B2AC;
 				}
 
-				.light\\:bg-teal-500 {
+				.lightnocache\\:bg-teal-500 {
 					background-color: #38B2AC;
 				}
 
 				@media (prefers-color-scheme: light) {
-					.light\\:bg-teal-500 {
+					.lightnocache\\:bg-teal-500 {
 						background-color: #38B2AC;
 					}
 				}
 
 				@media (prefers-color-scheme: dark) {
-					.dark\\:bg-teal-500 {
+					.darknocache\\:bg-teal-500 {
 						background-color: #38B2AC;
 					}
 				}
