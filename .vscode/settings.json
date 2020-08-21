@@ -10,4 +10,5 @@
     },
     "eslint.format.enable": true,
     "eslint.lintTask.enable": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
 }
