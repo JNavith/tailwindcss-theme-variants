@@ -26,7 +26,6 @@ export const visited = (selector: string): string => `${selector}:visited`;
 
 export const groupActive = (selector: string): string => `.group:active ${selector}`;
 export const groupFocus = (selector: string): string => `.group:focus ${selector}`;
-// What do you even do with this?
 export const groupFocusWithin = (selector: string): string => `.group:focus-within ${selector}`;
 export const groupHover = (selector: string): string => `.group:hover ${selector}`;
 export const groupInvalid = (selector: string): string => `.group:invalid ${selector}`;
