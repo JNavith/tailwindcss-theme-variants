@@ -8,7 +8,7 @@ import { createSandbox } from "sinon";
 import tailwindcss from "tailwindcss";
 
 import thisPlugin, {
-	active, canHover, colorsInverted, colorsNotInverted, disabled, even, first, focus, groupHover, groupFocus, hover, last, noHover, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, print, screen, selection, visited
+	active, canHover, colorsInverted, colorsNotInverted, disabled, even, first, focus, groupHover, groupFocus, hover, last, noHover, odd, prefersAnyMotion, prefersReducedMotion, prefersReducedTransparency, prefersAnyTransparency, prefersDark, prefersLight, prefersAnyContrast, prefersLowContrast, prefersHighContrast, print, screen, selection, visited,
 } from "../src/index";
 import { distill, addParent } from "../src/selectors";
 
@@ -2029,7 +2029,7 @@ describe("tailwindcss-theme-variants", () => {
 							fallback: true,
 							variants: {
 								hover,
-							}
+							},
 						}),
 					],
 
@@ -2239,8 +2239,8 @@ describe("tailwindcss-theme-variants", () => {
 				{
 					theme: {
 						boxShadow: {
-							"sm": "0 0 2px black",
-							"lg": "0 0 8px black",
+							sm: "0 0 2px black",
+							lg: "0 0 8px black",
 						},
 					},
 					corePlugins: ["boxShadow"],
