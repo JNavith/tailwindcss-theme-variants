@@ -6,7 +6,7 @@ devDependencies:
   '@types/assert': 1.5.1
   '@types/lodash': 4.14.159
   '@types/mocha': 8.0.3
-  '@types/sinon': 9.0.4
+  '@types/sinon': 9.0.5
   '@typescript-eslint/eslint-plugin': 3.9.1_bfaa9f11a80e0b0e07bd4175641995de
   '@typescript-eslint/parser': 3.9.1_eslint@7.7.0+typescript@4.0.2
   cross-env: 7.0.2
@@ -112,12 +112,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-vyxR57nv8NfcU0GZu8EUXZLTbCMupIUwy95LJ6lllN+JRPG25CwMHoB1q5xKh8YKhQnHYRAn4yW2yuHbf/5xgg==
-  /@types/sinon/9.0.4:
+  /@types/sinon/9.0.5:
     dependencies:
       '@types/sinonjs__fake-timers': 6.0.1
     dev: true
     resolution:
-      integrity: sha512-sJmb32asJZY6Z2u09bl0G2wglSxDlROlAejCjsnor+LzBMz17gu8IU7vKC/vWDnv9zEq2wqADHVXFjf4eE8Gdw==
+      integrity: sha512-4CnkGdM/5/FXDGqL32JQ1ttVrGvhOoesLLF7VnTh4KdjK5N5VQOtxaylFqqTjnHx55MnD9O02Nbk5c1ELC8wlQ==
   /@types/sinonjs__fake-timers/6.0.1:
     dev: true
     resolution:
@@ -2269,7 +2269,7 @@ specifiers:
   '@types/assert': ^1.5.1
   '@types/lodash': ^4.14.159
   '@types/mocha': ^8.0.3
-  '@types/sinon': ^9.0.4
+  '@types/sinon': ^9.0.5
   '@typescript-eslint/eslint-plugin': ^3.9.1
   '@typescript-eslint/parser': ^3.9.1
   cross-env: ^7.0.2
