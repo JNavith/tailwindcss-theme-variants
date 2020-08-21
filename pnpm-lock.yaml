@@ -2,7 +2,7 @@ dependencies:
   postcss-selector-parser: 6.0.2
   tailwindcss: 1.7.3
 devDependencies:
-  '@navith/tailwindcss-plugin-author-types': 0.0.4
+  '@navith/tailwindcss-plugin-author-types': 0.1.0
   '@types/assert': 1.5.1
   '@types/lodash': 4.14.159
   '@types/mocha': 8.0.3
@@ -47,13 +47,13 @@ packages:
       purgecss: 2.3.0
     resolution:
       integrity: sha512-qnKm5dIOyPGJ70kPZ5jiz0I9foVOic0j+cOzNDoo8KoCf6HjicIZ99UfO2OmE7vCYSKAAepEwJtNzpiiZAh9xw==
-  /@navith/tailwindcss-plugin-author-types/0.0.4:
+  /@navith/tailwindcss-plugin-author-types/0.1.0:
     dependencies:
       postcss: 7.0.32
       tailwindcss: 1.7.3
     dev: true
     resolution:
-      integrity: sha512-GTK14MUISlj8MZ3UOB/zbstbFtGb8ZUyZI9JjwP6mbvR2k+EXWVFZsJoMGrvYcJyoHqS/jcne+Innk0TgHE10Q==
+      integrity: sha512-0qrzi0XYu87zdYVhvTCDFuo9YUMiVeg9IZlBILYrMsfq7YaBFh3KcJGvvwBGcV2OD0vW0QAfraA+tn/L2zdEOA==
   /@sinonjs/commons/1.8.1:
     dependencies:
       type-detect: 4.0.8
@@ -2265,7 +2265,7 @@ packages:
     resolution:
       integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 specifiers:
-  '@navith/tailwindcss-plugin-author-types': ^0.0.4
+  '@navith/tailwindcss-plugin-author-types': ^0.1.0
   '@types/assert': ^1.5.1
   '@types/lodash': ^4.14.159
   '@types/mocha': ^8.0.3

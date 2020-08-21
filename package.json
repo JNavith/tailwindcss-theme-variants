@@ -31,7 +31,7 @@
 		"tailwindcss": "^1.7.3"
 	},
 	"devDependencies": {
-		"@navith/tailwindcss-plugin-author-types": "^0.0.4",
+		"@navith/tailwindcss-plugin-author-types": "^0.1.0",
 		"@types/assert": "^1.5.1",
 		"@types/lodash": "^4.14.159",
 		"@types/mocha": "^8.0.3",
