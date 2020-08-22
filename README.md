@@ -7,11 +7,14 @@
 * **Responsive** variants
 * **Stacking** on extra **variants**, like `hover` so you can change a link's hover color depending on the theme
 * **Falling back** to a certain theme when no other one could become active, like if a visitor's browser doesn't support JavaScript or the new `prefers-` media queries
-* As many themes and groups of themes as you want: light theme, dark theme, red theme, blue theme—just bring your own definitions! 
+* **As many themes as you want**: light theme, dark theme, red theme, blue theme—just bring your own definitions! 
 
 You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of that length is made up of long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
 
 However, if you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you**. You will probably be better off using a custom properties setup; refer back to [that table 👇](#alternatives).
+
+### What about when dark mode support becomes official in Tailwind CSS 2.0?
+**This plugin will still be maintained!** Light and dark mode support is *just* one thing this plugin can do. Furthermore, I don't anticipate that the complexity this plugin can provide will be reflected in Tailwind core, so I will still need this around.
 
 # ⬇️ Installation
 
@@ -624,12 +627,30 @@ You can still stack extra variants even while using responsive variants.
 TODO
 
 ## Using both selectors and media queries
-⚠️ If you use both selectors and media queries to activate themes, then **make sure that each specified class is specified as an *all or nothing* approach**. For instance, if you have `winter` and `summer` themes and want to add the `winter:bg-teal-100` class, then you also need to add the `summer:bg-orange-300` class. If you don't do this, then it will look like the values from an theme that's *supposed to be* inactive are "leaking" into the active theme.
+⚠️ If you use both selectors and media queries to activate themes, then **make sure that each specified class is specified as an *all or nothing* approach**. For instance, if you have `winter` and `summer` themes and want to add the `winter:bg-teal-100` class, then you also need to add the `summer:bg-orange-200` class. If you don't do this, then it will look like the values from an theme that's *supposed* to be inactive are "leaking" into the active theme.
 
-Every feature previously discussed still works as you'd expect when you decide to also add selectors or media queries (whichever you weren't using before) to theme control. TODO 
+**Every feature previously discussed will still work as you'd expect**, even when you decide to also add selectors or media queries to theme control. When both selectors and media queries are in use, **selectors will always take priority over media queries**. This allows the flexibility of *defaulting* to media queries while still being able to override with JavaScript-controlled selectors (like classes and data attributes)!
 
-TODO: Show active theme tables for every example
-Such as:
+For example, see this plugin call:
+```js
+// Rest of the Tailwind CSS config and imports...
+plugins: [
+    tailwindcssThemeVariants({
+        themes: {
+            cyan: {
+                selector: ".day",
+                mediaQuery: prefersLight,
+            },
+            navy: {
+                selector: ".night",
+                mediaQuery: prefersDark,
+            },
+        },
+    }),
+],
+```
+
+It has the corresponding active theme table:
 <table>
 <tr>
 <th align="left">Match</th>
@@ -660,10 +681,70 @@ Such as:
 </tr>
 </table>
 
+As previously noted, when a required selector is present, it takes precendence over the media queries; stated another way, the media queries only matter when no selector matches.
+
 ⚠️ If you are stacking variants on while using both selectors and media queries to activate themes, then **make sure that each stacked variant is specified as an *all or nothing* approach** on each element. For instance, if you have `normal-motion` and `reduced-motion` themes and want to add the `reduced-motion:hover:transition-none` class, then you also need to add the `normal-motion:hover:transition` class (or any [value of `transitionProperty`](https://tailwindcss.com/docs/transition-property/)). If you don't do this, then it will look like the values from a theme that's *supposed* to be inactive are "leaking" into the active theme.
 
 ### Fallback
-TODO
+Like when just selectors or just media queries are used for theme selection, the fallback feature for both media queries and selectors serves to "force" a theme match for the `None` / both `Neither` case in the active theme table.
+
+Here's an example:
+
+```js
+// Rest of the Tailwind CSS config and imports...
+plugins: [
+    tailwindcssThemeVariants({
+        baseSelector: "html",
+        themes: {
+            "not-inverted": {
+                selector: "[data-colors=normal]",
+                mediaQuery: colorsNotInverted /* @media (inverted-colors: none) */,
+            },
+            "inverted": {
+                selector: "[data-colors=invert]",
+                mediaQuery: colorsInverted /* @media (inverted-colors: inverted) */,
+            },
+        },
+        // Since `inverted-colors` has limited browser support, 
+        // assume visitors using unsupported browsers do not have their colors inverted
+        // and fall back to the "not-inverted" theme
+        fallback: true,
+        // Since selectors are being used too, we could even provide 
+        // a button on the site that will manually enable/disable inverted colors
+    }),
+],
+```
+
+It has the corresponding active theme table:
+<table>
+<tr>
+<th align="left">Match</th>
+<th align="left">Neither</th>
+<th align="left"><code>inverted-colors: none</code></th>
+<th align="left"><code>inverted-colors: inverted</code></th>
+</tr>
+
+<tr>
+<th align="left">Neither</th>
+<td align="center"><code>not-inverted</code></td>
+<td align="center"><code>not-inverted</code></td>
+<td align="center"><code>inverted</code></td>
+</tr>
+
+<tr>
+<th align="left"><code>html[data-colors=normal]</code></th>
+<td align="center"><code>not-inverted</code></td>
+<td align="center"><code>not-inverted</code></td>
+<td align="center"><code>not-inverted</code></td>
+</tr>
+
+<tr>
+<th align="left"><code>html[data-colors=invert]</code></th>
+<td align="center"><code>inverted</code></td>
+<td align="center"><code>inverted</code></td>
+<td align="center"><code>inverted</code></td>
+</tr>
+</table>
 
 ## Call the plugin more than once to separate unrelated themes
 The list of themes passed to one call of this plugin are intended to be *mutually exclusive*. So, if you have unrelated themes, like a set for motion, and another for light/dark, it doesn't make sense to stuff them all into the same plugin call. Instead, spread them out into two configs to be controlled independently:
@@ -691,6 +772,8 @@ plugins: [
     }),
 ]
 ```
+
+By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the  
 
 ## The ultimate example: how I use every feature together in production
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
@@ -813,13 +896,13 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th>Stacked variants like <code>hover</code></a></th>
             <td>✅</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>🟡</td>
+            <td>🟡</td>
+            <td>🟡</td>
+            <td>🟡</td>
             <td>✅</td>
-            <td></td>
+            <td>✅</td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
@@ -846,13 +929,13 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th>Supports other media queries like <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency"><code>prefers-reduced-transparency</code></a></th>
             <td>✅</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>❌</td>
             <td>✅</td>
-            <td></td>
+            <td>✅</td>
+            <td>❌</td>
         </tr>
     </tbody>
 </table>
@@ -889,7 +972,9 @@ As for theme plugins that are controlled with CSS selectors like classes and dat
 
 **Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
 
-**Stacked variants**: TODO.
+**Stacked variants**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on pseudoselector conditions, such as `:focus`, `:nth-child(even)`, `.group:hover `, etc.
+
+Plugins that have a 🟡 support only some of the variants in Tailwind's core, and none that come from other variant-registering plugins.
 
 **Supports `prefers-color-scheme` or other media queries**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like can be seen in the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) that some theme plugins recommend. This approach still comes with the caveats that
 1. JavaScriptless visitors will not have the site's theme reflect their preferred one
