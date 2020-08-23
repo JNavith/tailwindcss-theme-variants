@@ -527,7 +527,7 @@ module.exports = {
 };
 ```
 
-💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the given variant functions in [`src/variants.ts`]((https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`!
+💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the given variant functions in [`src/variants.ts`]((https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
 
 Back to the topic at hand: we can then implement the themeable table in HTML (Svelte) like so:
 
@@ -596,10 +596,11 @@ module.exports = {
         // Your Tailwind CSS theme configuration
     },
     variants: {
-        padding: ["responsive", "comfortable", "compact"]
+        padding: ["responsive", "density"]
     },
     plugins: [
         tailwindcssThemeVariants({
+            group: "density",
             themes: {
                 comfortable: { selector: "[data-density=comfortable]" },
                 compact: { selector: "[data-density=compact]" },
@@ -624,7 +625,49 @@ This will allow us to configure the padding for each theme for each breakpoint, 
 #### Extra stacked variants
 You can still stack extra variants even while using responsive variants.
 
-TODO
+Here's an example:
+```js
+const { tailwindcssThemeVariants, hover, landscape, portrait } = require("tailwindcss-theme-variants");
+
+module.exports = {
+    theme: {}
+    variants: {
+        // If you haven't seen the `group` feature yet:
+        // Instead of needing to write out ["landscape", "portrait", "landscape:hover", "portrait:hover"],
+        // We can just name the group "orientation" and write ["orientation", "orientation:hover"]
+        fontSize: ["responsive", "hover", "orientation", "orientation:hover"],
+    },
+    plugins: [
+        tailwindcssThemeVariants({
+            group: "orientation",
+            themes: {
+                landscape: {
+                    mediaQuery: landscape,
+                },
+                portrait: {
+                    mediaQuery: portrait,
+                },
+            },
+            variants: {
+                hover,
+            },
+        }),
+    ],
+};
+```
+
+We can make an `h1` change size based on orientation *and* breakpoint *and* hover for readability (this is definitely a contrived example):
+
+```html
+<h1 class="text-sm             landscape:text-base          portrait:text-xs
+           sm:text-base        sm:landscape:text-lg         sm:portrait:text-sm
+           sm:hover:text-lg    sm:landscape:hover:text-xl   sm:portrait:hover:text-md
+           lg:text-xl          lg:landscape:text-2xl        lg:portrait:text-lg
+           lg:hover:text-2xl   lg:landscape:hover:text-3xl  lg:portrait:hover:text-xl">
+    
+    This article title will try to change size so that it stays readable... hopefully.
+</h1>
+```
 
 ## Using both selectors and media queries
 ⚠️ If you use both selectors and media queries to activate themes, then **make sure that each specified class is specified as an *all or nothing* approach**. For instance, if you have `winter` and `summer` themes and want to add the `winter:bg-teal-100` class, then you also need to add the `summer:bg-orange-200` class. If you don't do this, then it will look like the values from an theme that's *supposed* to be inactive are "leaking" into the active theme.
@@ -943,7 +986,17 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
 ### Legend
 **Classes can be `@apply`ed**: 
 
-**As of Tailwind CSS 1.7, *any* class can be `@apply`ed with the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/releases/tag/v1.7.0#use-apply-with-variants-and-other-complex-classes).** The following information is applicable to versions of Tailwind before 1.7 or without `applyComplexClasses` enabled:
+As of Tailwind CSS 1.7, *any* class can be `@apply`ed with the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/releases/tag/v1.7.0#use-apply-with-variants-and-other-complex-classes).
+
+```css
+.btn-blue {
+    /* Now, it all just works! */
+    @apply light:bg-blue-100 light:text-blue-800;
+    @apply dark:bg-blue-700 dark:text-white;
+}
+```
+
+**The following information is applicable to versions of Tailwind before 1.7 or without `applyComplexClasses` enabled:**
 
 [Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
 ```css
