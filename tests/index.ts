@@ -2300,5 +2300,67 @@ describe("tailwindcss-theme-variants", () => {
 
 			`);
 		});
+
+		it("lets you experimentally @apply with media queries and responsive variants", async () => {
+			assertCSS(await generatePluginCss(
+				{
+					theme: {},
+					corePlugins: ["textColor"],
+					variants: {
+						textColor: ["responsive", "normal", "inverted"],
+					},
+
+					plugins: [
+						thisPlugin({
+							themes: {
+								normal: {
+									mediaQuery: colorsNotInverted,
+								},
+								inverted: {
+									mediaQuery: colorsInverted,
+								},
+							},
+						}),
+					],
+
+					experimental: {
+						applyComplexClasses: true,
+					},
+				},
+				`
+					.caption span {
+						@apply normal:text-gray-100 inverted:text-gray-800;
+						@apply md:normal:text-gray-300 md:inverted:text-gray-600;
+					}
+				`,
+			),
+			`
+				@media (inverted-colors: none) {
+					.caption span {
+						color: #f7fafc;
+					}
+				}
+
+				@media (inverted-colors: inverted) {
+					.caption span {
+						color: #2d3748;
+					}
+				}
+
+				@media (min-width: 768px) {
+					@media (inverted-colors: none) {
+						.caption span {
+							color: #e2e8f0;
+						}
+					}
+
+					@media (inverted-colors: inverted) {
+						.caption span {
+							color: #718096;
+						}
+					}
+				}
+			`);
+		});
 	});
 });
