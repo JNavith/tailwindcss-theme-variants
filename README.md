@@ -194,7 +194,7 @@ Where each parameter means:
 
 
 # Examples
-💡 At the time of writing, this documentation is a work in progress. For all examples, where I've done my best to stretch the plugin to its limits, see the test suite in [`tests/index.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests/index.ts#L67).
+💡 If you want to see the plugin get stretched to its limits, see the test suite in [`the tests directory`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests).
 
 ## Theme groups
 Specifying `group` in this plugin's configuration will create a magical variant you can use in place of manually typing out every single theme's name in the Tailwind `variants` section!
