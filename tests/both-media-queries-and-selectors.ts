@@ -1,12 +1,13 @@
 import { flatMap } from "lodash";
 import { describe, it } from "mocha";
 
-import thisPlugin, { disabled, odd, prefersDark, prefersLight } from "../src/index";
+import thisPlugin, {
+	disabled, odd, prefersDark, prefersLight,
+} from "../src/index";
 import { assertCSS, generatePluginCss } from "./_utils";
 
-export const bothSelectorsAndMediaQueries = () => {
-    describe("both selectors and media queries", () => {
-        
+export const bothSelectorsAndMediaQueries = (): void => {
+	describe("both selectors and media queries", () => {
 		it("supports media queries without fallback", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -42,9 +43,7 @@ export const bothSelectorsAndMediaQueries = () => {
 					background-color: #0000FF;
 				}
 			`);
-        });
-        
-
+		});
 
 		it("supports media queries with fallback", async () => {
 			assertCSS(await generatePluginCss({
@@ -87,7 +86,6 @@ export const bothSelectorsAndMediaQueries = () => {
 				}
 			`);
 		});
-
 
 		it("supports responsive variants with user-defined media queries", async () => {
 			assertCSS(await generatePluginCss({
@@ -160,8 +158,6 @@ export const bothSelectorsAndMediaQueries = () => {
 				}
 			`);
 		});
-
-
 
 		it("supports unstacked responsive variants and user-defined media queries and boolean fallback", async () => {
 			assertCSS(await generatePluginCss({
@@ -248,8 +244,6 @@ export const bothSelectorsAndMediaQueries = () => {
 				}
 			`);
 		});
-
-
 
 		it("(OMG) supports stacked responsive variants and partial use of user-defined media queries and fallback and custom separator", async () => {
 			assertCSS(await generatePluginCss({
@@ -409,7 +403,5 @@ export const bothSelectorsAndMediaQueries = () => {
 				}
 			`);
 		});
-
-
-    });
-}
+	});
+};

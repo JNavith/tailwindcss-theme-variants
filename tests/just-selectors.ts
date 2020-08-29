@@ -1,9 +1,11 @@
 import { describe, it } from "mocha";
 
-import thisPlugin, { active, even, focus, groupFocus, groupHover, hover, selection, visited } from "../src/index";
+import thisPlugin, {
+	active, even, focus, groupFocus, groupHover, hover, selection, visited,
+} from "../src/index";
 import { assertCSS, generatePluginCss } from "./_utils";
 
-export const justSelectors = () => {
+export const justSelectors = (): void => {
 	describe("just selectors", () => {
 		it("works in the most basic way without fallback", async () => {
 			assertCSS(await generatePluginCss({
@@ -26,7 +28,7 @@ export const justSelectors = () => {
 					}),
 				],
 			}),
-				`
+			`
 				.bg-red {
 					background-color: #FF0000;
 				}
@@ -40,7 +42,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
 
 		it("works the way the basic usage example with selectors says it will", async () => {
 			assertCSS(await generatePluginCss({
@@ -104,7 +105,7 @@ export const justSelectors = () => {
 					}),
 				],
 			}),
-				`
+			`
 				.bg-green {
 					background-color: #00FF00;
 				}
@@ -122,7 +123,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
 
 		it("works the way the basic usage example with selectors with fallback says it will", async () => {
 			assertCSS(await generatePluginCss({
@@ -168,7 +168,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
 
 		it("supports variants", async () => {
 			assertCSS(await generatePluginCss({
@@ -226,8 +225,6 @@ export const justSelectors = () => {
 			`);
 		});
 
-
-
 		it("supports user-defined variants", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -274,8 +271,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
-
 
 		it("supports user-defined variants with grouping", async () => {
 			assertCSS(await generatePluginCss({
@@ -324,7 +319,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
 
 		it("supports grouping to reduce redundancy with typing out variants", async () => {
 			assertCSS(await generatePluginCss({
@@ -519,7 +513,6 @@ export const justSelectors = () => {
 			`);
 		});
 
-
 		it("supports group hover and focus variants (with grouping) and `baseSelector` defaults to `html`", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -588,7 +581,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
 
 		it("supports even child variants with fallback", async () => {
 			assertCSS(await generatePluginCss({
@@ -678,8 +670,6 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
-
 
 		it("supports grouping even child variants with fallback", async () => {
 			assertCSS(await generatePluginCss({
@@ -838,7 +828,6 @@ export const justSelectors = () => {
 			`);
 		});
 
-
 		it("supports stacked responsive variants", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -921,11 +910,6 @@ export const justSelectors = () => {
 			`);
 		});
 
-
-
-
-
-
 		it("supports the new provided selection variant", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -968,8 +952,5 @@ export const justSelectors = () => {
 				}
 			`);
 		});
-
-
-
 	});
-}
+};

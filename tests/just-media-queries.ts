@@ -1,12 +1,12 @@
 import { describe, it } from "mocha";
 
-import thisPlugin, { first, last, prefersAnyContrast, prefersAnyMotion, prefersAnyTransparency, prefersDark, prefersHighContrast, prefersLight, prefersLowContrast, prefersReducedMotion, prefersReducedTransparency, selection } from "../src/index";
+import thisPlugin, {
+	first, last, prefersAnyContrast, prefersAnyMotion, prefersAnyTransparency, prefersDark, prefersHighContrast, prefersLight, prefersLowContrast, prefersReducedMotion, prefersReducedTransparency, selection,
+} from "../src/index";
 import { assertCSS, generatePluginCss } from "./_utils";
 
-export const justMediaQueries = () => {
-    describe("just media queries", () => {
-
-
+export const justMediaQueries = (): void => {
+	describe("just media queries", () => {
 		it("works the way the basic usage example with media queries says it will", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -49,8 +49,7 @@ export const justMediaQueries = () => {
 					}
 				}
 			`);
-        });
-        
+		});
 
 		it("works the way the basic usage example with media queries with fallback says it will", async () => {
 			assertCSS(await generatePluginCss({
@@ -101,7 +100,6 @@ export const justMediaQueries = () => {
 			`);
 		});
 
-
 		it("supports media queries without selectors with fallback", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -145,8 +143,7 @@ export const justMediaQueries = () => {
 					}
 				}
 			`);
-        });
-        
+		});
 
 		it("supports media queries without selectors with fallback without baseSelector", async () => {
 			assertCSS(await generatePluginCss({
@@ -199,8 +196,6 @@ export const justMediaQueries = () => {
 				}
 			`);
 		});
-
-
 
 		it("supports media queries without selectors or baseSelector and with stacking variants", async () => {
 			assertCSS(await generatePluginCss({
@@ -270,9 +265,6 @@ export const justMediaQueries = () => {
 			`);
 		});
 
-
-
-
 		it("supports media queries without selectors and implicit empty baseSelector and with stacking variants and grouping", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -340,13 +332,6 @@ export const justMediaQueries = () => {
 				}
 			`);
 		});
-
-
-
-
-
-
-
 
 		it("supports being called more than once with different options", async () => {
 			assertCSS(await generatePluginCss({
@@ -448,12 +433,6 @@ export const justMediaQueries = () => {
 			`);
 		});
 
-
-
-
-
-
-
 		it("supports the new provided selection variant with fallback without a baseSelector (because it was implicitly disabled)", async () => {
 			assertCSS(await generatePluginCss({
 				theme: {
@@ -505,9 +484,5 @@ export const justMediaQueries = () => {
 				}
 			`);
 		});
-
-
-
-
-    });
-}
+	});
+};

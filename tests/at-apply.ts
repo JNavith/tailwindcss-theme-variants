@@ -1,12 +1,12 @@
 import { describe, it } from "mocha";
 
-import thisPlugin, { canHover, colorsInverted, colorsNotInverted, hover, noHover, print, screen } from "../src/index";
+import thisPlugin, {
+	canHover, colorsInverted, colorsNotInverted, hover, noHover, print, screen,
+} from "../src/index";
 import { assertCSS, generatePluginCss } from "./_utils";
 
-export const atApply = () => {
-    describe("@apply", () => {
-
-
+export const atApply = (): void => {
+	describe("@apply", () => {
 		it("lets you experimentally @apply with selectors", async () => {
 			assertCSS(await generatePluginCss(
 				{
@@ -411,5 +411,5 @@ export const atApply = () => {
 				}
 			`);
 		});
-    });
-}
+	});
+};

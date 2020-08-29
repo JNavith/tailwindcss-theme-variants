@@ -8,6 +8,7 @@ import { justMediaQueries } from "./just-media-queries";
 import { bothSelectorsAndMediaQueries } from "./both-media-queries-and-selectors";
 import { atApply } from "./at-apply";
 import { warningsAndErrors } from "./warnings-and-errors";
+import { semantics } from "./semantics";
 
 describe("tailwindcss-theme-variants", () => {
 	describe("#distill()", () => {
@@ -52,5 +53,6 @@ describe("tailwindcss-theme-variants", () => {
 		bothSelectorsAndMediaQueries();
 		atApply();
 		warningsAndErrors();
+		semantics();
 	});
 });
