@@ -8,6 +8,7 @@
 * **Stacking** on extra **variants**, like `hover` so you can change a link's hover color depending on the theme
 * **Falling back** to a certain theme when no other one could become active, like if a visitor's browser doesn't support JavaScript or the new `prefers-` media queries
 * **As many themes as you want**: light theme, dark theme, red theme, blue theme—just bring your own definitions! 
+  * There's a planned feature *"semantics"* that will make multiple themes even easier to work with!
 
 You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of that length is made up of long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
 
@@ -873,6 +874,76 @@ module.exports = {
     ]
 }
 ```
+
+#  Semantics: the alternative to CSS custom properties
+Semantics are a planned / work in progress feature for this plugin that are meant to be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
+
+**The following sections are written in present tense but talk about features that are not implemented yet, so don't try to use them:**
+
+**Semantics require Tailwind CSS v1.7 or higher. Also, the `applyComplexClasses` experimental feature will be enabled for you if you use semantics because it's required for them to work.**
+
+TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because they have to be written by me (the plugin author 👋), only certain utilities are supported so far:
+* `backgroundColor`
+* `borderColor`
+* `textColor`
+
+But, when you use the variables feature, you can use *any* utility as long as you can reference `var(--semantic-name)`.
+
+Maybe in the future it'll be possible to let you, the user, write custom utility classes for use with semantics similarly to how you can write your own variants?
+
+⚠️ They support variants provided by Tailwind's core and by other variant-registering plugins, but ***not* variants created by this plugin!** 
+
+## Constants
+TODO. Constants are the easiest way to get started with semantics. They're called "constant" but actually change with each theme; they're just declared "up front" in the `tailwindcss-theme-variants` plugin call / configuration. 
+TODO. Constants are declared by specifying a value from your `theme` configuration for each configurable utility in the `semantics` option for each theme in `themes`, like so:
+
+```js
+tailwindcssThemeVariants({
+    themes: {
+        light: {
+            mediaQuery: prefersLight,
+            semantics: {
+                colors: {
+                    "body": "white",
+                    // Use Tailwind CSS's default palette's gray-800
+                    // (unless you overrode it in your regular Tailwind CSS theme config)
+                    "on-body": "gray-800",
+                },
+            },
+        },
+        dark: {
+            mediaQuery: prefersDark,
+            semantics: {
+                colors: {
+                    "body": "gray-900",
+                    "on-body": "gray-100",
+                },
+            },
+        },
+    }
+}),
+```
+Now you have classes like `bg-body` and `text-on-body` that represent `light:bg-white dark:bg-gray-900` and `light:text-gray-800 dark:text-gray-100` respectively at your disposal! Because you can now write semantically named classes, this feature is called *`semantics`*.
+
+### Examples
+TODO
+
+## Variables
+TODO. Variables are an optional extension on top of constants. If you specify `target: ie11` in your **Tailwind** config, then they will be disabled.
+
+⚠️ Don't give the same semantic name to multiple utilities in `semantics`; when using variables, they'll collide because they share a global "namespace".
+
+TODO. Every semantic name also has a corresponding variable; the variable defaults to each theme's constant declared in the theme's `semantics` configuration. Variables are automatically used by the semantic utility classes, so you don't have to do anything special to make them work.
+
+TODO. Variables can be set with utility classes that follow the format `semantic-name=value`; reminds you of assigning variables in regular programming languages, doesn't it? This new assignment will cascade down the CSS / DOM tree, because, ***surprise***, variables are implemented with CSS custom properties despite me describing semantics as an alternative to custom properties earlier! [This is because constants don't need custom properties, but variables do.]
+
+For that reason, you can also assign values to semantic variables with the typical custom property syntax
+```css
+--semantic-variable: #hex_code;
+```
+
+### Examples
+TODO
 
 # Alternatives
 Both because there are many theme plugins for Tailwind CSS, and because *what's the right way to do theming?* is a frequently asked question, we've compiled this table listing every theme plugin to compare their features and ultimately answer that question:

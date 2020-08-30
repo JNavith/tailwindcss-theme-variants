@@ -12,11 +12,12 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 		[K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
 	}[Keys]
 
-export type SupportedSemanticUtilities = "colors";
+export type ConfigurableSemantics = "colors";
+export type SupportedSemanticUtilities = "backgroundColor" | "borderColor" | "divideColor" | "textColor";
 export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQuery> & {
 	semantics?: {
-		[utility in SupportedSemanticUtilities]: {
-			[name: string]: string;
+		[utility in ConfigurableSemantics]: {
+			[name: string]: string | { [valueName: string]: string };
 		}
 	}
 };

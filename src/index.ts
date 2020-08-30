@@ -1,8 +1,10 @@
 import { AtRule } from "postcss";
 import plugin from "tailwindcss/plugin";
 
-import { PluginTools } from "@navith/tailwindcss-plugin-author-types";
-import { Themes, ThisPluginOptions } from "./types";
+import { CorePlugins, PluginTools } from "@navith/tailwindcss-plugin-author-types";
+import {
+	ConfigurableSemantics, SupportedSemanticUtilities, Themes, ThisPluginOptions,
+} from "./types";
 import { addParent } from "./selectors";
 
 const nameVariant = (themeName: string, variantName: string): string => {
@@ -14,7 +16,10 @@ const nameVariant = (themeName: string, variantName: string): string => {
 
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
 	group, themes, baseSelector, fallback = false, variants = {},
-}: ThisPluginOptions<GivenThemes, GroupName>) => ({ addVariant, e, postcss }: PluginTools): void => {
+}: ThisPluginOptions<GivenThemes, GroupName>) => ({
+		addUtilities, addVariant, config: lookupConfig, e, postcss, variants: lookupVariants,
+	}: PluginTools): void => {
+		const allThemeNames = Object.keys(themes ?? {});
 		const allThemes = Object.entries(themes ?? {});
 		if (allThemes.length === 0) {
 			console.warn("tailwindcss-theme-variants: no themes were given in this plugin's configuration under the `themes` key, so no variants can be generated. this can be fixed by specifying a theme like `light: { selector: '.light' }` in `themes` of this plugin's configuration. see the README for more information");
@@ -49,6 +54,8 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				console.warn(`tailwindcss-theme-variants: the "${fallbackTheme}" theme was selected for fallback, but you specified \`baseSelector: ""\` even though you use theme(s) that need a selector to activate, which will result in confusing and erroneous behavior of when themes activate. this can be fixed by disabling \`fallback\` in this plugin's configuration, or setting a \`baseSelector\` in this plugin's configuration (there is no way to silence this warning)`);
 			}
 		}
+
+		// Begin variants logic
 
 		// Use a normal default variant first
 		Object.entries({ "": (selector: string): string => selector, ...variants }).forEach(([variantName, variantFunction]) => {
@@ -112,6 +119,125 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				});
 			});
 		});
+
+		// End variants logic
+
+		// Begin semantics logic
+		const someSemantics = Object.values(themes).some((theme) => Object.prototype.hasOwnProperty.call(theme, "semantics"));
+		const everySemantics = Object.values(themes).every((theme) => Object.prototype.hasOwnProperty.call(theme, "semantics"));
+
+		if (everySemantics) {
+			const separator = lookupConfig("separator", ":");
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const corePlugins: CorePlugins = lookupConfig("corePlugins", {}) as any;
+
+			const semantics = allThemes.reduce(
+				(semanticsAccumulating, [themeName, themeConfiguration]) => {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					Object.entries(themeConfiguration.semantics!).forEach(([utility, utilityValues]) => {
+						if (!Object.prototype.hasOwnProperty.call(semanticsAccumulating, utility)) {
+							semanticsAccumulating[utility as ConfigurableSemantics] = {};
+						}
+
+						Object.entries(utilityValues).forEach(([valueName, value]) => {
+							const thing = semanticsAccumulating[utility as ConfigurableSemantics];
+							if (typeof value === "string") {
+								if (!Object.prototype.hasOwnProperty.call(thing, valueName)) {
+									// Use Maps to guarantee order matches theme order
+									thing[valueName] = new Map();
+								}
+								thing[valueName].set(themeName, value);
+							} else {
+								// TODO
+								console.log({ value });
+							}
+						});
+					});
+
+					return semanticsAccumulating;
+				}, {} as Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>,
+			);
+
+			const behavior = {
+				backgroundColor: {
+					className: ({ name }: { name: string }) => `bg-${name}`,
+				},
+				borderColor: {
+					className: ({ name }: { name: string }) => `border-${name}`,
+				},
+				divideColor: {
+					className: ({ name }: { name: string }) => `divide-${name}`,
+				},
+				textColor: {
+					className: ({ name }: { name: string }) => `text-${name}`,
+				},
+			};
+
+			const colorUtilities: SupportedSemanticUtilities[] = ["backgroundColor", "borderColor", "divideColor", "textColor"];
+			// Use "colors" as defaults for all the other color utilities and remove it from semantics
+			Object.entries(semantics?.colors ?? {}).forEach(([colorName, colorConfiguration]) => {
+				colorUtilities.forEach((colorUtility) => {
+					if (!Object.prototype.hasOwnProperty.call(semantics, colorUtility)) {
+						semantics[colorUtility] = {};
+					}
+
+					if (!Object.prototype.hasOwnProperty.call(semantics[colorUtility], colorName)) {
+						semantics[colorUtility][colorName] = colorConfiguration;
+					}
+				});
+			});
+
+			// If it were possible, semantics would be retyped here as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>
+			// Instead, it'll be coerced where used below
+
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			delete semantics.colors;
+
+			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
+				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
+					let utilityEnabled = true;
+					if (corePlugins === true) utilityEnabled = true;
+					else if (corePlugins === false) utilityEnabled = false;
+					else if (Array.isArray(corePlugins)) utilityEnabled = corePlugins.includes(utility);
+					else if (corePlugins[utility] === false) utilityEnabled = false;
+
+					if (!utilityEnabled) return;
+
+					const allVariants = lookupVariants(utility, []);
+					// Drop theme variants from these utilities because they won't work
+					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group);
+
+					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => `${themeName}${separator}${behavior[utility as SupportedSemanticUtilities].className({ name: sourceName })}`);
+					addUtilities({
+						[`.${behavior[utility as SupportedSemanticUtilities].className({ name: semanticName })}`]: {
+							[`@apply ${classesToApply.join(" ")}`]: "",
+						},
+					}, dedupedVariants);
+				});
+			});
+		} else if (someSemantics) {
+			throw new TypeError("tailwindcss-theme-variants: either all themes must define `semantics` or none do. this can be fixed by TODO");
+		}
+		// End semantics logic
+	},
+
+	<GivenThemes extends Themes, GroupName extends string>({
+	themes,
+}: ThisPluginOptions<GivenThemes, GroupName>) => {
+		const everySemantics = Object.values(themes).every((theme) => Object.prototype.hasOwnProperty.call(theme, "semantics"));
+
+		if (everySemantics) {
+			console.warn("tailwindcss-theme-variants: because you're using the `semantics` feature, the experimental Tailwind feature `applyComplexClasses` was enabled for you");
+
+			return {
+				experimental: {
+					applyComplexClasses: true,
+				},
+			};
+		}
+
+		return {};
 	});
 
 export const tailwindcssThemeVariants = thisPlugin;
