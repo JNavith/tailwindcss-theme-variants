@@ -217,7 +217,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 							[`@apply ${classesToApply.join(" ")}`]: "",
 							...(!ie11 ? {
 								[utility]: `var(--${semanticName})`,
-							} : {})
+							} : {}),
 						},
 					}, dedupedVariants);
 				});

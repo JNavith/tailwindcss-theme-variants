@@ -7,4 +7,3 @@ declare module "tailwindcss/plugin" {
     export = createPlugin;
 }
 
-declare module "jest-matcher-css";

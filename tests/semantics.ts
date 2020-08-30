@@ -1,12 +1,12 @@
 import { describe, it } from "mocha";
 
 import thisPlugin, { prefersDark, prefersLight } from "../src/index";
-import { assertExactCSS, generatePluginCSS } from "./_utils";
+import { assertContainsCSS, generatePluginCSS } from "./_utils";
 
 export const semantics = (): void => {
 	describe("semantics", () => {
 		it("background color with constants", async () => {
-			assertExactCSS(await generatePluginCSS(
+			assertContainsCSS(await generatePluginCSS(
 				{
 					target: "ie11",
 
@@ -53,72 +53,31 @@ export const semantics = (): void => {
 					],
 				},
 			),
-			`
-				.bg-white{
-					background-color: #FF
-				}
-				.bg-gray-100{
-					background-color: #EE
-				}
-				.bg-gray-800{
-					background-color: #22
-				}
-				.bg-gray-900{
-					background-color: #11
-				}
+			[
+				`
+					@media (prefers-color-scheme: light) {
+						.bg-primary {
+							background-color: #FF;
+						}
+					}
+					@media (prefers-color-scheme: dark) {
+						.bg-primary {
+							background-color: #11;
+						}
+					}
 
-				@media (prefers-color-scheme: light){
-					.light\\:bg-white{
-						background-color: #FF
+					@media (prefers-color-scheme: light) {
+						.bg-on-primary {
+							background-color: #22;
+						}
 					}
-					.light\\:bg-gray-100{
-						background-color: #EE
+					@media (prefers-color-scheme: dark) {
+						.bg-on-primary {
+							background-color: #EE;
+						}
 					}
-					.light\\:bg-gray-800{
-						background-color: #22
-					}
-					.light\\:bg-gray-900{
-						background-color: #11
-					}
-				}
-
-				@media (prefers-color-scheme: dark){
-					.dark\\:bg-white{
-						background-color: #FF
-					}
-					.dark\\:bg-gray-100{
-						background-color: #EE
-					}
-					.dark\\:bg-gray-800{
-						background-color: #22
-					}
-					.dark\\:bg-gray-900{
-						background-color: #11
-					}
-				}
-
-				@media (prefers-color-scheme: light) {
-					.bg-primary {
-						background-color: #FF;
-					}
-				}
-				@media (prefers-color-scheme: dark) {
-					.bg-primary {
-						background-color: #11;
-					}
-				}
-
-				@media (prefers-color-scheme: light) {
-					.bg-on-primary {
-						background-color: #22;
-					}
-				}
-				@media (prefers-color-scheme: dark) {
-					.bg-on-primary {
-						background-color: #EE;
-					}
-				}
-			`);
+				`,
+			]);
 		});
 	});
 };
