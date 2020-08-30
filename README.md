@@ -195,7 +195,7 @@ Where each parameter means:
 
 
 # Examples
-💡 If you want to see the plugin get stretched to its limits, see the test suite in [`the tests directory`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/tests).
+💡 If you want to see the plugin get stretched to its limits, see the test suite in [`the tests directory`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/tests).
 
 ## Theme groups
 Specifying `group` in this plugin's configuration will create a magical variant you can use in place of manually typing out every single theme's name in the Tailwind `variants` section!
@@ -383,7 +383,7 @@ Which has the active theme table:
 
 
 ## Stacked variants
-💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
+💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
 
 By specifying `variants` in this plugin's options, you can "stack" extra variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
 
@@ -528,7 +528,7 @@ module.exports = {
 };
 ```
 
-💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the given variant functions in [`src/variants.ts`]((https://github.com/SirNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
+💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the given variant functions in [`src/variants.ts`]((https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
 
 Back to the topic at hand: we can then implement the themeable table in HTML (Svelte) like so:
 
@@ -958,7 +958,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <th><a href="https://github.com/estevanmaito/tailwindcss-multi-theme">tailwindcss-multi-theme</a></th>
             <th><a href="https://github.com/javifm86/tailwindcss-prefers-dark-mode">tailwindcss-prefers-dark-mode</a></th>
             <th><a href="https://github.com/crswll/tailwindcss-theme-swapper">tailwindcss-theme-swapper</a></th>
-            <th><a href="https://github.com/SirNavith/tailwindcss-theme-variants">tailwindcss-theme-variants</a></th>
+            <th><a href="https://github.com/JakeNavith/tailwindcss-theme-variants">tailwindcss-theme-variants</a></th>
             <th><a href="https://github.com/innocenzi/tailwindcss-theming">tailwindcss-theming</a></th>
         </tr>
     </thead>
