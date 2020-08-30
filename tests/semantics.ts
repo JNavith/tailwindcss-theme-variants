@@ -22,12 +22,11 @@ export const semantics = (): void => {
 					},
 					corePlugins: ["backgroundColor"],
 					variants: {
-						backgroundColor: ["themes"],
+						backgroundColor: ["light", "dark"],
 					},
 
 					plugins: [
 						thisPlugin({
-							group: "themes",
 							baseSelector: "html",
 							themes: {
 								light: {
@@ -75,6 +74,108 @@ export const semantics = (): void => {
 						.bg-on-primary {
 							background-color: #EE;
 						}
+					}
+				`,
+			]);
+		});
+
+		it("text color with constants with hover variants", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					target: "ie11",
+
+					theme: {
+						colors: {
+							green: {
+								800: "#040",
+							},
+							teal: {
+								600: "#066",
+							},
+							pink: {
+								600: "#606",
+							},
+							red: {
+								800: "#400",
+							},
+						},
+					},
+					corePlugins: ["textColor"],
+					variants: {
+						textColor: ["colors", "hover"],
+					},
+
+					plugins: [
+						thisPlugin({
+							group: "colors",
+							fallback: true,
+							themes: {
+								red: {
+									selector: ".red-theme",
+									semantics: {
+										textColor: {
+											primary: "red-800",
+											accent: "pink-600",
+										},
+									},
+								},
+								green: {
+									selector: ".green-theme",
+									semantics: {
+										textColor: {
+											primary: "green-800",
+											accent: "teal-600",
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+			),
+			[
+				`
+					:root:not(.green-theme) .text-primary {
+						color: #400;
+					}
+					:root.red-theme .text-primary {
+						color: #400;
+					}
+					:root.green-theme .text-primary {
+						color: #040;
+					}
+				`,
+				`
+					:root:not(.green-theme) .text-accent {
+						color: #606;
+					}
+					:root.red-theme .text-accent {
+						color: #606;
+					}
+					:root.green-theme .text-accent {
+						color: #066;
+					}
+				`,
+				`
+					:root:not(.green-theme) .hover\\:text-primary:hover {
+						color: #400;
+					}
+					:root.red-theme .hover\\:text-primary:hover {
+						color: #400;
+					}
+					:root.green-theme .hover\\:text-primary:hover {
+						color: #040;
+					}
+				`,
+				`
+					:root:not(.green-theme) .hover\\:text-accent:hover {
+						color: #606;
+					}
+					:root.red-theme .hover\\:text-accent:hover {
+						color: #606;
+					}
+					:root.green-theme .hover\\:text-accent:hover {
+						color: #066;
 					}
 				`,
 			]);

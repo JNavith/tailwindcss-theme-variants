@@ -133,13 +133,12 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 
 			const semantics = allThemes.reduce(
 				(semanticsAccumulating, [themeName, themeConfiguration]) => {
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					Object.entries(themeConfiguration.semantics!).forEach(([utility, utilityValues]) => {
+					Object.entries(themeConfiguration.semantics ?? {}).forEach(([utility, utilityValues]) => {
 						if (!Object.prototype.hasOwnProperty.call(semanticsAccumulating, utility)) {
 							semanticsAccumulating[utility as ConfigurableSemantics] = {};
 						}
 
-						Object.entries(utilityValues).forEach(([valueName, value]) => {
+						Object.entries(utilityValues ?? {}).forEach(([valueName, value]) => {
 							const thing = semanticsAccumulating[utility as ConfigurableSemantics];
 							if (typeof value === "string") {
 								if (!Object.prototype.hasOwnProperty.call(thing, valueName)) {
