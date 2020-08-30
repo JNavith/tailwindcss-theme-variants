@@ -194,6 +194,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// @ts-ignore
 			delete semantics.colors;
 
+			const target = lookupConfig("target", "relaxed");
+			const ie11 = target === "ie11";
+
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
 					let utilityEnabled = true;
@@ -212,6 +215,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					addUtilities({
 						[`.${behavior[utility as SupportedSemanticUtilities].className({ name: semanticName })}`]: {
 							[`@apply ${classesToApply.join(" ")}`]: "",
+							...(!ie11 ? {
+								[utility]: `var(--${semanticName})`,
+							} : {})
 						},
 					}, dedupedVariants);
 				});
@@ -228,7 +234,8 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 		const everySemantics = Object.values(themes).every((theme) => Object.prototype.hasOwnProperty.call(theme, "semantics"));
 
 		if (everySemantics) {
-			console.warn("tailwindcss-theme-variants: because you're using the `semantics` feature, the experimental Tailwind feature `applyComplexClasses` was enabled for you");
+			console.warn("tailwindcss-theme-variants: because you're using the `semantics` feature, the experimental Tailwind feature `applyComplexClasses` was enabled for you (there is no way to silence this warning)");
+			console.warn("tailwindcss-theme-variants: you should see a warning from Tailwind core explaining so below:");
 
 			return {
 				experimental: {

@@ -8,6 +8,8 @@ export const semantics = (): void => {
 		it("background color with constants", async () => {
 			assertExactCSS(await generatePluginCSS(
 				{
+					target: "ie11",
+
 					theme: {
 						colors: {
 							white: "#FF",
