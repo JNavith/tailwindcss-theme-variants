@@ -12,10 +12,10 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/SirNavith/tailwindcss-theme-variants.git"
+		"url": "https://github.com/JakeNavith/tailwindcss-theme-variants.git"
 	},
-	"bugs": "https://github.com/SirNavith/tailwindcss-theme-variants/issues",
-	"homepage": "https://github.com/SirNavith/tailwindcss-theme-variants",
+	"bugs": "https://github.com/JakeNavith/tailwindcss-theme-variants/issues",
+	"homepage": "https://github.com/JakeNavith/tailwindcss-theme-variants",
 	"files": [
 		"dist/src/*"
 	],
