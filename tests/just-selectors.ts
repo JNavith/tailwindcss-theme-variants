@@ -3,12 +3,12 @@ import { describe, it } from "mocha";
 import thisPlugin, {
 	active, even, focus, groupFocus, groupHover, hover, selection, visited,
 } from "../src/index";
-import { assertCSS, generatePluginCss } from "./_utils";
+import { assertExactCSS, generatePluginCSS } from "./_utils";
 
 export const justSelectors = (): void => {
 	describe("just selectors", () => {
 		it("works in the most basic way without fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						red: "#FF0000",
@@ -44,7 +44,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("works the way the basic usage example with selectors says it will", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"gray-900": "#1A202C",
@@ -84,7 +84,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("works in the most basic way with fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						green: "#00FF00",
@@ -125,7 +125,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("works the way the basic usage example with selectors with fallback says it will", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"gray-900": "#1A202C",
@@ -170,7 +170,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports variants", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						yellow: "#FFFF00",
@@ -226,7 +226,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports user-defined variants", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						electron: "#18E",
@@ -273,7 +273,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports user-defined variants with grouping", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						electron: "#18E",
@@ -321,7 +321,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports grouping to reduce redundancy with typing out variants", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						yellow: "#FFFF00",
@@ -378,7 +378,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports data attribute selectors", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					// Pretend this is padding, which would've generated too many utilities to write a test case
 					fontSize: {
@@ -446,7 +446,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports group hover and focus variants and `baseSelector` defaults to `html`", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					opacity: {
 						50: 0.5,
@@ -514,7 +514,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports group hover and focus variants (with grouping) and `baseSelector` defaults to `html`", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					opacity: {
 						50: 0.5,
@@ -583,7 +583,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports even child variants with fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						orange: "#F80",
@@ -672,7 +672,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports grouping even child variants with fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						orange: "#F80",
@@ -763,7 +763,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports unstacked responsive variants", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						teal: "#0FA",
@@ -829,7 +829,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports stacked responsive variants", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					borderColor: {
 						gray: "#678",
@@ -911,7 +911,7 @@ export const justSelectors = (): void => {
 		});
 
 		it("supports the new provided selection variant", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"red-500": "#F56565",

@@ -5,7 +5,7 @@ import { merge } from "lodash";
 import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 
-export const generatePluginCss = (config: TailwindCSSConfig, css?: string): Promise<string> => postcss(
+export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Promise<string> => postcss(
 	tailwindcss(
 		merge({
 			theme: {},
@@ -19,7 +19,7 @@ export const generatePluginCss = (config: TailwindCSSConfig, css?: string): Prom
 	from: undefined,
 }).then((result) => result.css);
 
-export const assertCSS = (actual: string, expected: string): void => {
+export const assertExactCSS = (actual: string, expected: string): void => {
 	const { pass, message }: {pass: boolean, message: () => string} = cssMatcher(actual, expected);
 	assert.ok(pass, message());
 };

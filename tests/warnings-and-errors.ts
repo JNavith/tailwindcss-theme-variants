@@ -3,7 +3,7 @@ import { describe, it } from "mocha";
 import { createSandbox } from "sinon";
 
 import thisPlugin, { prefersDark } from "../src/index";
-import { generatePluginCss } from "./_utils";
+import { generatePluginCSS } from "./_utils";
 
 export const warningsAndErrors = (): void => {
 	describe("warnings and errors", () => {
@@ -11,7 +11,7 @@ export const warningsAndErrors = (): void => {
 			const sandbox = createSandbox();
 			const consoleStub = sandbox.stub(console, "warn");
 
-			await generatePluginCss({
+			await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						pink: "#FF00FF",
@@ -40,7 +40,7 @@ export const warningsAndErrors = (): void => {
 			const sandbox = createSandbox();
 			const consoleStub = sandbox.stub(console, "warn");
 
-			await generatePluginCss({
+			await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"gray-900": "#1A202C",
@@ -73,7 +73,7 @@ export const warningsAndErrors = (): void => {
 
 		it("errors at you for naming the theme group the same as any theme", async () => {
 			try {
-				await generatePluginCss({
+				await generatePluginCSS({
 					theme: {},
 
 					plugins: [

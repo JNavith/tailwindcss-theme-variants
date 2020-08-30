@@ -3,12 +3,12 @@ import { describe, it } from "mocha";
 import thisPlugin, {
 	canHover, colorsInverted, colorsNotInverted, hover, noHover, print, screen,
 } from "../src/index";
-import { assertCSS, generatePluginCss } from "./_utils";
+import { assertExactCSS, generatePluginCSS } from "./_utils";
 
 export const atApply = (): void => {
 	describe("@apply", () => {
 		it("lets you experimentally @apply with selectors", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {},
 					corePlugins: ["backgroundColor", "textColor"],
@@ -55,7 +55,7 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with selectors with fallback with grouping and stacking variants", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {},
 					corePlugins: ["backgroundColor"],
@@ -121,7 +121,7 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with media queries", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {},
 					corePlugins: ["backgroundColor"],
@@ -169,7 +169,7 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with media queries and responsive variants", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {},
 					corePlugins: ["textColor"],
@@ -231,7 +231,7 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with media queries with fallback", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {},
 					corePlugins: ["backgroundColor"],
@@ -284,7 +284,7 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with media queries and selectors with grouping", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {
 						boxShadow: {
@@ -351,7 +351,7 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with media queries and responsive variants", async () => {
-			assertCSS(await generatePluginCss(
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {},
 					corePlugins: ["textColor"],

@@ -4,12 +4,12 @@ import { describe, it } from "mocha";
 import thisPlugin, {
 	disabled, odd, prefersDark, prefersLight,
 } from "../src/index";
-import { assertCSS, generatePluginCss } from "./_utils";
+import { assertExactCSS, generatePluginCSS } from "./_utils";
 
 export const bothSelectorsAndMediaQueries = (): void => {
 	describe("both selectors and media queries", () => {
 		it("supports media queries without fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						blue: "#0000FF",
@@ -46,7 +46,7 @@ export const bothSelectorsAndMediaQueries = (): void => {
 		});
 
 		it("supports media queries with fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						pink: "#FF00FF",
@@ -88,7 +88,7 @@ export const bothSelectorsAndMediaQueries = (): void => {
 		});
 
 		it("supports responsive variants with user-defined media queries", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"dark-gray": "#123",
@@ -160,7 +160,7 @@ export const bothSelectorsAndMediaQueries = (): void => {
 		});
 
 		it("supports unstacked responsive variants and user-defined media queries and boolean fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						brown: "#640",
@@ -246,7 +246,7 @@ export const bothSelectorsAndMediaQueries = (): void => {
 		});
 
 		it("(OMG) supports stacked responsive variants and partial use of user-defined media queries and fallback and custom separator", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				separator: "~",
 				theme: {
 					stroke: {

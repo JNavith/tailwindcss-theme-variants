@@ -1,12 +1,12 @@
 import { describe, it } from "mocha";
 
 import thisPlugin, { prefersDark, prefersLight } from "../src/index";
-import { assertCSS, generatePluginCss } from "./_utils";
+import { assertExactCSS, generatePluginCSS } from "./_utils";
 
 export const semantics = (): void => {
 	describe("semantics", () => {
-		it("background color", async () => {
-			assertCSS(await generatePluginCss(
+		it("background color with constants", async () => {
+			assertExactCSS(await generatePluginCSS(
 				{
 					theme: {
 						colors: {

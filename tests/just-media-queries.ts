@@ -3,12 +3,12 @@ import { describe, it } from "mocha";
 import thisPlugin, {
 	first, last, prefersAnyContrast, prefersAnyMotion, prefersAnyTransparency, prefersDark, prefersHighContrast, prefersLight, prefersLowContrast, prefersReducedMotion, prefersReducedTransparency, selection,
 } from "../src/index";
-import { assertCSS, generatePluginCss } from "./_utils";
+import { assertExactCSS, generatePluginCSS } from "./_utils";
 
 export const justMediaQueries = (): void => {
 	describe("just media queries", () => {
 		it("works the way the basic usage example with media queries says it will", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"teal-500": "#38B2AC",
@@ -52,7 +52,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("works the way the basic usage example with media queries with fallback says it will", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						"teal-500": "#38B2AC",
@@ -101,7 +101,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("supports media queries without selectors with fallback", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						gold: "#FD0",
@@ -146,7 +146,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("supports media queries without selectors with fallback without baseSelector", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						silver: "#EEF",
@@ -198,7 +198,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("supports media queries without selectors or baseSelector and with stacking variants", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						obsidian: "#314",
@@ -266,7 +266,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("supports media queries without selectors and implicit empty baseSelector and with stacking variants and grouping", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						obsidian: "#314",
@@ -334,7 +334,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("supports being called more than once with different options", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					backgroundColor: {
 						berry: "#B37",
@@ -434,7 +434,7 @@ export const justMediaQueries = (): void => {
 		});
 
 		it("supports the new provided selection variant with fallback without a baseSelector (because it was implicitly disabled)", async () => {
-			assertCSS(await generatePluginCss({
+			assertExactCSS(await generatePluginCSS({
 				theme: {
 					textColor: {
 						"gray-200": "#EDF2F7",
