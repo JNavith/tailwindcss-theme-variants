@@ -23,7 +23,7 @@
 	"types": "dist/src/index.d.ts",
 	"scripts": {
 		"lint": "eslint --fix ./src/**/*.ts ./tests/**/*.ts",
-		"test": "cross-env TS_NODE_FILES=true mocha --require ts-node/register 'tests/**/*.ts'",
+		"test": "cross-env TS_NODE_FILES=true mocha --require ts-node/register 'tests/index.ts'",
 		"prepare": "tsc"
 	},
 	"dependencies": {
