@@ -62,10 +62,12 @@ export const semantics = (): void => {
 					}
 					@media (prefers-color-scheme: dark) {
 						.bg-primary {
-							background-color: #11;
+							background-color: #11;FFF
 						}
 					}
+				`,
 
+				`
 					@media (prefers-color-scheme: light) {
 						.bg-on-primary {
 							background-color: #22;

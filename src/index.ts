@@ -17,7 +17,7 @@ const nameVariant = (themeName: string, variantName: string): string => {
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
 	group, themes, baseSelector, fallback = false, variants = {},
 }: ThisPluginOptions<GivenThemes, GroupName>) => ({
-		addUtilities, addVariant, config: lookupConfig, e, postcss, variants: lookupVariants,
+		addUtilities, addVariant, config: lookupConfig, e, postcss, theme: lookupTheme, variants: lookupVariants,
 	}: PluginTools): void => {
 		const allThemeNames = Object.keys(themes ?? {});
 		const allThemes = Object.entries(themes ?? {});
@@ -212,14 +212,62 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group);
 
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => `${themeName}${separator}${behavior[utility as SupportedSemanticUtilities].className({ name: sourceName })}`);
+					const { className } = behavior[utility as SupportedSemanticUtilities];
 					addUtilities({
-						[`.${behavior[utility as SupportedSemanticUtilities].className({ name: semanticName })}`]: {
+						[`.${e(className({ name: semanticName }))}`]: {
 							[`@apply ${classesToApply.join(" ")}`]: "",
 							...(!ie11 ? {
 								[utility]: `var(--${semanticName})`,
 							} : {}),
 						},
 					}, dedupedVariants);
+
+					const themeValues = lookupTheme(utility, {}) ?? {};
+
+					const flattenedThemeValues = Object.entries(themeValues).reduce((themeValuesAccumulating, [key, value]) => {
+						if (typeof value === "string") {
+							themeValuesAccumulating[key] = value;
+						} else {
+							Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+								themeValuesAccumulating[`${key}-${nestedKey}`] = nestedValue as string;
+							});
+						}
+						return themeValuesAccumulating;
+					}, {} as Record<string, string>);
+
+					Object.entries(flattenedThemeValues).forEach(([themeKey, themeValue]) => {
+						// addBase here?
+
+						const variableDeclaration = `.${e(`${semanticName}=${themeKey}`)}`;
+						if (!ie11) {
+							addUtilities({
+								[variableDeclaration]: {
+									[`--${semanticName}`]: themeValue,
+								},
+							},
+							// TODO: ummmm
+							[group ?? "", ...lookupVariants("semanticVariables", [])]);
+						}
+
+						const variableUser = `.${e(className({ name: semanticName }))}`;
+						addUtilities({
+							// Set both for parity with custom properties (i.e. they can apply to the current element in addition to its children)
+							[`${variableDeclaration}${variableUser}, ${variableDeclaration} ${variableUser}`]: {
+								[`@apply ${className({ name: themeKey })}`]: "",
+							},
+						},
+						// TODO: how can we support variants like above?
+						// the modifySelectors transformation isn't what I expected
+						[]);
+					});
+
+					// TODO: fix this: this should be addBase and wrapped in `if (!ie11)`
+					// addUtilities({
+					// "": {
+					// // TODO: don't hardcode
+					// "@apply light:primary=white dark:primary=gray-900": "",
+					// },
+					// }, []);
 				});
 			});
 		} else if (someSemantics) {
