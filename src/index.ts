@@ -213,6 +213,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					addUtilities({
 						[`.${e(className({ name: semanticName }))}`]: {
 							// Only use @apply
+							// eslint-disable-next-line no-nested-ternary
 							...((noie11 ? (opacityUtility ? isUtilityEnabled(opacityUtility) : true) : true) ? {
 								[`@apply ${classesToApply.join(" ")}`]: "",
 							} : {}),
