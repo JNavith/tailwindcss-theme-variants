@@ -1,8 +1,6 @@
 import { describe, it } from "mocha";
 
-import thisPlugin, {
-	active, even, focus, groupFocus, groupHover, hover, selection, visited,
-} from "../src/index";
+import thisPlugin from "../src/index";
 import { assertExactCSS, generatePluginCSS } from "./_utils";
 
 export const justSelectors = (): void => {
@@ -187,10 +185,6 @@ export const justSelectors = (): void => {
 							red: { selector: ".red-theme" },
 							blue: { selector: ".blue-theme" },
 						},
-						variants: {
-							active,
-							hover,
-						},
 					}),
 				],
 			}),
@@ -243,9 +237,6 @@ export const justSelectors = (): void => {
 							"solarized-light-theme": { selector: ".solarized-light" },
 							"solarized-dark-theme": { selector: ".solarized-dark" },
 						},
-						variants: {
-							visited,
-						},
 					}),
 				],
 			}),
@@ -290,9 +281,6 @@ export const justSelectors = (): void => {
 						themes: {
 							"solarized-light-theme": { selector: ".solarized-light" },
 							"solarized-dark-theme": { selector: ".solarized-dark" },
-						},
-						variants: {
-							visited,
 						},
 					}),
 				],
@@ -339,10 +327,6 @@ export const justSelectors = (): void => {
 							blue: { selector: ".blue-theme" },
 						},
 						group: "themes",
-						variants: {
-							active,
-							hover,
-						},
 					}),
 				],
 			}),
@@ -463,10 +447,6 @@ export const justSelectors = (): void => {
 							"high-contrast": { selector: ".high-contrast" },
 							"low-contrast": { selector: ".low-contrast" },
 						},
-						variants: {
-							"group-focus": groupFocus,
-							"group-hover": groupHover,
-						},
 					}),
 				],
 			}),
@@ -532,10 +512,6 @@ export const justSelectors = (): void => {
 							"high-contrast": { selector: ".high-contrast" },
 						},
 						group: "contrast",
-						variants: {
-							"group-focus": groupFocus,
-							"group-hover": groupHover,
-						},
 					}),
 				],
 			}),
@@ -601,9 +577,6 @@ export const justSelectors = (): void => {
 							"low-contrast": { selector: ".low-contrast" },
 						},
 						fallback: true,
-						variants: {
-							even,
-						},
 					}),
 				],
 			}),
@@ -691,9 +664,6 @@ export const justSelectors = (): void => {
 						},
 						group: "level-contrast",
 						fallback: true,
-						variants: {
-							even,
-						},
 					}),
 				],
 			}),
@@ -848,10 +818,6 @@ export const justSelectors = (): void => {
 						themes: {
 							winter: { selector: ".theme.winter" },
 						},
-						variants: {
-							focus,
-							"group-hover": groupHover,
-						},
 					}),
 				],
 			}),
@@ -931,9 +897,6 @@ export const justSelectors = (): void => {
 							dark: {
 								selector: ".dark",
 							},
-						},
-						variants: {
-							selection,
 						},
 					}),
 				],

@@ -2,10 +2,13 @@ import { AtRule } from "postcss";
 import plugin from "tailwindcss/plugin";
 
 import { CorePlugins, PluginTools } from "@navith/tailwindcss-plugin-author-types";
-import {
+import { kebabCase } from "lodash";
+import type {
 	ConfigurableSemantics, SupportedSemanticUtilities, Themes, ThisPluginOptions,
 } from "./types";
 import { addParent } from "./selectors";
+import * as builtinUtilities from "./utilities";
+import * as builtinVariants from "./variants";
 
 const nameVariant = (themeName: string, variantName: string): string => {
 	if (variantName === "") {
@@ -13,6 +16,8 @@ const nameVariant = (themeName: string, variantName: string): string => {
 	}
 	return `${themeName}:${variantName}`;
 };
+
+const defaultVariants = Object.fromEntries(Object.entries(builtinVariants).map(([variantName, variantFunction]) => [kebabCase(variantName), variantFunction]));
 
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
 	group, themes, baseSelector, fallback = false, variants = {},
@@ -58,7 +63,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 		// Begin variants logic
 
 		// Use a normal default variant first
-		Object.entries({ "": (selector: string): string => selector, ...variants }).forEach(([variantName, variantFunction]) => {
+		Object.entries({ "": (selector: string): string => selector, ...defaultVariants, ...variants }).forEach(([variantName, variantFunction]) => {
 			const toRegister = group ? [...allThemes, [group, { mediaQuery: "", selector: "" }] as typeof allThemes[0]] : allThemes;
 			toRegister.forEach(([rootTheme, themeConfig]) => {
 				const namedVariant = nameVariant(rootTheme, variantName);
@@ -131,6 +136,16 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const corePlugins: CorePlugins = lookupConfig("corePlugins", {}) as any;
 
+			const isUtilityEnabled = (utility: string): boolean => {
+				let utilityEnabled = true;
+				if (corePlugins === true) utilityEnabled = true;
+				else if (corePlugins === false) utilityEnabled = false;
+				else if (Array.isArray(corePlugins)) utilityEnabled = corePlugins.includes(utility);
+				else if (corePlugins[utility] === false) utilityEnabled = false;
+
+				return utilityEnabled;
+			};
+
 			const semantics = allThemes.reduce(
 				(semanticsAccumulating, [themeName, themeConfiguration]) => {
 					Object.entries(themeConfiguration.semantics ?? {}).forEach(([utility, utilityValues]) => {
@@ -157,21 +172,6 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				}, {} as Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>,
 			);
 
-			const behavior = {
-				backgroundColor: {
-					className: ({ name }: { name: string }) => `bg-${name}`,
-				},
-				borderColor: {
-					className: ({ name }: { name: string }) => `border-${name}`,
-				},
-				divideColor: {
-					className: ({ name }: { name: string }) => `divide-${name}`,
-				},
-				textColor: {
-					className: ({ name }: { name: string }) => `text-${name}`,
-				},
-			};
-
 			const colorUtilities: SupportedSemanticUtilities[] = ["backgroundColor", "borderColor", "divideColor", "textColor"];
 			// Use "colors" as defaults for all the other color utilities and remove it from semantics
 			Object.entries(semantics?.colors ?? {}).forEach(([colorName, colorConfiguration]) => {
@@ -193,29 +193,30 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// @ts-ignore
 			delete semantics.colors;
 
+			// TODO: support for user-defined utilities
+			const behavior = builtinUtilities;
+
 			const target = lookupConfig("target", "relaxed");
-			const ie11 = target === "ie11";
+			const onlyie11 = target === "ie11";
+			const noie11 = target === "modern";
 
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
-					let utilityEnabled = true;
-					if (corePlugins === true) utilityEnabled = true;
-					else if (corePlugins === false) utilityEnabled = false;
-					else if (Array.isArray(corePlugins)) utilityEnabled = corePlugins.includes(utility);
-					else if (corePlugins[utility] === false) utilityEnabled = false;
-
-					if (!utilityEnabled) return;
+					if (!isUtilityEnabled(utility)) return;
 
 					const allVariants = lookupVariants(utility, []);
 					// Drop theme variants from these utilities because they won't work
 					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group);
 
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => `${themeName}${separator}${behavior[utility as SupportedSemanticUtilities].className({ name: sourceName })}`);
-					const { className } = behavior[utility as SupportedSemanticUtilities];
+					const { className, opacityUtility } = behavior[utility as SupportedSemanticUtilities];
 					addUtilities({
 						[`.${e(className({ name: semanticName }))}`]: {
-							[`@apply ${classesToApply.join(" ")}`]: "",
-							...(!ie11 ? {
+							// Only use @apply
+							...((noie11 ? (opacityUtility ? isUtilityEnabled(opacityUtility) : true) : true) ? {
+								[`@apply ${classesToApply.join(" ")}`]: "",
+							} : {}),
+							...(!onlyie11 ? {
 								[utility]: `var(--${semanticName})`,
 							} : {}),
 						},
@@ -238,7 +239,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 						// addBase here?
 
 						const variableDeclaration = `.${e(`${semanticName}=${themeKey}`)}`;
-						if (!ie11) {
+						if (!onlyie11) {
 							addUtilities({
 								[variableDeclaration]: {
 									[`--${semanticName}`]: themeValue,
@@ -249,15 +250,17 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 						}
 
 						const variableUser = `.${e(className({ name: semanticName }))}`;
-						addUtilities({
-							// Set both for parity with custom properties (i.e. they can apply to the current element in addition to its children)
-							[`${variableDeclaration}${variableUser}, ${variableDeclaration} ${variableUser}`]: {
-								[`@apply ${className({ name: themeKey })}`]: "",
+						if (!noie11) {
+							addUtilities({
+								// Set both for parity with custom properties (i.e. they can apply to the current element in addition to its children)
+								[`${variableDeclaration}${variableUser}, ${variableDeclaration} ${variableUser}`]: {
+									[`@apply ${className({ name: themeKey })}`]: "",
+								},
 							},
-						},
-						// TODO: how can we support variants like above?
-						// the modifySelectors transformation isn't what I expected
-						[]);
+							// TODO: how can we support variants like above?
+							// the modifySelectors transformation isn't what I expected
+							[]);
+						}
 					});
 
 					// TODO: fix this: this should be addBase and wrapped in `if (!ie11)`

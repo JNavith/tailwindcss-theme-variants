@@ -187,11 +187,11 @@ Where each parameter means:
 
 - `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. If you pass `true`, then the first theme you listed in `themes` will be the theme that is fallen back to. You can think of it as the *default* theme for your site.
 
-- `variants` (default is nothing): an object mapping the name of a variant to a function that gives a selector for when that variant is active. 
+- `variants` (default is `{}`): an object mapping the name of a variant to a function that gives a selector for when that variant is active. These will be **merged** with [the default variants](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) rather than replace them; this makes it work sort of like `extend`.
 
-  For example, the importable `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The importable `groupHover` (which you are recommended to name `"group-hover"` for consistency) variant returns `` `.group:hover ${selector}` ``
+  For example, the default `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The default `group-hover` variant returns `` `.group:hover ${selector}` ``
 
-  Each given name and function pair will create an appropriately named variant in combination with each theme for use in the `variants` section of your Tailwind CSS config, like `amoled:hover` if you have an `amoled` theme and a `hover` variant in this plugin's configuration.
+  Each given name and function pair will create an appropriately named variant in combination with each theme for use in the `variants` section of your Tailwind CSS config, like `amoled:my-hover` if you have an `amoled` theme and a `my-hover` variant in this plugin's configuration. Either way, because `hover` is one of the default variants, `amoled:hover` will be created too.
 
 
 # Examples
@@ -385,9 +385,9 @@ Which has the active theme table:
 ## Stacked variants
 💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
 
-By specifying `variants` in this plugin's options, you can "stack" extra variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
+You can "stack" built-in or custom variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
 
-Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) (which you can import as `prefersHighContrast`) with the `:hover` variant (which you can import as `hover`):
+Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) with the `:hover` variant:
 ```js
 const { tailwindcssThemeVariants, hover, prefersHighContrast } = require("tailwindcss-theme-variants");
 
@@ -408,9 +408,6 @@ module.exports = {
                     mediaQuery: prefersHighContrast /* "@media (prefers-contrast: high)" */,
                 },
             },
-            variants: {
-                "hover": hover /* (selector) => `${selector}:hover` */,
-            },
         }),
     ],
 };
@@ -429,12 +426,12 @@ You could create a simple card that uses contrast pleasant for fully sighted vis
 ```
 
 #### Writing a custom variant function
-You might need to write a variant function yourself if it's not `export`ed with this plugin. 
+You might need to write a variant function yourself if it's not [built-in to this plugin](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts). 
 
 It's common to use the same styles on links and buttons when they are hovered over or focused on, so you may want to make things easier for yourself and reduce duplication by creating a `"hocus"` variant that activates for **either** `:hover` **or** `:focus`.
 
 ```js
-const { tailwindcssThemeVariants, hover, odd } = require("tailwindcss-theme-variants");
+const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -512,23 +509,21 @@ module.exports = {
                 "orange-accent": { selector: ".themed-orange" },
             },
             variants: {
-                hover /* (selector) => `${selector}:hover` */,
-                odd /* (selector) => `${selector}:nth-child(odd)` */,
-
                 // The custom variant function, written by you
                 "odd:hover": (selector) => `${selector}:nth-child(odd):hover`,
                 // There is nothing special about the : in odd:hover
-                // It's just meant to signify that there's an extra variant to your brain
+                // For your understanding, it's just to get the point across
+                // that you are looking for two conditions to be met
 
                 // By the way, the ordering here doesn't matter
-                // (as opposed to the ordering of variants above)
+                // (as opposed to the ordering of variants in Tailwind's config above)
             },
         }),
     ],
 };
 ```
 
-💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the given variant functions in [`src/variants.ts`]((https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
+💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the built-in variant functions in [`src/variants.ts`]((https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
 
 Back to the topic at hand: we can then implement the themeable table in HTML (Svelte) like so:
 
@@ -628,7 +623,7 @@ You can still stack extra variants even while using responsive variants.
 
 Here's an example:
 ```js
-const { tailwindcssThemeVariants, hover, landscape, portrait } = require("tailwindcss-theme-variants");
+const { tailwindcssThemeVariants, landscape, portrait } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {}
@@ -648,9 +643,6 @@ module.exports = {
                 portrait: {
                     mediaQuery: portrait,
                 },
-            },
-            variants: {
-                hover,
             },
         }),
     ],
@@ -801,10 +793,6 @@ plugins: [
             light: { selector: "[data-theme=light]" },
             dark: { selector: "[data-theme=dark]" },
         },
-        variants: {
-            hover,
-            focus,
-        }
     }),
 
     tailwindcssThemeVariants({
@@ -863,13 +851,7 @@ module.exports = {
                 "light-theme": { selector: "[data-theme=light]", mediaQuery: prefersLight },
                 "dark-theme": { selector: "[data-theme=dark]", mediaQuery: prefersDark },
             },
-            variants: {
-                focus,
-                "group-focus": groupFocus,
-                "group-hover": groupHover,
-                hover,
-                selection,
-            },
+            // I personally only need the built-in variants so I don't specify any custom ones here
         }),
     ]
 }
@@ -929,7 +911,7 @@ Now you have classes like `bg-body` and `text-on-body` that represent `light:bg-
 TODO
 
 ## Variables
-TODO. Variables are an optional extension on top of constants. If you specify `target: ie11` in your **Tailwind** config, then they will be disabled.
+TODO. Variables are an optional extension on top of constants. If you specify `target: "ie11"` in your **Tailwind** config, then they will be disabled.
 
 ⚠️ Don't give the same semantic name to multiple utilities in `semantics`; when using variables, they'll collide because they share a global "namespace".
 

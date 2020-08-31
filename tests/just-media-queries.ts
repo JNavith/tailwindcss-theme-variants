@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 
 import thisPlugin, {
-	first, last, prefersAnyContrast, prefersAnyMotion, prefersAnyTransparency, prefersDark, prefersHighContrast, prefersLight, prefersLowContrast, prefersReducedMotion, prefersReducedTransparency, selection,
+	prefersAnyContrast, prefersAnyMotion, prefersAnyTransparency, prefersDark, prefersHighContrast, prefersLight, prefersLowContrast, prefersReducedMotion, prefersReducedTransparency,
 } from "../src/index";
 import { assertExactCSS, generatePluginCSS } from "./_utils";
 
@@ -215,10 +215,6 @@ export const justMediaQueries = (): void => {
 							"normal-motion": { mediaQuery: prefersAnyMotion },
 							"reduced-motion": { mediaQuery: prefersReducedMotion },
 						},
-						variants: {
-							first,
-							last,
-						},
 					}),
 				],
 			}),
@@ -282,10 +278,6 @@ export const justMediaQueries = (): void => {
 						themes: {
 							"normal-motion": { mediaQuery: prefersAnyMotion },
 							"reduced-motion": { mediaQuery: prefersReducedMotion },
-						},
-						variants: {
-							first,
-							last,
 						},
 					}),
 				],
@@ -455,9 +447,6 @@ export const justMediaQueries = (): void => {
 							dark: {
 								mediaQuery: prefersDark,
 							},
-						},
-						variants: {
-							selection,
 						},
 					}),
 				],

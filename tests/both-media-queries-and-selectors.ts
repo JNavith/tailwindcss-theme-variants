@@ -2,7 +2,7 @@ import { flatMap } from "lodash";
 import { describe, it } from "mocha";
 
 import thisPlugin, {
-	disabled, odd, prefersDark, prefersLight,
+	prefersDark, prefersLight,
 } from "../src/index";
 import { assertExactCSS, generatePluginCSS } from "./_utils";
 
@@ -270,10 +270,6 @@ export const bothSelectorsAndMediaQueries = (): void => {
 							"time-day": { selector: ".sun-out", mediaQuery: prefersLight },
 						},
 						fallback: true,
-						variants: {
-							disabled,
-							odd,
-						},
 					}),
 				],
 			}),
