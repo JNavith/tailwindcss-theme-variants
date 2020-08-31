@@ -61,7 +61,7 @@ export const semantics = (): void => {
 					}
 					@media (prefers-color-scheme: dark) {
 						.bg-primary {
-							background-color: #11;FFF
+							background-color: #11;
 						}
 					}
 				`,
