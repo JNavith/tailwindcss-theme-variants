@@ -935,6 +935,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th></th>
             <th><a href="https://tailwindcss.com/docs/breakpoints/#dark-mode">Native screens</a></th>
+            <th><a href="https://github.com/tailwindlabs/tailwindcss/pull/2279">Experimental <code>darkModeVariant</code></a></th>
             <th><a href="https://github.com/ChanceArthur/tailwindcss-dark-mode">tailwindcss-dark-mode</a></th>
             <th><a href="https://github.com/danestves/tailwindcss-darkmode">tailwindcss-darkmode</a></th>
             <th><a href="https://github.com/estevanmaito/tailwindcss-multi-theme">tailwindcss-multi-theme</a></th>
@@ -952,6 +953,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>🟡</td>
             <td>🟡</td>
             <td>🟡</td>
+            <td>🟡</td>
             <td>✅</td>
             <td>❌</td>
             <td>✅</td>
@@ -959,6 +961,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th>Controllable with selectors (classes or data attributes)</th>
             <td>❌</td>
+            <td>🟡</td>
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
@@ -969,6 +972,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         </tr>
         <tr>
             <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
+            <td>❌</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
@@ -988,9 +992,11 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Stacked variants like <code>hover</code></a></th>
+            <td>✅</td>
             <td>✅</td>
             <td>🟡</td>
             <td>🟡</td>
@@ -1003,6 +1009,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
             <td>✅</td>
+            <td>🟡</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
@@ -1018,6 +1025,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
+            <td>❌</td>
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
@@ -1025,6 +1033,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th>Supports other media queries like <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency"><code>prefers-reduced-transparency</code></a></th>
             <td>✅</td>
+            <td>❌</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
@@ -1087,7 +1096,7 @@ Plugins that have a 🟡 support only some of the variants in Tailwind's core, a
 2. It could still be possible for a flash of unthemed content to appear before the appropriate theme is activated
 3. Your site will immediately jump between light and dark instead of smoothly transitioning with the rest of the screen on macOS
 
-**[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
+**[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)** and **[experimental `darkModeVariant`](https://github.com/tailwindlabs/tailwindcss/pull/2279)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
 
 
 # 📄 License and Contributing
