@@ -936,6 +936,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <th></th>
             <th><a href="https://tailwindcss.com/docs/breakpoints/#dark-mode">Native screens</a></th>
             <th><a href="https://github.com/tailwindlabs/tailwindcss/pull/2279">Experimental <code>darkModeVariant</code></a></th>
+            <th><a href="https://github.com/benface/tailwindcss-alt">tailwindcss-alt</a></th>
             <th><a href="https://github.com/ChanceArthur/tailwindcss-dark-mode">tailwindcss-dark-mode</a></th>
             <th><a href="https://github.com/danestves/tailwindcss-darkmode">tailwindcss-darkmode</a></th>
             <th><a href="https://github.com/estevanmaito/tailwindcss-multi-theme">tailwindcss-multi-theme</a></th>
@@ -954,6 +955,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>🟡</td>
             <td>🟡</td>
             <td>🟡</td>
+            <td>🟡</td>
             <td>✅</td>
             <td>❌</td>
             <td>✅</td>
@@ -965,6 +967,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
+            <td>✅</td>
             <td>🟡</td>
             <td>✅</td>
             <td>✅</td>
@@ -972,6 +975,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         </tr>
         <tr>
             <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
+            <td>❌</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
@@ -993,11 +997,13 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
+            <td>✅</td>
         </tr>
         <tr>
             <th>Stacked variants like <code>hover</code></a></th>
             <td>✅</td>
             <td>✅</td>
+            <td>🟡</td>
             <td>🟡</td>
             <td>🟡</td>
             <td>🟡</td>
@@ -1010,6 +1016,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
             <td>✅</td>
             <td>🟡</td>
+            <td>❌</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
@@ -1026,6 +1033,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
+            <td>❌</td>
             <td>✅</td>
             <td>✅</td>
             <td>✅</td>
@@ -1033,6 +1041,7 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
         <tr>
             <th>Supports other media queries like <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency"><code>prefers-reduced-transparency</code></a></th>
             <td>✅</td>
+            <td>❌</td>
             <td>❌</td>
             <td>❌</td>
             <td>❌</td>
