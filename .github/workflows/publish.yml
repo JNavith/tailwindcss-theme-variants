@@ -6,19 +6,41 @@ on:
       - '*'
 
 jobs:
-  test-and-publish:
-    runs-on: ubuntu-20.04
+  test:
+    strategy:
+      matrix:
+        node-version: [12, 14]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v2-beta
         with:
-          node-version: 14
+          node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v1.2.0
         with:
-          version: 5.3.0
+          version: 5.5.10
       - run: pnpm install
       - run: pnpm run test
+  
+  publish:
+    needs: test
+    strategy:
+      matrix:
+        node-version: [14]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v1.2.0
+        with:
+          version: 5.5.10
+      - run: pnpm install
       - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
