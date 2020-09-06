@@ -19,7 +19,9 @@ export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Prom
 }).then((result) => result.css);
 
 // Source: jest-matcher-css
-const strip = (str: string): string => str.replace(/[;\s]/g, "");
+const strip = (str: string): string => str.replace(/^\s+/gm, "").replace(/;/g, "").replace(/:\s+/g, ":").replace(/\s+{/g, "{")
+	.replace(/}\s+/g, "}")
+	.replace(/\n+/g, "\n");
 const prettify = (str: string): string => str.replace(/}/g, "\n}").replace(/{/g, "{\n");
 const clean = (str:string):string => prettify(strip(str));
 

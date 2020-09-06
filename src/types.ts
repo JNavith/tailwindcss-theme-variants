@@ -24,6 +24,7 @@ export type SemanticUtility = {
 export type SupportedSemanticUtilities = keyof typeof builtinUtilities;
 export type SpecialSemantickeys = "colors";
 export type ConfigurableSemantics = SupportedSemanticUtilities | SpecialSemantickeys;
+
 export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQuery> & {
 	semantics?: {
 		[utility in ConfigurableSemantics]?: {
@@ -38,7 +39,7 @@ export interface ThisPluginOptions<GivenThemes extends Themes, GroupName extends
 	group?: GroupName extends (keyof GivenThemes) ? never : GroupName;
 	themes: GivenThemes;
 	baseSelector?: string;
-	fallback?: boolean;
+	fallback?: boolean | "compact";
 	variants?: {
 		[name: string]: (selector: string) => string;
 	};

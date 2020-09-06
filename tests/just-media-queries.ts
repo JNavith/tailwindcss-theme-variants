@@ -100,6 +100,49 @@ export const justMediaQueries = (): void => {
 			`);
 		});
 
+		it("compacts with fallback", async () => {
+			assertExactCSS(await generatePluginCSS({
+				theme: {
+					backgroundColor: {
+						"teal-500": "#38B2AC",
+					},
+				},
+				corePlugins: ["backgroundColor"],
+				variants: {
+					backgroundColor: ["light789", "dark789"],
+				},
+
+				plugins: [
+					thisPlugin({
+						themes: {
+							light789: {
+								mediaQuery: prefersLight,
+							},
+							dark789: {
+								mediaQuery: prefersDark,
+							},
+						},
+						fallback: "compact",
+					}),
+				],
+			}),
+			`
+				.bg-teal-500 {
+					background-color: #38B2AC;
+				}
+
+				.light789\\:bg-teal-500 {
+					background-color: #38B2AC;
+				}
+
+				@media (prefers-color-scheme: dark) {
+					.dark789\\:bg-teal-500 {
+						background-color: #38B2AC;
+					}
+				}
+			`);
+		});
+
 		it("supports media queries without selectors with fallback", async () => {
 			assertExactCSS(await generatePluginCSS({
 				theme: {

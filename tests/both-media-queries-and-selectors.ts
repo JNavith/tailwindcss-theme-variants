@@ -245,6 +245,73 @@ export const bothSelectorsAndMediaQueries = (): void => {
 			`);
 		});
 
+		it("supports unstacked responsive variants and user-defined media queries and compacted fallback", async () => {
+			assertExactCSS(await generatePluginCSS({
+				theme: {
+					textColor: {
+						brown: "#640",
+					},
+					screens: {
+						middle: "600px",
+					},
+				},
+				corePlugins: ["textColor"],
+				variants: {
+					textColor: ["responsive", "themes72"],
+				},
+				plugins: [
+					thisPlugin({
+						group: "themes72",
+						baseSelector: "html",
+						fallback: "compact",
+						themes: {
+							"theme-dark72": { selector: ".dark-theme", mediaQuery: prefersDark },
+							"theme-light72": { selector: ".light-theme", mediaQuery: prefersLight },
+						},
+					}),
+				],
+			}),
+			`
+				.text-brown {
+					color: #640;
+				}
+
+				html .theme-dark72\\:text-brown {
+					color: #640;
+				}
+
+				@media (prefers-color-scheme: light) {
+					html:not(.dark-theme) .theme-light72\\:text-brown {
+						color: #640;
+					}
+				}
+
+				html.light-theme .theme-light72\\:text-brown {
+					color: #640;
+				}
+
+				@media (min-width: 600px) {
+					.middle\\:text-brown {
+						color: #640;
+					}
+
+					html .middle\\:theme-dark72\\:text-brown {
+						color: #640;
+					}
+
+					@media (prefers-color-scheme: light) {
+						html:not(.dark-theme) .middle\\:theme-light72\\:text-brown {
+							color: #640;
+						}
+					}
+
+					html.light-theme .middle\\:theme-light72\\:text-brown {
+						color: #640;
+					}
+				}
+			`);
+		});
+
 		it("(OMG) supports stacked responsive variants and partial use of user-defined media queries and fallback and custom separator", async () => {
 			assertExactCSS(await generatePluginCSS({
 				separator: "~",

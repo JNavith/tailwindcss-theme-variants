@@ -36,7 +36,8 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 		}
 
 		// eslint-disable-next-line no-nested-ternary
-		const fallbackTheme = (fallback === true) ? allThemes[0][0] : (fallback === false ? undefined : fallback);
+		const fallbackTheme = fallback ? allThemes[0][0] : undefined;
+		const compactFallback = fallback === "compact";
 
 		const usesAnySelectors = allThemes.some(([_name, { selector }]) => selector);
 
@@ -82,50 +83,57 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 
 							containerFallBack.walkRules((rule) => {
 								const namedSelector = nameSelector(rule.selector);
-								const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
-								rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
+								if (compactFallback) {
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									rule.selector = addParent(namedSelector, baseSelector!);
+								} else {
+									const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
+									rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
+								}
 							});
 
 							container.append(containerFallBack);
 						}
 
-						if (mediaQuery) {
-							const queryAtRule = postcss.parse(mediaQuery).first as any as AtRule; // eslint-disable-line @typescript-eslint/no-explicit-any
+						// When fallback is being compacted, only generate the regular cases for the non-fallback-theme
+						if (!compactFallback || themeName !== fallbackTheme) {
+							if (mediaQuery) {
+								const queryAtRule = postcss.parse(mediaQuery).first as any as AtRule; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-							// Nest the utilities inside the given media query
-							const queryContainer = originalContainer.clone();
-							queryContainer.walkRules((rule) => {
-								const namedSelector = nameSelector(rule.selector);
-								if (fallbackTheme && baseSelector !== "") {
-									const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
-									rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
-								} else {
-									rule.selector = namedSelector;
+								// Nest the utilities inside the given media query
+								const queryContainer = originalContainer.clone();
+								queryContainer.walkRules((rule) => {
+									const namedSelector = nameSelector(rule.selector);
+									if (fallbackTheme && baseSelector !== "") {
+										const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
+										rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
+									} else {
+										rule.selector = namedSelector;
+									}
+								});
+
+								if (queryContainer.nodes) {
+									queryAtRule.append(queryContainer.nodes);
 								}
-							});
 
-							if (queryContainer.nodes) {
-								queryAtRule.append(queryContainer.nodes);
+								container.append(queryAtRule);
 							}
 
-							container.append(queryAtRule);
-						}
+							if (selector) {
+								const normalScreenContainer = originalContainer.clone();
+								normalScreenContainer.walkRules((rule) => {
+									const namedSelector = nameSelector(rule.selector);
+									const activator = `${baseSelector}${selector}`;
+									rule.selector = addParent(namedSelector, activator);
+								});
 
-						if (selector) {
-							const normalScreenContainer = originalContainer.clone();
-							normalScreenContainer.walkRules((rule) => {
-								const namedSelector = nameSelector(rule.selector);
-								const activator = `${baseSelector}${selector}`;
-								rule.selector = addParent(namedSelector, activator);
-							});
-
-							container.append(normalScreenContainer);
+								container.append(normalScreenContainer);
+							}
 						}
 					});
 				});
 			});
 		});
-
 		// End variants logic
 
 		// Begin semantics logic
@@ -163,7 +171,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 								}
 								thing[valueName].set(themeName, value);
 							} else {
-								// TODO
+								// TODO: flattening logic
 								console.log({ value });
 							}
 						});

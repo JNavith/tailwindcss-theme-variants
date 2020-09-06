@@ -122,6 +122,48 @@ export const justSelectors = (): void => {
 			`);
 		});
 
+		it("works in the most basic way with compacted fallback", async () => {
+			assertExactCSS(await generatePluginCSS({
+				theme: {
+					backgroundColor: {
+						green: "#00FF00",
+					},
+				},
+				corePlugins: ["backgroundColor"],
+				variants: {
+					backgroundColor: ["light33", "base33", "dark33"],
+				},
+				plugins: [
+					thisPlugin({
+						baseSelector: "html",
+						fallback: "compact",
+						themes: {
+							light33: { selector: ".theme-light" },
+							base33: { selector: ".theme-base" },
+							dark33: { selector: ".theme-dark" },
+						},
+					}),
+				],
+			}),
+			`
+				.bg-green {
+					background-color: #00FF00;
+				}
+
+				html .light33\\:bg-green {
+					background-color: #00FF00;
+				}
+
+				html.theme-base .base33\\:bg-green {
+					background-color: #00FF00;
+				}
+				
+				html.theme-dark .dark33\\:bg-green {
+					background-color: #00FF00;
+				}
+			`);
+		});
+
 		it("works the way the basic usage example with selectors with fallback says it will", async () => {
 			assertExactCSS(await generatePluginCSS({
 				theme: {
@@ -728,6 +770,51 @@ export const justSelectors = (): void => {
 
 				:root.low-contrast .low-contrast\\:even\\:text-cyan:nth-child(even) {
 					color: #0FF;
+				}
+			`);
+		});
+
+		it("supports grouping even child variants with compact fallback", async () => {
+			assertExactCSS(await generatePluginCSS({
+				theme: {
+					borderColor: {
+						cyan: "#0FF",
+					},
+				},
+				corePlugins: ["borderColor"],
+				variants: {
+					borderColor: ["contrast", "contrast:even"],
+				},
+				plugins: [
+					thisPlugin({
+						themes: {
+							"high-contrast": { selector: ".high-contrast" },
+							"low-contrast": { selector: ".low-contrast" },
+						},
+						group: "contrast",
+						fallback: "compact",
+					}),
+				],
+			}),
+			`
+				.border-cyan {
+					border-color: #0FF;
+				}
+
+				:root .high-contrast\\:border-cyan {
+					border-color: #0FF;
+				}
+
+				:root.low-contrast .low-contrast\\:border-cyan {
+					border-color: #0FF;
+				}
+
+				:root .high-contrast\\:even\\:border-cyan:nth-child(even) {
+					border-color: #0FF;
+				}
+
+				:root.low-contrast .low-contrast\\:even\\:border-cyan:nth-child(even) {
+					border-color: #0FF;
 				}
 			`);
 		});
