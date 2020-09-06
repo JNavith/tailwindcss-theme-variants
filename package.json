@@ -1,7 +1,7 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.1.0",
-	"description": "JavaScript- or media-query-based theme variants with fallback for Tailwind CSS",
+	"version": "1.2.0",
+	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
 		"tailwind",
