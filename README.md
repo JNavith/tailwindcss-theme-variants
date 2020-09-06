@@ -165,7 +165,7 @@ This plugin expects configuration of the form
     };
 
     baseSelector?: string;
-    fallback?: boolean;
+    fallback?: boolean | "compact";
 
     variants?: {
         [name: string]: (selector: string) => string;
@@ -185,7 +185,9 @@ Where each parameter means:
 
 - `baseSelector` (default `""` (empty string) if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
 
-- `fallback` (default `false`): chooses a theme to fall back to when none of the media queries or selectors are active. If you pass `true`, then the first theme you listed in `themes` will be the theme that is fallen back to. You can think of it as the *default* theme for your site.
+- `fallback` (default `false`): if you pass `true`, then the first theme you listed in `themes` will be the theme that is fallen back to when none of the media queries or selectors are active. You can think of it as the *default* theme for your site.
+
+  If you pass `fallback: "compact"`, then your CSS file size will be drastically reduced because redundant things will be "canceled out." You are **recommended** to try this feature and only switch back to `true` if you encounter issues (which you should please [report 😁](https://github.com/JakeNavith/tailwindcss-theme-variants/issues)), because it will become the default option in the future.
 
 - `variants` (default is `{}`): an object mapping the name of a variant to a function that gives a selector for when that variant is active. These will be **merged** with [the default variants](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) rather than replace them; this makes it work sort of like `extend`.
 
@@ -457,7 +459,9 @@ module.exports = {
             },
             // prefers-reduced-transparency is not supported in any browsers yet,
             // so assume an unsupported browser means the visitor is okay with transparency effects
-            fallback: true,
+            fallback: "compact",
+            // If you haven't seen "compact" yet, it's the same as true
+            // but reduces resulting CSS file size by a lot
             variants: {
                 // The custom variant function, written by you
                 hocus: (selector) => `${selector}:hover, ${selector}:focus`,
@@ -597,6 +601,7 @@ module.exports = {
     plugins: [
         tailwindcssThemeVariants({
             group: "density",
+            // baseSelector is ":root"
             themes: {
                 comfortable: { selector: "[data-density=comfortable]" },
                 compact: { selector: "[data-density=compact]" },
@@ -781,6 +786,8 @@ It has the corresponding active theme table:
 <td align="center"><code>inverted</code></td>
 </tr>
 </table>
+
+💡 If you're still using `fallback: true`, now would be a good time to try out `fallback: "compact"` to reduce generated CSS size for free. Because using both selectors and media queries to activate themes results in *a ton* of CSS, the benefits of `compact`ing it are great now, but if you encounter any problems, then you should [create an issue](https://github.com/JakeNavith/tailwindcss-theme-variants/issues) and switch back to `true` until it's resolved.
 
 ## Call the plugin more than once to separate unrelated themes
 The list of themes passed to one call of this plugin are intended to be *mutually exclusive*. So, if you have unrelated themes, like a set for motion, and another for light/dark, it doesn't make sense to stuff them all into the same plugin call. Instead, spread them out into two configs to be controlled independently:
