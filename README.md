@@ -917,8 +917,6 @@ TODO. Variables are an optional extension on top of constants. If you specify `t
 
 TODO. Every semantic name also has a corresponding variable; the variable defaults to each theme's constant declared in the theme's `semantics` configuration. Variables are automatically used by the semantic utility classes, so you don't have to do anything special to make them work.
 
-TODO. Variables can be set with utility classes that follow the format `semantic-name=value`; reminds you of assigning variables in regular programming languages, doesn't it? This new assignment will cascade down the CSS / DOM tree, because, ***surprise***, variables are implemented with CSS custom properties despite me describing semantics as an alternative to custom properties earlier! [This is because constants don't need custom properties, but variables do.]
-
 For that reason, you can also assign values to semantic variables with the typical custom property syntax
 ```css
 --semantic-variable: #hex_code;

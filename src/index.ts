@@ -1,5 +1,6 @@
 import { AtRule } from "postcss";
 import plugin from "tailwindcss/plugin";
+import { toRgba } from "tailwindcss/lib/util/withAlphaVariable";
 
 import { CorePlugins, PluginTools } from "@navith/tailwindcss-plugin-author-types";
 import { kebabCase } from "lodash";
@@ -172,6 +173,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				}, {} as Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>,
 			);
 
+			// TODO: same logic for gradientColorStops and opacity
 			const colorUtilities: SupportedSemanticUtilities[] = ["backgroundColor", "borderColor", "divideColor", "textColor"];
 			// Use "colors" as defaults for all the other color utilities and remove it from semantics
 			Object.entries(semantics?.colors ?? {}).forEach(([colorName, colorConfiguration]) => {
@@ -209,7 +211,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group);
 
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => `${themeName}${separator}${behavior[utility as SupportedSemanticUtilities].className({ name: sourceName })}`);
-					const { className, opacityUtility } = behavior[utility as SupportedSemanticUtilities];
+					const { className, opacityUtility, opacityVariable } = behavior[utility as SupportedSemanticUtilities];
 					addUtilities({
 						[`.${e(className({ name: semanticName }))}`]: {
 							// Only use @apply
@@ -218,59 +220,26 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 								[`@apply ${classesToApply.join(" ")}`]: "",
 							} : {}),
 							...(!onlyie11 ? {
-								[utility]: `var(--${semanticName})`,
+								[utility]: opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`,
 							} : {}),
 						},
 					}, dedupedVariants);
 
-					const themeValues = lookupTheme(utility, {}) ?? {};
-
-					const flattenedThemeValues = Object.entries(themeValues).reduce((themeValuesAccumulating, [key, value]) => {
-						if (typeof value === "string") {
-							themeValuesAccumulating[key] = value;
-						} else {
-							Object.entries(value).forEach(([nestedKey, nestedValue]) => {
-								themeValuesAccumulating[`${key}-${nestedKey}`] = nestedValue as string;
-							});
-						}
-						return themeValuesAccumulating;
-					}, {} as Record<string, string>);
-
-					Object.entries(flattenedThemeValues).forEach(([themeKey, themeValue]) => {
-						// addBase here?
-
-						const variableDeclaration = `.${e(`${semanticName}=${themeKey}`)}`;
-						if (!onlyie11) {
-							addUtilities({
-								[variableDeclaration]: {
-									[`--${semanticName}`]: themeValue,
-								},
-							},
-							// TODO: ummmm
-							[group ?? "", ...lookupVariants("semanticVariables", [])]);
-						}
-
-						const variableUser = `.${e(className({ name: semanticName }))}`;
-						if (!noie11) {
-							addUtilities({
-								// Set both for parity with custom properties (i.e. they can apply to the current element in addition to its children)
-								[`${variableDeclaration}${variableUser}, ${variableDeclaration} ${variableUser}`]: {
-									[`@apply ${className({ name: themeKey })}`]: "",
-								},
-							},
-							// TODO: how can we support variants like above?
-							// the modifySelectors transformation isn't what I expected
-							[]);
-						}
-					});
-
-					// TODO: fix this: this should be addBase and wrapped in `if (!ie11)`
-					// addUtilities({
-					// "": {
+					// TODO: make this work
+					// if (!ie11) {
+					// addBase({
+					// ":root.light-theme": {
 					// // TODO: don't hardcode
-					// "@apply light:primary=white dark:primary=gray-900": "",
-					// },
-					// }, []);
+					// "--primary": doSomethingWith(toRgba(theme("colors.white")));
+					// // ... for each semantic variable
+					// })
+					// addBase({
+					// ":root.dark-theme": {
+					// // TODO: don't hardcode
+					// "--primary": doSomethingWith(toRgba(theme("colors.gray.900")));
+					// // ... for each semantic variable
+					// })
+					// }
 				});
 			});
 		} else if (someSemantics) {
