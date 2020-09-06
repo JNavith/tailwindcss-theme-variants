@@ -230,6 +230,7 @@ module.exports = {
 };
 ```
 
+TODO: lol I forgot to finish writing this section
 
 ## Fallback
 ### Media queries
@@ -812,7 +813,7 @@ plugins: [
 ]
 ```
 
-By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the  
+By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the TODO: I forgot to finish writing the docs here too??.
 
 ## The ultimate example: how I use every feature together in production
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
