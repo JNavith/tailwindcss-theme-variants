@@ -12,6 +12,7 @@ jobs:
         node-version: [12, 14]
         os: [ubuntu-latest, windows-latest, macOS-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v2-beta
@@ -31,6 +32,7 @@ jobs:
         node-version: [14]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v2-beta
