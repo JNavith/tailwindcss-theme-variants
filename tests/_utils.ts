@@ -11,6 +11,7 @@ export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Prom
 			corePlugins: false,
 			future: {
 				removeDeprecatedGapUtilities: true,
+				purgeLayersByDefault: true,
 			},
 		} as TailwindCSSConfig, config),
 	),
