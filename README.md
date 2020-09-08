@@ -174,7 +174,7 @@ This plugin expects configuration of the form
 
 Where each parameter means:
 
-- `group` (defaults to not making a group name): the name of the group of themes in this configuration. For example, a sensible name for `light` and `dark` would be `themes` or `modes`. This will create a `themes` (or `modes`) variant that can be listed in `variants` to generate all the CSS for both `light` and `dark` themes in the correct order (matching your configuration). If you provide extra variants to stack (explained in the `variants` description below), like `focus`, then similarly named variants like `themes:focus` will be created.
+- `group` (defaults to not making a group name): the name of the group of themes in this configuration. For example, a sensible name for `light` and `dark` would be `themes` or `modes`. This will create a `themes` (or `modes`) variant that can be listed in `variants` to generate all the CSS for both `light` and `dark` themes in the correct order (matching your configuration). If you want to stack variants (explained in the `variants` description below), like `focus`, then similarly named variants like `themes:focus` will be created.
 
 - `themes`: an object mapping a theme name to the conditions that determine whether or not the theme will be active.
 
@@ -184,11 +184,11 @@ Where each parameter means:
 
 - `baseSelector` (default `""` (empty string) if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
 
-- `fallback` (default `false`): if you pass `true`, then the first theme you listed in `themes` will be the theme that is fallen back to when none of the media queries or selectors are active. You can think of it as the *default* theme for your site.
+- `fallback` (default `false`): if you pass `true`, then the first theme you listed in `themes` will be fallen back to when none of the media queries or selectors are active. You can think of it as the *default* theme for your site.
 
-  If you pass `fallback: "compact"`, then your CSS file size will be drastically reduced because redundant things will be "canceled out." You are **recommended** to try this feature and only switch back to `true` if you encounter issues (which you should please [report 😁](https://github.com/JakeNavith/tailwindcss-theme-variants/issues)), because it will become the default option in the future.
+  If you pass `fallback: "compact"`, then your CSS file size will be drastically reduced for free because redundant things will be "canceled out." You are **recommended** to try this feature and only switch back to `true` if you encounter issues (which you should please [report 😁](https://github.com/JakeNavith/tailwindcss-theme-variants/issues)), because it will become the default option in the future.
 
-- `variants` (default is `{}`): an object mapping the name of a variant to a function that gives a selector for when that variant is active. These will be **merged** with [the default variants](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) rather than replace them; this makes it work sort of like `extend`.
+- `variants` (default is `{}`): an object mapping the name of a variant to a function that gives a selector for when that variant is active. These will be **merged** with [the default variants](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) rather than replace them—this means it works like Tailwind's `extend` feature.
 
   For example, the default `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The default `group-hover` variant returns `` `.group:hover ${selector}` ``
 
@@ -229,7 +229,37 @@ module.exports = {
 };
 ```
 
-TODO: lol I forgot to finish writing this section
+will generate CSS with `light` classes then `dark` classes, but as you create more themes or start playing with the `fallback` feature and stacking variants, it becomes unmaintainable to keep writing all the theme variants out in `variants`. **Introducing: the `group` feature.**
+
+We can clean things up by calling this group `"schemes"` for example, and use that in the `variants` list instead:
+```js
+const { tailwindcssThemeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
+
+module.exports = {
+    theme: {},
+
+    variants: {
+        backgroundColor: ["schemes"],
+        textColor: ["hover", "schemes"],
+    },
+
+    plugins: [
+        tailwindcssThemeVariants({
+            group: "schemes",
+            themes: {
+                light: {
+                    mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
+                },
+                dark: {
+                    mediaQuery: prefersDark /* "@media (prefers-color-scheme: dark)" */,
+                },
+            },
+        }),
+    ],
+};
+```
+
+This will generate the exact same output CSS, but we are making things easier for ourselves as our plugin configuration becomes more complex.
 
 ## Fallback
 ### Media queries
@@ -812,14 +842,39 @@ plugins: [
 ]
 ```
 
-By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the TODO: I forgot to finish writing the docs here too??.
+By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the combinations of *every* theme and *every* stacked variant, you can bring it back down to just per group per stacked variant.
+
+```js
+// Rest of the Tailwind CSS config and imports...
+plugins: [
+    tailwindcssThemeVariants({
+        group: "themes",
+        baseSelector: "html",
+        themes: {
+            light: { selector: "[data-theme=light]" },
+            dark: { selector: "[data-theme=dark]" },
+        },
+    }),
+
+    tailwindcssThemeVariants({
+        group: "motion-preference",
+        themes: {
+            "motion": { mediaQuery: prefersAnyMotion },
+            "no-motion": { mediaQuery: prefersReducedMotion },
+        },
+        fallback: true,
+    }),
+]
+```
+
+Now you have magic `"themes"` and `"motion-preference"` variants that are guaranteed to generate the CSS in the correct order, so you should use these instead of `"light", "dark"` and `"motion", "no-motion"` respectively. You'll even get stacked variants like `"themes:group-focus"` or `"motion-preference:hover"`.
 
 ## The ultimate example: how I use every feature together in production
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
 
 ```js
 const defaultConfig = require("tailwindcss/defaultConfig");
-const { tailwindcssThemeVariants, focus, groupFocus, groupHover, hover, prefersDark, prefersLight, selection } = require("tailwindcss-theme-variants");
+const { tailwindcssThemeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
 
 const { theme: defaultTheme, variants: defaultVariants } = defaultConfig;
 
@@ -864,21 +919,21 @@ module.exports = {
 }
 ```
 
-#  Semantics: the alternative to CSS custom properties
+# Semantics
 Semantics are a planned / work in progress feature for this plugin that are meant to be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
 
 **The following sections are written in present tense but talk about features that are not implemented yet, so don't try to use them:**
 
-**Semantics require Tailwind CSS v1.7 or higher. Also, the `applyComplexClasses` experimental feature will be enabled for you if you use semantics because it's required for them to work.**
+**Semantics require Tailwind CSS 1.7 or higher. Also, the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/pull/2159) will be enabled for you if you use semantics because it's required for them to work.**
 
 TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because they have to be written by me (the plugin author 👋), only certain utilities are supported so far:
 * `backgroundColor`
 * `borderColor`
 * `textColor`
+In the future it'll be possible to let you, the user, write custom utility classes for use with semantics similarly to how you can write your own variants?
 
 But, when you use the variables feature, you can use *any* utility as long as you can reference `var(--semantic-name)`.
 
-Maybe in the future it'll be possible to let you, the user, write custom utility classes for use with semantics similarly to how you can write your own variants?
 
 ⚠️ They support variants provided by Tailwind's core and by other variant-registering plugins, but ***not* variants created by this plugin!** 
 
@@ -926,8 +981,10 @@ TODO. Every semantic name also has a corresponding variable; the variable defaul
 
 For that reason, you can also assign values to semantic variables with the typical custom property syntax
 ```css
---semantic-variable: #hex_code;
+--semantic-variable: 0, 128, 255;
 ```
+
+All semantic colors need to be written as `r, g, b` to maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities.
 
 ### Examples
 TODO
