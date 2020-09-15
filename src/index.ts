@@ -23,7 +23,7 @@ const defaultVariants = Object.fromEntries(Object.entries(builtinVariants).map((
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
 	group, themes, baseSelector, fallback = false, variants = {},
 }: ThisPluginOptions<GivenThemes, GroupName>) => ({
-		addUtilities, addVariant, config: lookupConfig, e, postcss, theme: lookupTheme, variants: lookupVariants,
+		addUtilities, addVariant, config: lookupConfig, e, postcss, target: lookupTarget, theme: lookupTheme, variants: lookupVariants,
 	}: PluginTools): void => {
 		const allThemeNames = Object.keys(themes ?? {});
 		const allThemes = Object.entries(themes ?? {});
@@ -206,8 +206,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// TODO: support for user-defined utilities
 			const behavior = builtinUtilities;
 
-			const target = lookupConfig("target", "relaxed");
+			const target = lookupTarget("themeVariants");
 			const onlyie11 = target === "ie11";
+			// @ts-expect-error: doesn't work yet, but might in the future
 			const noie11 = target === "modern";
 
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
@@ -219,19 +220,29 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group);
 
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => `${themeName}${separator}${behavior[utility as SupportedSemanticUtilities].className({ name: sourceName })}`);
-					const { className, opacityUtility, opacityVariable } = behavior[utility as SupportedSemanticUtilities];
+					const {
+						className, opacityUtility, opacityVariable, property, selector,
+					} = behavior[utility as SupportedSemanticUtilities];
+
+					const computedClass = `.${e(className({ name: semanticName }))}`;
 					addUtilities({
-						[`.${e(className({ name: semanticName }))}`]: {
+						[computedClass]: {
 							// Only use @apply
 							// eslint-disable-next-line no-nested-ternary
 							...((noie11 ? (opacityUtility ? isUtilityEnabled(opacityUtility) : true) : true) ? {
 								[`@apply ${classesToApply.join(" ")}`]: "",
 							} : {}),
-							...(!onlyie11 ? {
-								[utility]: opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`,
-							} : {}),
 						},
 					}, dedupedVariants);
+
+					const computedSelector = selector ? selector({ name: semanticName }) : computedClass;
+					if (!onlyie11) {
+						addUtilities({
+							[computedSelector]: {
+								[property ?? utility]: opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`,
+							},
+						}, dedupedVariants);
+					}
 
 					// TODO: make this work
 					// if (!ie11) {
@@ -275,8 +286,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 		return {};
 	});
 
-export const tailwindcssThemeVariants = thisPlugin;
 export default thisPlugin;
+export const tailwindcssThemeVariants = thisPlugin;
+export const themeVariants = thisPlugin;
 
 export * from "./media-queries";
 export * from "./variants";

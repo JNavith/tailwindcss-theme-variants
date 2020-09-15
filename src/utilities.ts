@@ -28,6 +28,8 @@ export const divideColor: SemanticUtility = {
 	className: ({ name }) => `divide-${name}`,
 	opacityUtility: "divideOpacity",
 	opacityVariable: "divide-opacity",
+	property: "border-color",
+	selector: ({ name }) => `.divide-${name} > :not(template) ~ :not(template)`,
 };
 export const divideOpacity: SemanticUtility = {
 	className: ({ name }) => `divide-opacity-${name}`,

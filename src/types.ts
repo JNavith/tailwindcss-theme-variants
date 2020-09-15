@@ -19,6 +19,7 @@ export type SemanticUtility = {
 	opacityUtility?: string;
 	opacityVariable?: string;
 	property?: string;
+	selector?: ({ name }: { name: string }) => string;
 }
 
 export type SupportedSemanticUtilities = keyof typeof builtinUtilities;
