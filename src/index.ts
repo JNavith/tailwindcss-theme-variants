@@ -233,32 +233,32 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 
 					const allVariants = lookupVariants(utility, []);
 					// Drop theme variants from these utilities because they won't work
-					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group);
+					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group && allThemeNames.every((themeName) => !variant.startsWith(`${themeName}:`)) && !variant.startsWith(`${group}:`));
 
-					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => `${themeName}${separator}${behavior[utility as SupportedSemanticUtilities].className({ name: sourceName })}`);
 					const {
-						className, opacityUtility, opacityVariable, property, selector,
+						opacityUtility, opacityVariable, prefix: classPrefix, css,
 					} = behavior[utility as SupportedSemanticUtilities];
+					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => {
+						const wholePrefix = `${themeName}${separator}${classPrefix}`;
+						if (sourceName === "default") return wholePrefix;
+						return `${wholePrefix}-${sourceName}`;
+					});
 
-					const computedClass = `.${e(className({ name: semanticName }))}`;
-					addUtilities({
-						[computedClass]: {
-							// Only use @apply
-							// eslint-disable-next-line no-nested-ternary
-							...((noie11 ? (opacityUtility ? isUtilityEnabled(opacityUtility) : true) : true) ? {
-								[`@apply ${classesToApply.join(" ")}`]: "",
-							} : {}),
-						},
-					}, dedupedVariants);
-
-					const computedSelector = selector ? selector({ name: semanticName }) : computedClass;
-					const computedValue = opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`;
-					if (!onlyie11) {
+					const computedClass = semanticName === "default" ? `.${e(classPrefix)}` : `.${e(`${classPrefix}-${semanticName}`)}`;
+					// eslint-disable-next-line no-nested-ternary
+					if (noie11 ? (opacityUtility ? isUtilityEnabled(opacityUtility) : true) : true) {
 						addUtilities({
-							[computedSelector]: {
-								[property ?? utility]: `${computedValue} !important`,
+							[computedClass]: {
+								// eslint-disable-next-line no-nested-ternary
+								[`@apply ${classesToApply.join(" ")}`]: "",
 							},
 						}, dedupedVariants);
+					}
+
+					// Use the custom properties extension if allowed
+					const computedValue = opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`;
+					if (!onlyie11) {
+						addUtilities(css({ computedClass, computedValue: `${computedValue} !important` }), dedupedVariants);
 					}
 				});
 			});

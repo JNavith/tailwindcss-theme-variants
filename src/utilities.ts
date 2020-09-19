@@ -1,84 +1,112 @@
+import { kebabCase } from "lodash";
+
 import type { SemanticUtility } from "./types";
 
+const simpleCSS = (property: string): SemanticUtility["css"] => ({ computedClass, computedValue }) => ({
+	[computedClass]: {
+		[property]: computedValue,
+	},
+});
+
+const simpleUtility = (utility: string, prefix?: string): SemanticUtility => ({
+	prefix: prefix ?? utility,
+	css: simpleCSS(kebabCase(utility)),
+});
+
+// TODO: "#ff0" -> "rgba(255, 255, 0, 0)"
+const sameColorFullyTransparent = (color: string) => "rgba(0, 0, 0, 0)";
+
 export const backgroundColor: SemanticUtility = {
-	className: ({ name }) => `bg-${name}`,
+	prefix: "bg",
 	opacityUtility: "backgroundOpacity",
 	opacityVariable: "bg-opacity",
+	css: simpleCSS("background-color"),
 };
 export const backgroundOpacity: SemanticUtility = {
-	className: ({ name }) => `bg-opacity-${name}`,
-	property: "--bg-opacity",
+	prefix: "bg-opacity",
+	css: simpleCSS("--bg-opacity"),
 };
 
 export const borderColor: SemanticUtility = {
-	className: ({ name }) => `border-${name}`,
+	prefix: "border",
 	opacityUtility: "borderOpacity",
 	opacityVariable: "border-opacity",
+	css: simpleCSS("border-color"),
 };
 export const borderOpacity: SemanticUtility = {
-	className: ({ name }) => `border-opacity-${name}`,
-	property: "--border-opacity",
+	prefix: "border-opacity",
+	css: simpleCSS("--border-opacity"),
 };
 
-export const boxShadow: SemanticUtility = {
-	className: ({ name }) => `shadow-${name}`,
-};
+export const boxShadow = simpleUtility("boxShadow", "shadow");
 
 export const divideColor: SemanticUtility = {
-	className: ({ name }) => `divide-${name}`,
+	prefix: "divide",
 	opacityUtility: "divideOpacity",
 	opacityVariable: "divide-opacity",
-	property: "border-color",
-	selector: ({ name }) => `.divide-${name} > :not(template) ~ :not(template)`,
+	css: ({ computedClass, computedValue }) => ({
+		[`${computedClass} > :not(template) ~ :not(template)`]: {
+			"border-color": computedValue,
+		},
+	}),
 };
 export const divideOpacity: SemanticUtility = {
-	className: ({ name }) => `divide-opacity-${name}`,
-	property: "--divide-opacity",
+	prefix: "divide-opacity",
+	css: ({ computedClass, computedValue }) => ({
+		[`${computedClass} > :not(template) ~ :not(template)`]: {
+			"--divide-opacity": computedValue,
+		},
+	}),
+};
+export const divideStyle: SemanticUtility = {
+	prefix: "divide",
+	css: ({ computedClass, computedValue }) => ({
+		[`${computedClass} > :not(template) ~ :not(template)`]: {
+			"border-style": computedValue,
+		},
+	}),
 };
 
-export const fontFamily: SemanticUtility = {
-	className: ({ name }) => `font-${name}`,
-};
-
-export const fontSize: SemanticUtility = {
-	className: ({ name }) => `text-${name}`,
-};
-
-export const fontWeight: SemanticUtility = {
-	className: ({ name }) => `shadow-${name}`,
-};
+export const fontFamily = simpleUtility("fontFamily", "font");
+export const fontSize = simpleUtility("fontSize", "text");
+export const fontWeight = simpleUtility("fontWeight", "font");
 
 export const gradientFromColor: SemanticUtility = {
-	className: ({ name }) => `from-${name}`,
-	property: "--gradient-from-color",
+	prefix: "from",
+	css: ({ computedClass, computedValue }) => ({
+		[computedClass]: {
+			"--gradient-from-color": computedValue,
+			"--gradient-color-stops": `var(--gradient-from-color), var(--gradient-to-color, ${sameColorFullyTransparent(computedValue)})`,
+		},
+	}),
 };
 export const gradientViaColor: SemanticUtility = {
-	className: ({ name }) => `via-${name}`,
-	property: "--gradient-via-color",
+	prefix: "via",
+	css: ({ computedClass, computedValue }) => ({
+		[computedClass]: {
+			"--gradient-via-color": computedValue,
+			"--gradient-color-stops": `var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, ${sameColorFullyTransparent(computedValue)})`,
+		},
+	}),
 };
 export const gradientToColor: SemanticUtility = {
-	className: ({ name }) => `to-${name}`,
-	property: "--gradient-to-color",
+	prefix: "to",
+	css: simpleCSS("--gradient-to-color"),
 };
 
-export const opacity: SemanticUtility = {
-	className: ({ name }) => `opacity-${name}`,
-};
+export const opacity = simpleUtility("opacity");
 
 export const textColor: SemanticUtility = {
-	className: ({ name }) => `text-${name}`,
+	prefix: "text",
 	opacityUtility: "textOpacity",
 	opacityVariable: "text-opacity",
-	property: "color",
+	css: simpleCSS("color"),
 };
 export const textOpacity: SemanticUtility = {
-	className: ({ name }) => `text-opacity-${name}`,
-	property: "--text-opacity",
+	prefix: "text-opacity",
+	css: simpleCSS("--text-opacity"),
 };
 
-export const transitionDuration: SemanticUtility = {
-	className: ({ name }) => `duration-${name}`,
-};
-export const transitionProperty: SemanticUtility = {
-	className: ({ name }) => `transition-${name}`,
-};
+export const transitionDuration = simpleUtility("transitionDuration", "duration");
+export const transitionProperty = simpleUtility("transitionProperty", "transition");
+export const transitionTimingFunction = simpleUtility("transitionTimingFunction", "ease");

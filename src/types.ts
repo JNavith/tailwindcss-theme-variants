@@ -15,11 +15,18 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 	}[Keys]
 
 export type SemanticUtility = {
-	className: ({ name }: { name: string }) => string;
 	opacityUtility?: string;
 	opacityVariable?: string;
-	property?: string;
-	selector?: ({ name }: { name: string }) => string;
+	prefix: string;
+	css: ({ computedClass, computedValue }: { computedClass: string, computedValue: string }) => {
+		[selector: string]: {
+			[property: string]: string,
+		},
+	},
+}
+
+type ObjectOfNestedStrings = {
+	[property: string]: string | ObjectOfNestedStrings,
 }
 
 export type SupportedSemanticUtilities = keyof typeof builtinUtilities;
@@ -28,9 +35,7 @@ export type ConfigurableSemantics = SupportedSemanticUtilities | SpecialSemantic
 
 export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQuery> & {
 	semantics?: {
-		[utility in ConfigurableSemantics]?: {
-			[name: string]: string | { [valueName: string]: string };
-		}
+		[utility in ConfigurableSemantics]?: ObjectOfNestedStrings;
 	}
 };
 
