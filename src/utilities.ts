@@ -69,6 +69,7 @@ export const textColor: SemanticUtility = {
 	className: ({ name }) => `text-${name}`,
 	opacityUtility: "textOpacity",
 	opacityVariable: "text-opacity",
+	property: "color",
 };
 export const textOpacity: SemanticUtility = {
 	className: ({ name }) => `text-opacity-${name}`,

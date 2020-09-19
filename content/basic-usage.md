@@ -5,7 +5,7 @@
 With this Tailwind configuration,
 
 ```js
-const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
+const { themeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -19,7 +19,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             themes: {
                 light: {
                     selector: ".light-theme",
@@ -73,7 +73,7 @@ This will result in dark blue text on a light blue background in the light theme
 You may rather choose to tie your theme selection to matched media queries, like [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme):
 
 ```js
-const { tailwindcssThemeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
+const { themeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -87,7 +87,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             themes: {
                 light: {
                     mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
@@ -121,4 +121,4 @@ Which generates this CSS:
 }
 ```
 
-💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `tailwindcssThemeVariants`'s `themes` option. If you use the `group` feature, this will be taken care of for you!
+💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. If you use the `group` feature, this will be taken care of for you!

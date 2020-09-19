@@ -8,6 +8,8 @@ Semantics are a planned / work in progress feature for this plugin that are mean
 TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because they have to be written by me (the plugin author 👋), only certain utilities are supported so far:
 * `backgroundColor`
 * `borderColor`
+* `boxShadow`
+* `divideColor`
 * `textColor`
 
 In the future it'll be possible to let you, the user, write custom utility classes for use with semantics similarly to how you can write your own variants.
@@ -22,7 +24,7 @@ TODO. Constants are the easiest way to get started with semantics. They're calle
 TODO. Constants are declared by specifying a value from your `theme` configuration for each configurable utility in the `semantics` option for each theme in `themes`, like so:
 
 ```js
-tailwindcssThemeVariants({
+themeVariants({
     themes: {
         light: {
             mediaQuery: prefersLight,

@@ -4,22 +4,22 @@ This plugin expects configuration of the form
 
 ```ts
 {
-    group?: string;
+    group?: string,
     
     themes: {
         [name: string]: {
             // At least one is required
-            selector?: string;
-            mediaQuery?: string;
-        }
-    };
+            selector?: string,
+            mediaQuery?: string,
+        },
+    },
 
-    baseSelector?: string;
-    fallback?: boolean | "compact";
+    baseSelector?: string,
+    fallback?: boolean | "compact",
 
     variants?: {
-        [name: string]: (selector: string) => string;
-    };
+        [name: string]: (selector: string) => string,
+    },
 }
 ```
 

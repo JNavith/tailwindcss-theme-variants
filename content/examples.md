@@ -7,7 +7,7 @@ Specifying `group` in this plugin's configuration will create a magical variant 
 For instance, you saw before that 
 
 ```js
-const { tailwindcssThemeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
+const { themeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {},
@@ -18,7 +18,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             themes: {
                 light: {
                     mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
@@ -36,7 +36,7 @@ will generate CSS with `light` classes then `dark` classes, but as you create mo
 
 We can clean things up by calling this group `"schemes"` for example, and use that in the `variants` list instead:
 ```js
-const { tailwindcssThemeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
+const { themeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {},
@@ -47,7 +47,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             group: "schemes",
             themes: {
                 light: {
@@ -224,7 +224,7 @@ You can "stack" built-in or custom variants on top of the existing theme variant
 
 Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) with the `:hover` variant:
 ```js
-const { tailwindcssThemeVariants, hover, prefersHighContrast } = require("tailwindcss-theme-variants");
+const { themeVariants, prefersHighContrast } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -237,7 +237,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             themes: {
                 "high-contrast": {
                     mediaQuery: prefersHighContrast /* "@media (prefers-contrast: high)" */,
@@ -266,7 +266,7 @@ You might need to write a variant function yourself if it's not [built-in to thi
 It's common to use the same styles on links and buttons when they are hovered over or focused on, so you may want to make things easier for yourself and reduce duplication by creating a `"hocus"` variant that activates for **either** `:hover` **or** `:focus`.
 
 ```js
-const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
+const { themeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -281,7 +281,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             themes: {
                 "transparency-safe": { 
                     mediaQuery: prefersAnyTransparency /* "@media (prefers-reduced-transparency: no-preference)" */,
@@ -325,7 +325,7 @@ With this, let's try making an icon button that's overlaid on top of an image in
 Another—complex—example: suppose you want to zebra stripe your tables, matching the current theme, and change it on hover:
 
 ```js
-const { tailwindcssThemeVariants, hover, odd } = require("tailwindcss-theme-variants");
+const { themeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -333,11 +333,11 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: ["accents", "accents:hover", "accents:odd", "accents:odd:hover"],
+        backgroundColor: ["accents", "accents:hover", "accents:odd", "accents:odd-hover"],
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             group: "accents",
             baseSelector: "table.themed",
             themes: {
@@ -347,10 +347,7 @@ module.exports = {
             },
             variants: {
                 // The custom variant function, written by you
-                "odd:hover": (selector) => `${selector}:nth-child(odd):hover`,
-                // There is nothing special about the : in odd:hover
-                // For your understanding, it's just to get the point across
-                // that you are looking for two conditions to be met
+                "odd-hover": (selector) => `${selector}:nth-child(odd):hover`,
 
                 // By the way, the ordering here doesn't matter
                 // (as opposed to the ordering of variants in Tailwind's config above)
@@ -360,7 +357,7 @@ module.exports = {
 };
 ```
 
-💡 By the way, you might have noticed the `"odd:hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the built-in variant functions in [`src/variants.ts`]((https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts)) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
+💡 By the way, you might have noticed the `"odd-hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the built-in variant functions in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
 
 Back to the topic at hand: we can then implement the themeable table in HTML (Svelte) like so:
 
@@ -370,7 +367,7 @@ Back to the topic at hand: we can then implement the themeable table in HTML (Sv
         <tr class="no-accent:bg-white               green-accent:bg-green-50             orange-accent:bg-orange-50
                    no-accent:hover:bg-gray-100      green-accent:hover:bg-green-100      orange-accent:hover:bg-orange-100
                    no-accent:odd:bg-gray-100        green-accent:odd:bg-green-100        orange-accent:odd:bg-orange-100
-                   no-accent:odd:hover:bg-gray-200  green-accent:odd:hover:bg-green-200  orange-accent:odd:hover:bg-orange-100
+                   no-accent:odd-hover:bg-gray-200  green-accent:odd-hover:bg-green-200  orange-accent:odd-hover:bg-orange-100
                   ">
 
             <td>{person.firstName} {person.lastName}</td>
@@ -388,7 +385,7 @@ Responsive variants let you distinguish the current breakpoint per theme, lettin
 ⚠️ Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration. Also, because this feature is provided by Tailwind CSS rather than this plugin, you have to type `breakpoint:` **before** the `theme-name:` instead of after.
 
 ```js
-const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
+const { themeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -398,7 +395,7 @@ module.exports = {
         textColor: ["responsive", "day", "night"]
     },
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             themes: {
                 day: { selector: "[data-time=day]" },
                 night: { selector: "[data-time=night]" },
@@ -422,7 +419,7 @@ With this, we could make the landing page's title line change color at different
 We could also make a group of themes for data density, like you can [configure in GMail](https://www.solveyourtech.com/switch-compact-view-gmail/):
 
 ```js
-const { tailwindcssThemeVariants } = require("tailwindcss-theme-variants");
+const { themeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
@@ -432,7 +429,7 @@ module.exports = {
         padding: ["responsive", "density"]
     },
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             group: "density",
             // baseSelector is ":root"
             themes: {
@@ -461,7 +458,7 @@ You can still stack extra variants even while using responsive variants.
 
 Here's an example:
 ```js
-const { tailwindcssThemeVariants, landscape, portrait } = require("tailwindcss-theme-variants");
+const { themeVariants, landscape, portrait } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {}
@@ -472,7 +469,7 @@ module.exports = {
         fontSize: ["responsive", "hover", "orientation", "orientation:hover"],
     },
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             group: "orientation",
             themes: {
                 landscape: {
@@ -509,7 +506,7 @@ For example, see this plugin call:
 ```js
 // Rest of the Tailwind CSS config and imports...
 plugins: [
-    tailwindcssThemeVariants({
+    themeVariants({
         themes: {
             cyan: {
                 selector: ".day",
@@ -567,7 +564,7 @@ Here's an example:
 ```js
 // Rest of the Tailwind CSS config and imports...
 plugins: [
-    tailwindcssThemeVariants({
+    themeVariants({
         baseSelector: "html",
         themes: {
             "not-inverted": {
@@ -627,7 +624,7 @@ The list of themes passed to one call of this plugin are intended to be *mutuall
 ```js
 // Rest of the Tailwind CSS config and imports...
 plugins: [
-    tailwindcssThemeVariants({
+    themeVariants({
         baseSelector: "html",
         themes: {
             light: { selector: "[data-theme=light]" },
@@ -635,7 +632,7 @@ plugins: [
         },
     }),
 
-    tailwindcssThemeVariants({
+    themeVariants({
         themes: {
             "motion": { mediaQuery: prefersAnyMotion },
             "no-motion": { mediaQuery: prefersReducedMotion },
@@ -650,7 +647,7 @@ By the way, if you're not using it yet, this is the perfect opportunity to embra
 ```js
 // Rest of the Tailwind CSS config and imports...
 plugins: [
-    tailwindcssThemeVariants({
+    themeVariants({
         group: "themes",
         baseSelector: "html",
         themes: {
@@ -659,7 +656,7 @@ plugins: [
         },
     }),
 
-    tailwindcssThemeVariants({
+    themeVariants({
         group: "motion-preference",
         themes: {
             "motion": { mediaQuery: prefersAnyMotion },
@@ -677,7 +674,7 @@ Because I primarily made this plugin to solve my own problems (a shocking reason
 
 ```js
 const defaultConfig = require("tailwindcss/defaultConfig");
-const { tailwindcssThemeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
+const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
 
 const { theme: defaultTheme, variants: defaultVariants } = defaultConfig;
 
@@ -708,7 +705,7 @@ module.exports = {
     },
 
     plugins: [
-        tailwindcssThemeVariants({
+        themeVariants({
             group: "themes",
             baseSelector: "html",
             fallback: "light-theme",

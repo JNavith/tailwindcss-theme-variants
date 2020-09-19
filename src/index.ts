@@ -1,9 +1,8 @@
-import { AtRule } from "postcss";
+import { kebabCase } from "lodash";
 import plugin from "tailwindcss/plugin";
 import { toRgba } from "tailwindcss/lib/util/withAlphaVariable";
 
-import { CorePlugins, PluginTools } from "@navith/tailwindcss-plugin-author-types";
-import { kebabCase } from "lodash";
+import type { CorePlugins, PluginTools } from "@navith/tailwindcss-plugin-author-types";
 import type {
 	ConfigurableSemantics, SupportedSemanticUtilities, Themes, ThisPluginOptions,
 } from "./types";
@@ -18,10 +17,12 @@ const nameVariant = (themeName: string, variantName: string): string => {
 	return `${themeName}:${variantName}`;
 };
 
-const defaultVariants = Object.fromEntries(Object.entries(builtinVariants).map(([variantName, variantFunction]) => [kebabCase(variantName), variantFunction]));
+const defaultVariants: {
+	[name: string]: (selector: string) => string;
+} = Object.fromEntries(Object.entries(builtinVariants).map(([variantName, variantFunction]) => [kebabCase(variantName), variantFunction]));
 
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
-	group, themes, baseSelector, fallback = false, variants = {},
+	group, themes, baseSelector: passedBaseSelector, fallback = false, variants = {},
 }: ThisPluginOptions<GivenThemes, GroupName>) => ({
 		addUtilities, addVariant, config: lookupConfig, e, postcss, target: lookupTarget, theme: lookupTheme, variants: lookupVariants,
 	}: PluginTools): void => {
@@ -35,18 +36,14 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			throw new TypeError(`tailwindcss-theme-variants: a group of themes was named "${group}" even though there is already a theme named that in \`themes\`. this can be fixed by removing or changing the name of \`group\` in this plugin's configuration`);
 		}
 
-		// eslint-disable-next-line no-nested-ternary
 		const fallbackTheme = fallback ? allThemes[0][0] : undefined;
 		const compactFallback = fallback === "compact";
 
 		const usesAnySelectors = allThemes.some(([_name, { selector }]) => selector);
 
-		if (baseSelector === undefined) {
-			// Implicitly disable `baseSelector` on behalf of the person only using media queries to set their themes
-			// Otherwise use :root as the default `baseSelector`
-			// eslint-disable-next-line no-param-reassign
-			baseSelector = usesAnySelectors ? ":root" : "";
-		}
+		// Implicitly disable `baseSelector` on behalf of the person only using media queries to set their themes
+		// Otherwise use :root as the default `baseSelector`
+		const baseSelector = passedBaseSelector ?? (usesAnySelectors ? ":root" : "");
 
 		if (fallbackTheme !== undefined) {
 			if (allThemes.length === 1) {
@@ -84,8 +81,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 							containerFallBack.walkRules((rule) => {
 								const namedSelector = nameSelector(rule.selector);
 								if (compactFallback) {
-									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-									rule.selector = addParent(namedSelector, baseSelector!);
+									rule.selector = addParent(namedSelector, baseSelector);
 								} else {
 									const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
 									rule.selector = addParent(namedSelector, `${baseSelector}${inactiveThemes.join("")}`);
@@ -98,7 +94,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 						// When fallback is being compacted, only generate the regular cases for the non-fallback-theme
 						if (!compactFallback || themeName !== fallbackTheme) {
 							if (mediaQuery) {
-								const queryAtRule = postcss.parse(mediaQuery).first as any as AtRule; // eslint-disable-line @typescript-eslint/no-explicit-any
+								const queryAtRule = postcss.parse(mediaQuery).first;
 
 								// Nest the utilities inside the given media query
 								const queryContainer = originalContainer.clone();
@@ -112,11 +108,15 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 									}
 								});
 
-								if (queryContainer.nodes) {
-									queryAtRule.append(queryContainer.nodes);
-								}
+								if (queryAtRule?.type === "atrule") {
+									if (queryContainer.nodes) {
+										queryAtRule.append(queryContainer.nodes);
+									}
 
-								container.append(queryAtRule);
+									container.append(queryAtRule);
+								} else {
+									throw new TypeError(`tailwindcss-theme-variants: the media query passed to ${themeName}'s \`mediaQuery\` option (\`${mediaQuery}\`) is not a valid media query. this can be fixed by passing a valid media query there instead (lol)`);
+								}
 							}
 
 							if (selector) {
@@ -211,6 +211,22 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// @ts-expect-error: doesn't work yet, but might in the future
 			const noie11 = target === "modern";
 
+			// TODO: make this work
+			// if (!ie11) {
+			// addBase({
+			// ":root.light-theme": {
+			// // TODO: don't hardcode
+			// "--primary": doSomethingWith(toRgba(theme("colors.white")));
+			// // ... for each semantic variable
+			// })
+			// addBase({
+			// ":root.dark-theme": {
+			// // TODO: don't hardcode
+			// "--primary": doSomethingWith(toRgba(theme("colors.gray.900")));
+			// // ... for each semantic variable
+			// })
+			// }
+
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
 					if (!isUtilityEnabled(utility)) return;
@@ -236,29 +252,14 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					}, dedupedVariants);
 
 					const computedSelector = selector ? selector({ name: semanticName }) : computedClass;
+					const computedValue = opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`;
 					if (!onlyie11) {
 						addUtilities({
 							[computedSelector]: {
-								[property ?? utility]: opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`,
+								[property ?? utility]: `${computedValue} !important`,
 							},
 						}, dedupedVariants);
 					}
-
-					// TODO: make this work
-					// if (!ie11) {
-					// addBase({
-					// ":root.light-theme": {
-					// // TODO: don't hardcode
-					// "--primary": doSomethingWith(toRgba(theme("colors.white")));
-					// // ... for each semantic variable
-					// })
-					// addBase({
-					// ":root.dark-theme": {
-					// // TODO: don't hardcode
-					// "--primary": doSomethingWith(toRgba(theme("colors.gray.900")));
-					// // ... for each semantic variable
-					// })
-					// }
 				});
 			});
 		} else if (someSemantics) {
@@ -291,4 +292,5 @@ export const tailwindcssThemeVariants = thisPlugin;
 export const themeVariants = thisPlugin;
 
 export * from "./media-queries";
+export * from "./supports";
 export * from "./variants";

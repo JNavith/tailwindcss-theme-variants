@@ -9,6 +9,7 @@ import { bothSelectorsAndMediaQueries } from "./both-media-queries-and-selectors
 import { atApply } from "./at-apply";
 import { warningsAndErrors } from "./warnings-and-errors";
 import { semantics } from "./semantics";
+import { justSupports } from "./just-supports";
 
 describe("tailwindcss-theme-variants", () => {
 	describe("#distill()", () => {
@@ -50,6 +51,7 @@ describe("tailwindcss-theme-variants", () => {
 	describe("#thisPlugin()", () => {
 		justSelectors();
 		justMediaQueries();
+		justSupports();
 		bothSelectorsAndMediaQueries();
 		atApply();
 		warningsAndErrors();

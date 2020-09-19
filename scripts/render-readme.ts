@@ -14,7 +14,7 @@ const contentOrder = [
 ];
 
 const main = async () => {
-	const content = contentOrder.map((stem) => readFile(`./site/src/content/${stem}.md`));
+	const content = contentOrder.map((stem) => readFile(`./content/${stem}.md`));
 
 	const combined = (await Promise.all(content)).join("\n\n");
 
