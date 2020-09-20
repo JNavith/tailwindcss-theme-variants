@@ -14,14 +14,12 @@ jobs:
     steps:
       - name: "Checkout Repo"
         uses: actions/checkout@master
-      - name: "Enter the site directory"
-        run: "cd site"
       - name: "Install Production and Development Dependencies"
-        run: "npm install"
+        run: "cd site && npm install"
 
       - name: "Export a Static Build"
-        run: "npm run export"
+        run: "cd site && npm run export"
       - name: "Deploy Hosting"
-        run: "npm run firebase:deploy:hosting"
+        run: "cd site && npm run firebase:deploy:hosting"
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
