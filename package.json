@@ -25,7 +25,7 @@
 		"eslint:fix": "eslint --fix ./src/**/*.ts ./scripts/**/*.ts ./tests/**/*.ts",
 		"lint": "npm run eslint:fix",
 		"test": "cross-env TS_NODE_FILES=true mocha --require ts-node/register 'tests/index.ts'",
-		"build-readme": "ts-node 'scripts/build-readme.ts'",
+		"render:content": "ts-node scripts/render-content.ts",
 		"render:readme": "ts-node scripts/render-readme.ts",
 		"prepare": "tsc"
 	},

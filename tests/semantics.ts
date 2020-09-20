@@ -182,5 +182,63 @@ export const semantics = (): void => {
 				`,
 			]);
 		});
+
+		it("divide color and opacity with relaxed target (i.e. custom properties present)", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					theme: {
+						colors: {
+							yellow: {
+								200: "#DD0",
+							},
+							purple: {
+								600: "#606",
+							},
+						},
+						divideOpacity: {
+							50: "0.5",
+							100: "1",
+						},
+					},
+					corePlugins: ["divideColor", "divideOpacity"],
+					variants: {
+						divideColor: ["seasons"],
+						divideOpacity: [],
+					},
+
+					plugins: [
+						thisPlugin({
+							group: "seasons",
+							fallback: "compact",
+							themes: {
+								fall: {
+									mediaQuery: prefersDark,
+									semantics: {
+										divideColor: {
+											primary: "purple-600",
+											accent: "yellow-200",
+										},
+									},
+								},
+								spring: {
+									mediaQuery: prefersLight,
+									semantics: {
+										divideColor: {
+											primary: "yellow-200",
+											accent: "purple-600",
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+			),
+			[
+				`
+					klwejagfoiwjafioiwju
+				`,
+			]);
+		});
 	});
 };

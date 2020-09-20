@@ -1,0 +1,14 @@
+{
+	"hosting": {
+		"public": "__sapper__/export",
+		"rewrites": [
+			{
+				"source": "**",
+				"function": "ssr"
+			}
+		]
+	},
+	"functions": {
+		"source": "."
+	}
+}

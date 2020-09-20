@@ -1,0 +1,25 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "site/**"
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Checkout Repo"
+        uses: actions/checkout@master
+      - name: "Install Production and Development Dependencies"
+        run: "npm install"
+
+      - name: "Export a Static Build"
+        run: "npm run export"
+      - name: "Deploy Hosting"
+        run: "npm run firebase:deploy:hosting"
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

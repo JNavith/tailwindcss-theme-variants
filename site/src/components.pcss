@@ -1,0 +1,51 @@
+.sidebar {
+	@apply leading-normal;
+
+	a {
+		@apply transition-theme;
+		@apply text-on-primary-faint-100 hocus:text-on-primary;
+		@apply hocus:underline;
+	}
+
+	li {
+		@apply py-1;
+		@apply px-3;
+	}
+
+	/* Section (defined by h1) groups */
+	> ul > li {
+		@apply pl-0;
+		@apply py-4;
+	}
+
+	/* The first section group in the navigation should not have any top padding */
+	> ul > li:first-child {
+		@apply pt-0;
+	}
+	/* Similarly, the last section group in the navigation should not have any bottom padding */
+	> ul > li:last-child {
+		@apply pb-0;
+	}
+
+	/* Subsection (defined by h2) groups */
+	> ul > li > ul > li {
+		@apply py-2;
+	}
+
+	/* h1s */
+	> ul > li > *:first-child {
+		@apply text-on-primary-faint-200 hocus:text-on-primary-faint-100;
+		@apply font-semibold uppercase;
+	}
+
+	/* Underneath any heading */
+	> ul ul {
+		@apply pt-2;
+	}
+}
+
+@screen 2xl {
+	.sidebar {
+		@apply text-lg;
+	}
+}

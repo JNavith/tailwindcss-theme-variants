@@ -1,0 +1,15 @@
+.history/
+/dist/
+node_modules/
+._*
+.DS_Store
+.firebase/
+firebase-debug.log
+/.history/
+/node_modules/
+__sapper__/
+/site/src/node_modules/@sapper/
+/site/src/rendered-content/
+/site/static/global.css
+/site/static/global.css.map
+pnpm-debug.log

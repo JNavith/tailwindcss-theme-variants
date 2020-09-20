@@ -1,3 +1,5 @@
+declare module "markdown-toc";
+
 declare module "tailwindcss";
 
 declare module "tailwindcss/plugin" {

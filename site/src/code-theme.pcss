@@ -1,0 +1,178 @@
+/* This theme is based on Atom Dark for Prism, attributed like so: */
+/**
+ * atom-dark theme for `prism.js`
+ * Based on Atom's `atom-dark` theme: https://github.com/atom/atom-dark-syntax
+ * @author Joe Gibson (@gibsjose)
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	/* color: #c5c8c6; */
+	@apply light-theme:text-gray-800 dark-theme:text-gray-200;
+	@apply transition-theme;
+
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	/* background: #1d1f21; */
+    @apply light-theme:bg-gray-100 dark-theme:bg-gray-800;
+	@apply transition-theme;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+}
+
+.token {
+	@apply transition-theme;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	/* color: #7C7C7C; */
+    @apply light-theme:text-gray-600 dark-theme:text-gray-300;
+}
+
+.token.comment {
+	@apply italic;
+}
+
+.token.punctuation {
+	/* color: #c5c8c6; */
+	@apply light-theme:text-gray-700 dark-theme:text-gray-300;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.keyword,
+.token.tag {
+	/* color: #96CBFE; */
+    @apply light-theme:text-blue-800 dark-theme:text-blue-300;
+}
+
+.token.class-name {
+	/* color: #FFFFB6; */
+    @apply light-theme:text-yellow-900 dark-theme:text-yellow-100;
+	text-decoration: underline;
+}
+
+.token.boolean,
+.token.constant {
+	/* color: #99CC99; */
+    @apply light-theme:text-green-800 dark-theme:text-green-300;
+}
+
+.token.symbol,
+.token.deleted {
+	/* color: #f92672; */
+    @apply light-theme:text-pink-500 dark-theme:text-pink-500;
+}
+
+.token.number {
+	/* color: #FF73FD; */
+    @apply light-theme:text-purple-800 dark-theme:text-purple-300;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.inserted {
+	/* color: #A8FF60; */
+    @apply light-theme:text-green-800 dark-theme:text-green-300;
+}
+.token.builtin {
+	/* color: #A8FF60; */
+    @apply light-theme:text-teal-800 dark-theme:text-teal-300;
+}
+
+.token.variable {
+	/* color: #C6C5FE; */
+    @apply light-theme:text-indigo-700 dark-theme:text-indigo-300;
+}
+
+.token.operator {
+	/* color: #EDEDED; */
+    @apply light-theme:text-gray-800 dark-theme:text-gray-200;
+}
+
+.token.entity {
+	/* color: #FFFFB6; */
+    @apply light-theme:text-yellow-900 dark-theme:text-yellow-100;
+	cursor: help;
+}
+
+.token.url {
+	/* color: #96CBFE; */
+    @apply light-theme:text-blue-800 dark-theme:text-blue-300;
+}
+
+.language-css .token.string,
+.style .token.string {
+	/* color: #87C38A; */
+    @apply light-theme:text-green-800 dark-theme:text-green-300;
+}
+
+.token.attr-value {
+	/* color: #F9EE98; */
+    @apply light-theme:text-yellow-800 dark-theme:text-yellow-200;
+}
+
+.token.rule {
+    @apply light-theme:text-purple-800 dark-theme:text-purple-300;
+}
+
+/* .token.function {
+	color: #DAD085; 
+    @apply dark-theme:text-yellow-200;
+} */
+
+.token.regex {
+	/* color: #E9C062; */
+    @apply light-theme:text-yellow-700 dark-theme:text-yellow-300;
+}
+
+.token.important {
+	/* color: #fd971f; */
+    @apply light-theme:text-orange-600 dark-theme:text-orange-400;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+
+.token.italic {
+	font-style: italic;
+}
