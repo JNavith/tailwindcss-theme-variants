@@ -1,5 +1,5 @@
 import {
-	readdir, readFile, unlink, writeFile,
+	mkdir, readdir, readFile, unlink, writeFile,
 } from "fs/promises";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore -- not following the decs.d.ts file for some reason?
@@ -8,6 +8,7 @@ import toc from "markdown-toc";
 const main = async () => {
 	const destination = "./site/src/rendered-content";
 
+	mkdir(destination, { recursive: true });
 	const preexisting = await readdir(destination);
 	await Promise.all(preexisting.map(async (file) => {
 		await unlink(`${destination}/${file}`);

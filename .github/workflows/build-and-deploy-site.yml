@@ -4,8 +4,9 @@ on:
     branches:
       - main
     paths:
-      - "site/**"
       - ".github/workflows/**"
+      - "site/**"
+      - "scripts/**"
 
 jobs:
   build:
