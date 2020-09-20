@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: "Checkout Repo"
         uses: actions/checkout@master
+      - name: "Enter the site directory"
+        run: "cd site"
       - name: "Install Production and Development Dependencies"
         run: "npm install"
 
