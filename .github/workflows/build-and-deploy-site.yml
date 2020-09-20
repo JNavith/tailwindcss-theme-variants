@@ -10,16 +10,32 @@ on:
 jobs:
   build:
     name: Build and Deploy
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [14]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - name: "Checkout Repo"
         uses: actions/checkout@master
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v1.2.0
+        with:
+          version: 5.6.x
       - name: "Install Production and Development Dependencies"
-        run: "cd site && npm install"
+        run: "pnpm install"
+      - name: "Render Content"
+        run: "pnpm run render:content"
+      - name: "Install Production and Development Dependencies in the site directory"
+        run: "cd site && pnpm install"
 
       - name: "Export a Static Build"
-        run: "cd site && npm run export"
+        run: "cd site && pnpm run export"
       - name: "Deploy Hosting"
-        run: "cd site && npm run firebase:deploy:hosting"
+        run: "cd site && pnpm run firebase:deploy:hosting"
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
