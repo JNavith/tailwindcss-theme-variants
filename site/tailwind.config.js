@@ -123,6 +123,7 @@ const tailwindcssConfig = {
 						backgroundColor: false,
 						"@apply bg-on-primary-faint-500": "",
 						"@apply transition-theme": "",
+						top: "0.875em",
 					},
 					"ol > li::before": {
 						backgroundColor: false,
@@ -175,11 +176,17 @@ const tailwindcssConfig = {
 						"@apply bg-primary-faint-100": "",
 					},
 
-					"tbody td:last-child": {
+					"thead th:first-child": {
+						paddingLeft: false,
+					},
+					"thead th:last-child": {
 						paddingRight: false,
 					},
 
-					"thead th:last-child": {
+					"tbody td:first-child": {
+						paddingLeft: false,
+					},
+					"tbody td:last-child": {
 						paddingRight: false,
 					},
 
@@ -218,15 +225,36 @@ const tailwindcssConfig = {
 			
 			sm: {
 				css: {
-					lineHeight: false,
-					"@apply leading-loose": "",
+					lineHeight: "2.5",
+
+					// Begin heading styles
+					"h1": {
+						marginTop: typographyStyles.sm.css[0].h2.marginTop,
+						marginBottom: typographyStyles.sm.css[0].h1.marginTop,
+					},
+					"h2": {
+						marginTop: typographyStyles.sm.css[0].h1.marginBottom,
+					},
+					// End heading styles
+
+					// Begin list styles
+					"ul > li::before": {
+						top: "1em",
+					},
+					// End list styles
 
 					// Begin table styles
-					"tbody td:last-child": {
+					"thead th:first-child": {
+						paddingLeft: false,
+					},
+					"thead th:last-child": {
 						paddingRight: false,
 					},
 
-					"thead th:last-child": {
+					"tbody td:first-child": {
+						paddingLeft: false,
+					},
+					"tbody td:last-child": {
 						paddingRight: false,
 					},
 					// End table styles

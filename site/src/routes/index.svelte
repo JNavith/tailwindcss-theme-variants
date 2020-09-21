@@ -28,10 +28,10 @@
 <Metadata  />
 
 <div class="flex flex-col h-screen overflow-y-hidden">
-	<header class="z-20 flex items-baseline justify-between bg-header shadow-header">
+	<header class="z-20 flex flex-row items-baseline justify-between bg-header shadow-header">
 		<!-- Homepage link -->
-		<div class="p-5 pl-10">
-			<a href="/" class="text-xl font-medium hocus:underline">Tailwind CSS Theme Variants</a>
+		<div class="p-5 lg:pl-10">
+			<a href="/" class="text-xl font-medium hocus:underline"><span class="hidden md:inline">Tailwind CSS </span>Theme Variants</a>
 		</div>
 		<!-- End homepage link -->
 		
@@ -42,7 +42,7 @@
 			{/if}
 			{#each themeOptions as themeOption}
 				<div class="inline-block">
-					<button aria-labelledby="theme-label" class="px-2 py-5 group" on:click={() => $theme = themeOption}>
+					<button aria-labelledby="theme-label" class="px-2 py-2 sm:py-5 group" on:click={() => $theme = themeOption}>
 						<span class="p-1 -m-1 rounded transition-theme {$theme === themeOption ? 'font-semibold bg-primary-faint-200' : 'group-hocus:bg-primary-faint-200'}">
 							{themeOption.slice(0, 1).toUpperCase()}{themeOption.slice(1)}
 						</span>
@@ -55,7 +55,7 @@
 		<!-- External links for the package -->
 		<div class="pr-5">
 			{#each [[github, "GitHub", "https://github.com/JakeNavith/tailwindcss-theme-variants"], [npm, "NPM", "https://www.npmjs.com/package/tailwindcss-theme-variants"]] as [icon, name, link]}
-				<a class="p-5 group text-on-primary-faint-200 hocus:text-on-primary transition-theme" href={link}><Icon {icon} style="font-size: 150%" class="inline align-middle text-on-primary-faint-300 group-hocus:text-on-primary transition-theme" /><span class="pl-1 align-middle group-hocus:underline">{name}</span></a>
+				<a title={name} class="p-2 pr-0 lg:p-5 lg:pr-5 group text-on-primary-faint-200 hocus:text-on-primary transition-theme" href={link}><Icon {icon} style="font-size: 150%" class="inline align-middle text-on-primary-faint-300 group-hocus:text-on-primary transition-theme" /><span class="pl-1 align-middle group-hocus:underline hidden md:inline">{name}</span></a>
 			{/each}
 		</div>
 		<!-- End external links for the package -->
