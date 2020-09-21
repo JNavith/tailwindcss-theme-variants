@@ -201,7 +201,7 @@ Where each parameter means:
 
 
 # Examples
-💡 If you want to see the plugin get stretched to its limits, see the test suite in [`the tests directory`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/tests).
+💡 If you want to see the plugin get stretched to its limits, see the test suite in [`the tests directory`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/tests).
 
 ## Theme groups
 Specifying `group` in this plugin's configuration will create a magical variant you can use in place of manually typing out every single theme's name in the Tailwind `variants` section!
@@ -282,19 +282,23 @@ themes: {
 we can create a table to show what the active theme will be under all possible conditions:
 
 <table>
+<thead>
 <tr align="center">
 <th align="left">Matching media query</th>
 <th>Neither</th>
 <th><code>prefers-color-scheme: light</code></th>
 <th><code>prefers-color-scheme: dark</code></th>
 </tr>
+</thead>
 
+<tbody>
 <tr align="center">
 <th align="left">Active theme</th>
 <td>None</td>
 <td><code>light</code></td>
 <td><code>dark</code></td>
 </tr>
+</tbody>
 </table>
 
 **The whole point of the fallback feature is to address that *None* case.** It could mean that the visitor is using a browser that doesn't [support `prefers-color-scheme`](https://caniuse.com/#search=prefers-color-scheme), such as IE11. Instead of leaving them on an unthemed site, we can "push" them into a particular theme by specifying `fallback`.
@@ -340,19 +344,23 @@ Which will change the generated CSS to activate `light` earlier than any media q
 
 Which, in turn, changes the active theme table to:
 <table>
+<thead>
 <tr align="center">
 <th align="left">Matching media query</th>
 <th>Neither</th>
 <th><code>prefers-color-scheme: light</code></th>
 <th><code>prefers-color-scheme: dark</code></th>
 </tr>
+</thead>
 
+<tbody>
 <tr align="center">
 <th align="left">Active theme</th>
 <td><code>light</code></td>
 <td><code>light</code></td>
 <td><code>dark</code></td>
 </tr>
+</tbody>
 </table>
 
 💡 Even though `background-color` has been used in every example so far, theme variants are available for *any* utility. 
@@ -397,11 +405,14 @@ These options, with the same Tailwind config as before with `backgroundColor: ["
 
 Which has the active theme table:
 <table>
+<thead>
 <tr>
 <th align="left">Matching selector</th>
 <th align="left">Active theme</th>
 </tr>
+</thead>
 
+<tbody>
 <tr>
 <th align="left">Neither</th>
 <td align="center"><code>dark</code></td>
@@ -416,11 +427,12 @@ Which has the active theme table:
 <th align="left"><code>:root.dark-theme</code></th>
 <td align="center"><code>dark</code></td>
 </tr>
+</tbody>
 </table>
 
 
 ## Stacked variants
-💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts).
+💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts).
 
 You can "stack" built-in or custom variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
 
@@ -559,7 +571,7 @@ module.exports = {
 };
 ```
 
-💡 By the way, you might have noticed the `"odd-hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the built-in variant functions in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/master/src/variants.ts) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
+💡 By the way, you might have noticed the `"odd-hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the built-in variant functions in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
 
 Back to the topic at hand: we can then implement the themeable table in HTML (Svelte) like so:
 
@@ -725,13 +737,16 @@ plugins: [
 
 It has the corresponding active theme table:
 <table>
+<thead>
 <tr>
 <th align="left">Match</th>
 <th align="left">Neither</th>
 <th align="left"><code>prefers-color-scheme: light</code></th>
 <th align="left"><code>prefers-color-scheme: dark</code></th>
 </tr>
+</thead>
 
+<tbody>
 <tr>
 <th align="left">Neither</th>
 <td align="center">None</td>
@@ -752,6 +767,7 @@ It has the corresponding active theme table:
 <td align="center"><code>navy</code></td>
 <td align="center"><code>navy</code></td>
 </tr>
+</tbody>
 </table>
 
 As previously noted, when a required selector is present, it takes precendence over the media queries; stated another way, the media queries only matter when no selector matches.
@@ -790,13 +806,16 @@ plugins: [
 
 It has the corresponding active theme table:
 <table>
+<thead>
 <tr>
 <th align="left">Match</th>
 <th align="left">Neither</th>
 <th align="left"><code>inverted-colors: none</code></th>
 <th align="left"><code>inverted-colors: inverted</code></th>
 </tr>
+</thead>
 
+<tbody>
 <tr>
 <th align="left">Neither</th>
 <td align="center"><code>not-inverted</code></td>
@@ -817,9 +836,10 @@ It has the corresponding active theme table:
 <td align="center"><code>inverted</code></td>
 <td align="center"><code>inverted</code></td>
 </tr>
+</tbody>
 </table>
 
-💡 If you're still using `fallback: true`, now would be a good time to try out `fallback: "compact"` to reduce generated CSS size for free. Because using both selectors and media queries to activate themes results in *a ton* of CSS, the benefits of `compact`ing it are great now! If you encounter any problems, then you should [create an issue](https://github.com/JakeNavith/tailwindcss-theme-variants/issues) and switch back to `true` until it's resolved.
+💡 If you're using `fallback: true`, now would be a good time to try out `fallback: "compact"` to reduce generated CSS size without changing anything else. Because using both selectors and media queries to activate themes results in *a ton* of CSS, the benefits of `compact`ing it are great now! If you encounter any problems, then you should [create an issue](https://github.com/JakeNavith/tailwindcss-theme-variants/issues) and switch back to `true` until it's resolved.
 
 ## Call the plugin more than once to separate unrelated themes
 The list of themes passed to one call of this plugin are intended to be *mutually exclusive*. So, if you have unrelated themes, like a set for motion, and another for light/dark, it doesn't make sense to stuff them all into the same plugin call. Instead, spread them out into two configs to be controlled independently:
