@@ -44,10 +44,10 @@ devDependencies:
   ncp: 2.0.0
   npm-run-all: 4.1.5
   polka: 0.5.2
-  postcss: 8.0.7
+  postcss: 8.0.6
   postcss-import: 12.0.1
   postcss-load-config: 2.1.1
-  postcss-nested: 5.0.0_postcss@8.0.7
+  postcss-nested: 5.0.0_postcss@8.0.6
   postcss-preset-env: 6.7.0
   regenerator-runtime: 0.13.7
   rehype-autolink-headings: 4.0.0
@@ -60,8 +60,8 @@ devDependencies:
   sapper: 0.28.8_svelte@3.25.1
   shimport: 1.0.1
   svelte: 3.25.1
-  svelte-check: 1.0.46_dba7c429b504975cf34a420719a00d62
-  svelte-preprocess: 4.3.0_f7bfbaeb75b9816ab17007624de1c845
+  svelte-check: 1.0.46_1a164a524d760bebbc5e31a3bb89ea17
+  svelte-preprocess: 4.3.0_aaee518659d3a0b6f57720bda471abd0
   tailwindcss: 1.8.10
   tailwindcss-leading-trim: 0.0.0
   tailwindcss-theme-variants: 1.3.1
@@ -1327,7 +1327,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-K1WYTjGIv+4vLdc2SB+2jdqdWATlhcElxPAB5fxaE+l2G50k8HkHErnIgCSIUHCq8m0PAW5Dk/BZUSx9RDQnCA==
-      tarball: '@navith/tailwindcss-plugin-author-types/-/tailwindcss-plugin-author-types-1.8.1-0.0.tgz'
   /@nodelib/fs.scandir/2.1.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.3
@@ -6849,9 +6848,9 @@ packages:
     dev: true
     resolution:
       integrity: sha512-rOv0W1HquRCamWy2kFl3QazJMMe1ku6rCFoAAH+9AcxdbpDeBr6k968MLWuLjvjMcGEip01ak09hKOEgpK9hvw==
-  /postcss-nested/5.0.0_postcss@8.0.7:
+  /postcss-nested/5.0.0_postcss@8.0.6:
     dependencies:
-      postcss: 8.0.7
+      postcss: 8.0.6
       postcss-selector-parser: 6.0.3
     dev: true
     engines:
@@ -7186,7 +7185,7 @@ packages:
       node: '>=6.0.0'
     resolution:
       integrity: sha512-H/7V2VeNScX9KE83GDrDZNiGT1m2H+UTnlinIzhjlLX9hfMUn1mHNnGeX81a1c8JSBdBvqk7c2ZOG6ZPn5itGw==
-  /postcss/8.0.7:
+  /postcss/8.0.6:
     dependencies:
       colorette: 1.2.1
       line-column: 1.0.2
@@ -7196,7 +7195,7 @@ packages:
     engines:
       node: ^10 || ^12 || >=14
     resolution:
-      integrity: sha512-LTCMGOjmC/CGWV/azk3h34u6TNj1s9p4XleEiW8yA3j+8k+z3mnv5V7yyREvWDKlkel8GxqhjEZJ+JXWTzKPWw==
+      integrity: sha512-P4lvqkhoiba/w0JE1t432xlQyeJnnf1elrviZOX0GybserV79IN4skB2nQg+NoOmkq30MNqVv9ggdqVmYjaolA==
   /prelude-ls/1.2.1:
     dev: true
     engines:
@@ -8319,13 +8318,13 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-HHi5kVSefKaJkGYXbDuKbUGRVxqnWGn3J2e39CYcNJEfWciGq2zYtOhXLTlvrOZW1QU7VX67w7fMmWafHX9Pfw==
-  /svelte-check/1.0.46_dba7c429b504975cf34a420719a00d62:
+  /svelte-check/1.0.46_1a164a524d760bebbc5e31a3bb89ea17:
     dependencies:
       chalk: 4.1.0
       chokidar: 3.4.2
       glob: 7.1.6
       minimist: 1.2.5
-      svelte-language-server: 0.10.125_dba7c429b504975cf34a420719a00d62
+      svelte-language-server: 0.10.125_1a164a524d760bebbc5e31a3bb89ea17
       vscode-languageserver: 6.1.1
       vscode-languageserver-protocol: 3.15.3
       vscode-languageserver-types: 3.15.1
@@ -8338,7 +8337,7 @@ packages:
       postcss-load-config: '*'
     resolution:
       integrity: sha512-IV3gff7cwo12HIh7JZvFtRTZJkZS585QfI6e4Xru32WqthJ/9HLQlf1z0Gyj7sSz+eWM4J1HsDqTDKyKB63PSg==
-  /svelte-language-server/0.10.125_dba7c429b504975cf34a420719a00d62:
+  /svelte-language-server/0.10.125_1a164a524d760bebbc5e31a3bb89ea17:
     dependencies:
       chokidar: 3.4.2
       cosmiconfig: 7.0.0
@@ -8348,7 +8347,7 @@ packages:
       prettier-plugin-svelte: 1.2.1_prettier@2.1.1+svelte@3.25.1
       source-map: 0.7.3
       svelte: 3.25.1
-      svelte-preprocess: 4.3.0_f7bfbaeb75b9816ab17007624de1c845
+      svelte-preprocess: 4.3.0_aaee518659d3a0b6f57720bda471abd0
       svelte2tsx: 0.1.113_svelte@3.25.1+typescript@4.0.3
       typescript: 4.0.3
       vscode-css-languageservice: 4.2.0
@@ -8365,13 +8364,13 @@ packages:
       postcss-load-config: '*'
     resolution:
       integrity: sha512-5MHUY6eqsC6yFLB8VBeVGj1adu41OGKT8tx2sMxDHTsItAFu+NXnexlZKy2FM+JMYonIh+tvoR2QPDC0jW8zpw==
-  /svelte-preprocess/4.3.0_f7bfbaeb75b9816ab17007624de1c845:
+  /svelte-preprocess/4.3.0_aaee518659d3a0b6f57720bda471abd0:
     dependencies:
       '@babel/core': 7.11.6
       '@types/pug': 2.0.4
       '@types/sass': 1.16.0
       detect-indent: 6.0.0
-      postcss: 8.0.7
+      postcss: 8.0.6
       postcss-load-config: 2.1.1
       strip-indent: 3.0.0
       svelte: 3.25.1
@@ -9354,7 +9353,7 @@ specifiers:
   node-fetch: ^2.6.1
   npm-run-all: ^4.1.5
   polka: ^0.5.2
-  postcss: ^8.0.7
+  postcss: 8.0.6
   postcss-import: ^12.0.1
   postcss-load-config: ^2.1.1
   postcss-nested: ^5.0.0
