@@ -51,6 +51,7 @@
 		"@babel/plugin-transform-runtime": "^7.11.5",
 		"@babel/preset-env": "^7.11.5",
 		"@babel/runtime": "^7.11.2",
+		"@iconify/icons-heroicons-solid": "^1.0.4",
 		"@iconify/icons-mdi": "^1.0.136",
 		"@iconify/svelte": "^1.0.2",
 		"@jsdevtools/rehype-toc": "^3.0.2",
