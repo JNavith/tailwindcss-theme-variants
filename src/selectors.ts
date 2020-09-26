@@ -1,6 +1,6 @@
 import { flatten } from "lodash";
 import parser, {
-	Node, Container, Root, Selector,
+	Node, Container, Root,
 } from "postcss-selector-parser";
 
 export const parse = (selector: string): Root => {
@@ -16,14 +16,14 @@ export const parse = (selector: string): Root => {
 
 export const unparse = (node: Node): string => node.toString();
 
-const childrenNodesAsStrings = (selector: string): string[] => (parse(selector).nodes[0] as Selector).nodes.map(unparse);
+const childrenNodesAsStrings = (selector: string): string[] => (parse(selector).nodes[0] as Container).nodes.map(unparse);
 
 const intersection = (...selectors: string[]): string => {
 	const [firstSelector, ...otherSelectors] = selectors;
 
 	const node = parse(firstSelector);
 	otherSelectors.map(parse).forEach((otherNode) => {
-		(node.nodes[0] as Container).append(otherNode as any as Selector); // eslint-disable-line @typescript-eslint/no-explicit-any
+		(node.nodes[0] as Container).append(otherNode as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 	});
 
 	return unparse(node);
