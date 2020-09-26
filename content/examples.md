@@ -511,6 +511,8 @@ We can make an `h1` change size based on orientation *and* breakpoint *and* hove
 </h1>
 ```
 
+More realistically, you might just want to change a link color on hover depending on the breakpoint and theme.
+
 ## Using both selectors and media queries
 ⚠️ If you use both selectors and media queries to activate themes, then **make sure that each specified class is specified as an *all or nothing* approach**. For instance, if you have `winter` and `summer` themes and want to add the `winter:bg-teal-100` class, then you also need to add the `summer:bg-orange-200` class. If you don't do this, then it will look like the values from an theme that's *supposed* to be inactive are "leaking" into the active theme.
 
@@ -639,7 +641,7 @@ It has the corresponding active theme table:
 </tbody>
 </table>
 
-💡 If you're using `fallback: true`, now would be a good time to try out `fallback: "compact"` to reduce generated CSS size without changing anything else. Because using both selectors and media queries to activate themes results in *a ton* of CSS, the benefits of `compact`ing it are great now! If you encounter any problems, then you should [create an issue](https://github.com/JakeNavith/tailwindcss-theme-variants/issues) and switch back to `true` until it's resolved.
+💡 If you're using `fallback: true`, now would be a good time to try out `fallback: "compact"` to reduce generated CSS size without needing to make any other changes. Because using both selectors and media queries to activate themes results in *a ton* of CSS, the benefits of `compact`ing it are great now! If you encounter any problems, then you should [create an issue](https://github.com/JakeNavith/tailwindcss-theme-variants/issues) and switch back to `true` until it's resolved.
 
 ## Call the plugin more than once to separate unrelated themes
 The list of themes passed to one call of this plugin are intended to be *mutually exclusive*. So, if you have unrelated themes, like a set for motion, and another for light/dark, it doesn't make sense to stuff them all into the same plugin call. Instead, spread them out into two configs to be controlled independently:
@@ -764,11 +766,11 @@ module.exports = {
                         color: theme("colors.gray.900"),
                     },
 
-					"ol > li::before": {
-						color: theme("colors.gray.600"),
+                    "ol > li::before": {
+                        color: theme("colors.gray.600"),
                     },
-					"ul > li::before": {
-						backgroundColor: theme("colors.gray.400"),
+                    "ul > li::before": {
+                        backgroundColor: theme("colors.gray.400"),
                     },
                     
                     "hr": {
@@ -828,11 +830,11 @@ module.exports = {
                         color: theme("colors.white"),
                     },
 
-					"ol > li::before": {
-						color: theme("colors.gray.300"),
+                    "ol > li::before": {
+                        color: theme("colors.gray.300"),
                     },
-					"ul > li::before": {
-						backgroundColor: theme("colors.gray.500"),
+                    "ul > li::before": {
+                        backgroundColor: theme("colors.gray.500"),
                     },
                     
                     "hr": {
