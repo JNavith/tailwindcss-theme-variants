@@ -1,6 +1,6 @@
 dependencies:
   lodash: 4.17.20
-  postcss-selector-parser: 6.0.3
+  postcss-selector-parser: 6.0.4
   tailwindcss: 1.8.10
 devDependencies:
   '@navith/tailwindcss-plugin-author-types': 1.8.1-0.1
@@ -8,7 +8,7 @@ devDependencies:
   '@types/lodash': 4.14.161
   '@types/mocha': 8.0.3
   '@types/node': 14.11.2
-  '@types/sinon': 9.0.5
+  '@types/sinon': 9.0.6
   '@typescript-eslint/eslint-plugin': 4.2.0_f03a45cabb98ca1bed95b35505a7c027
   '@typescript-eslint/parser': 4.2.0_eslint@7.9.0+typescript@3.9.7
   cross-env: 7.0.2
@@ -82,7 +82,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-IWbqc/0YKyckvTFVPfZ4xq5i3dKXfml8KlhGL34GOA03+ih/6dNCuHJ3Ex9HM4ybUvKP9X5su3Ht18WAJPrdCA==
-      tarball: '@navith/tailwindcss-plugin-author-types/-/tailwindcss-plugin-author-types-1.8.1-0.1.tgz'
   /@nodelib/fs.scandir/2.1.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.3
@@ -165,16 +164,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-jiE3QIxJ8JLNcb1Ps6rDbysDhN4xa8DJJvuC9prr6w+1tIh+QAbYyNF3tyiZNLDBIuBCf4KEcV2UvQm/V60xfA==
-  /@types/sinon/9.0.5:
+  /@types/sinon/9.0.6:
     dependencies:
-      '@types/sinonjs__fake-timers': 6.0.1
+      '@types/sinonjs__fake-timers': 6.0.2
     dev: true
     resolution:
-      integrity: sha512-4CnkGdM/5/FXDGqL32JQ1ttVrGvhOoesLLF7VnTh4KdjK5N5VQOtxaylFqqTjnHx55MnD9O02Nbk5c1ELC8wlQ==
-  /@types/sinonjs__fake-timers/6.0.1:
+      integrity: sha512-j3GK0fiHgn8fe7sqOpInMjm0A2Tary1NBZ8gbI/sZ0C0JxYeO+nh8H0/pW/0l94vNWcH1FnZOZu/cOvIfNZTrg==
+  /@types/sinonjs__fake-timers/6.0.2:
     dev: true
     resolution:
-      integrity: sha512-yYezQwGWty8ziyYLdZjwxyMb0CZR49h8JALHGrxjQHWlqGgc8kLdHEgWrgL0uZ29DMvEVBDnHU2Wg36zKSIUtA==
+      integrity: sha512-dIPoZ3g5gcx9zZEszaxLSVTvMReD3xxyyDnQUjA6IYDG9Ba2AV0otMPs+77sG9ojB4Qr2N2Vk5RnKeuA0X/0bg==
   /@types/unist/2.0.3:
     dev: true
     resolution:
@@ -449,8 +448,8 @@ packages:
       integrity: sha512-N6mr0nUS0TB+SLHCrDYzLIdJQ1wklXNhsiKYh6tcrjDMlhjfz6BFGlDvngcpcBvZpko10jVjvF5XziJOxyA9Sg==
   /autoprefixer/9.8.6:
     dependencies:
-      browserslist: 4.14.4
-      caniuse-lite: 1.0.30001135
+      browserslist: 4.14.5
+      caniuse-lite: 1.0.30001137
       colorette: 1.2.1
       normalize-range: 0.1.2
       num2fraction: 1.2.2
@@ -490,17 +489,17 @@ packages:
     dev: true
     resolution:
       integrity: sha512-qhAVI1+Av2X7qelOfAIYwXONood6XlZE/fXaBSmW/T5SzLAmCgzi+eiWE7fUvbHaeNBQH13UftjpXxsfLkMpgw==
-  /browserslist/4.14.4:
+  /browserslist/4.14.5:
     dependencies:
-      caniuse-lite: 1.0.30001135
-      electron-to-chromium: 1.3.571
+      caniuse-lite: 1.0.30001137
+      electron-to-chromium: 1.3.573
       escalade: 3.1.0
       node-releases: 1.1.61
     engines:
       node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7
     hasBin: true
     resolution:
-      integrity: sha512-7FOuawafVdEwa5Jv4nzeik/PepAjVte6HmVGHsjt2bC237jeL9QlcTBDF3PnHEvcC6uHwLGYPwZHNZMB7wWAnw==
+      integrity: sha512-Z+vsCZIvCBvqLoYkBFTwEYH3v5MCQbsAjp50ERycpOjnPmolg1Gjy4+KaWWpm8QOJt9GHkhdqAl14NpCX73CWA==
   /buffer-from/1.1.1:
     dev: true
     resolution:
@@ -527,9 +526,9 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
-  /caniuse-lite/1.0.30001135:
+  /caniuse-lite/1.0.30001137:
     resolution:
-      integrity: sha512-ziNcheTGTHlu9g34EVoHQdIu5g4foc8EsxMGC7Xkokmvw0dqNtX8BS8RgCgFBaAiSp2IdjvBxNdh0ssib28eVQ==
+      integrity: sha512-54xKQZTqZrKVHmVz0+UvdZR6kQc7pJDgfhsMYDG19ID1BWoNnDMFm5Q3uSBSU401pBvKYMsHAt9qhEDcxmk8aw==
   /ccount/1.0.5:
     dev: true
     resolution:
@@ -822,9 +821,9 @@ packages:
       node: '>=6.0.0'
     resolution:
       integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==
-  /electron-to-chromium/1.3.571:
+  /electron-to-chromium/1.3.573:
     resolution:
-      integrity: sha512-UYEQ2Gtc50kqmyOmOVtj6Oqi38lm5yRJY3pLuWt6UIot0No1L09uu6Ja6/1XKwmz/p0eJFZTUZi+khd1PV1hHA==
+      integrity: sha512-oypaNmexr8w0m2GX67fGLQ0Xgsd7uXz7GcwaHZ9eW3ZdQ8uA2+V/wXmLdMTk3gcacbqQGAN7CXWG3fOkfKYftw==
   /emoji-regex/7.0.3:
     dev: true
     resolution:
@@ -2406,10 +2405,10 @@ packages:
   /postcss-nested/4.2.3:
     dependencies:
       postcss: 7.0.34
-      postcss-selector-parser: 6.0.3
+      postcss-selector-parser: 6.0.4
     resolution:
       integrity: sha512-rOv0W1HquRCamWy2kFl3QazJMMe1ku6rCFoAAH+9AcxdbpDeBr6k968MLWuLjvjMcGEip01ak09hKOEgpK9hvw==
-  /postcss-selector-parser/6.0.3:
+  /postcss-selector-parser/6.0.4:
     dependencies:
       cssesc: 3.0.0
       indexes-of: 1.0.1
@@ -2418,7 +2417,7 @@ packages:
     engines:
       node: '>=4'
     resolution:
-      integrity: sha512-0ClFaY4X1ra21LRqbW6y3rUbWcxnSVkDFG57R7Nxus9J9myPFlv+jYDMohzpkBx0RrjjiqjtycpchQ+PLGmZ9w==
+      integrity: sha512-gjMeXBempyInaBqpp8gODmwZ52WaYsVOsfr4L4lDQ7n3ncD6mEyySiDtgzCT+NYC0mmeOLvtsF8iaEf0YT6dBw==
   /postcss-value-parser/3.3.1:
     resolution:
       integrity: sha512-pISE66AbVkp4fDQ7VHBwRNXzAAKJjw4Vw7nWI/+Q3vuly7SNfgYXvm6i5IgFylHGK5sP/xHAbB7N49OS4gWNyQ==
@@ -2507,7 +2506,7 @@ packages:
       commander: 5.1.0
       glob: 7.1.6
       postcss: 7.0.32
-      postcss-selector-parser: 6.0.3
+      postcss-selector-parser: 6.0.4
     hasBin: true
     resolution:
       integrity: sha512-BE5CROfVGsx2XIhxGuZAT7rTH9lLeQx/6M0P7DTXQH4IUc3BBzs9JUzt4yzGf3JrH9enkeq6YJBe9CTtkm1WmQ==
@@ -3087,7 +3086,7 @@ packages:
     dependencies:
       '@fullhuman/postcss-purgecss': 2.3.0
       autoprefixer: 9.8.6
-      browserslist: 4.14.4
+      browserslist: 4.14.5
       bytes: 3.1.0
       chalk: 4.1.0
       color: 3.1.2
@@ -3102,7 +3101,7 @@ packages:
       postcss-functions: 3.0.0
       postcss-js: 2.0.3
       postcss-nested: 4.2.3
-      postcss-selector-parser: 6.0.3
+      postcss-selector-parser: 6.0.4
       postcss-value-parser: 4.1.0
       pretty-hrtime: 1.0.3
       reduce-css-calc: 2.1.7
@@ -3515,7 +3514,7 @@ specifiers:
   '@types/lodash': ^4.14.161
   '@types/mocha': ^8.0.3
   '@types/node': ^14.11.2
-  '@types/sinon': ^9.0.5
+  '@types/sinon': ^9.0.6
   '@typescript-eslint/eslint-plugin': ^4.2.0
   '@typescript-eslint/parser': ^4.2.0
   cross-env: ^7.0.2
@@ -3527,7 +3526,7 @@ specifiers:
   mocha: ^8.1.3
   npm-run-all: ^4.1.5
   postcss: ^8.0.9
-  postcss-selector-parser: ^6.0.3
+  postcss-selector-parser: ^6.0.4
   remark-parse: ^8.0.3
   remark-retext: ^4.0.0
   remark-stringify: ^8.1.1
@@ -3540,6 +3539,6 @@ specifiers:
   tailwindcss: ^1.8.10
   to-vfile: ^6.1.0
   ts-node: ^9.0.0
-  typescript: '3'
+  typescript: ^3.9.7
   unified: ^9.2.0
   vfile-reporter: ^6.0.1
