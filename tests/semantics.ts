@@ -235,9 +235,7 @@ export const semantics = (): void => {
 				},
 			),
 			[
-				`
-					klwejagfoiwjafioiwju
-				`,
+				// TODO: write this test
 			]);
 		});
 	});
