@@ -6,7 +6,6 @@
 	import colorSwatch from "@iconify/icons-heroicons-solid/color-swatch";
 	import moon from "@iconify/icons-heroicons-solid/moon";
 	import sun from "@iconify/icons-heroicons-solid/sun";
-	import chip from "@iconify/icons-heroicons-solid/chip";
 
 	import Metadata from "../components/Metadata.svelte";
 
@@ -41,7 +40,7 @@
 	<header class="z-20 flex flex-row items-baseline justify-between bg-header shadow-header">
 		<!-- Homepage link -->
 		<div class="p-5 lg:pl-10">
-			<a href="/" class="text-xl font-medium hocus:underline"><span class="hidden md:inline">Tailwind CSS </span>Theme Variants</a>
+			<a href="/" class="text-base sm:text-xl font-medium hocus:underline"><span class="hidden md:inline">Tailwind CSS </span>Theme Variants</a>
 		</div>
 		<!-- End homepage link -->
 		
@@ -82,7 +81,7 @@
 
 		<!-- Main page content -->
 		<div class="flex-1 overflow-y-auto">
-			<div class="flex justify-center p-10">
+			<div class="flex justify-center p-5 lg:p-10">
 				<article class="prose-sm prose md:prose 2xl:prose-lg">
 					<SiteAll />
 				</article>

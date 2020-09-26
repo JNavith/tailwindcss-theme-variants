@@ -31,8 +31,8 @@ const tailwindcssConfig = {
 			"sm": "640px",
 			"md": "768px",
 			"lg": "1024px",
-			"xl": "1280px",		
-			"2xl": "1920px",	
+			"xl": "1280px",
+			"2xl": "1920px",
 		},
 		typography: {
 			default: {
@@ -80,30 +80,29 @@ const tailwindcssConfig = {
 						backgroundColor: "transparent !important",
 					},
 					// End code styles
-					
+
 					"h1": {
 						color: false,
-						"@apply text-on-primary": "",
-						"@apply transition-theme": "",
-						
+
 						marginTop: typographyStyles.default.css[1].h2.marginTop,
 						marginBottom: typographyStyles.default.css[1].h1.marginTop,
-						
+
 						fontWeight: false,
 						"@apply font-semibold": "",
 					},
 					"h2": {
 						color: false,
-						"@apply text-on-primary": "",
-						"@apply transition-theme": "",
 
 						marginTop: typographyStyles.default.css[1].h1.marginBottom,
-						
+
 						fontWeight: false,
 						"@apply font-semibold": "",
 					},
 					"h3": {
 						color: false,
+					},
+
+					"h1 a, h2 a, h3 a": {
 						"@apply text-on-primary": "",
 						"@apply transition-theme": "",
 					},
@@ -127,7 +126,7 @@ const tailwindcssConfig = {
 					},
 					"ol > li::before": {
 						backgroundColor: false,
-						"@apply text-on-primary-faint-300": "",
+						"@apply text-on-primary-faint-200": "",
 						"@apply transition-theme": "",
 					},
 					// End list styles
@@ -148,6 +147,7 @@ const tailwindcssConfig = {
 
 					"thead": {
 						borderBottomWidth: false,
+						color: false,
 					},
 
 					"thead:first-child tr:first-child th:first-child, tbody:first-child tr:first-child th:first-child, tbody:first-child tr:first-child td:first-child": {
@@ -170,7 +170,7 @@ const tailwindcssConfig = {
 					"thead th:first-child:empty": {
 						"@apply z-10": "",
 					},
-					
+
 					"tbody th:first-child, thead th": {
 						"@apply sticky top-0 left-0": "",
 						"@apply bg-primary-faint-100": "",
@@ -204,25 +204,9 @@ const tailwindcssConfig = {
 						"@apply bg-primary-faint-200": "",
 					},
 					// End table styles
-
-					// Header links
-					"[id]": {
-						position: "relative",
-					},
-					"[id]:hover, [id]:focus": {
-						textDecoration: "underline",
-					},
-					"[id]:hover a::before, [id]:target a::before": {
-						content: '"🔗"',
-						position: "absolute",
-						left: "0",
-						right: "0",
-						transform: "translate(-3ch, 50%)",
-						fontSize: "0.5em",
-					}
 				},
 			},
-			
+
 			sm: {
 				css: {
 					lineHeight: "2.5",
@@ -273,12 +257,10 @@ const tailwindcssConfig = {
 		},
 	},
 	variants: {
-		backgroundColor: ["group-hocus", "hocus", "themes"],
-		borderColor: ["themes"],
-		boxShadow: ["themes"],
-		divideColor: ["themes"],
-		textDecoration: ["group-hocus", "hocus"],
-		textColor: ["group-hocus", "hocus", "themes"],
+		backgroundColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
+		boxShadow: ({ after }) => after(["themes"]),
+		textDecoration: ({ after }) => after(["group-hocus", "hocus"]),
+		textColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
 	},
 	plugins: [
 		themeVariants({
@@ -351,7 +333,7 @@ const tailwindcssConfig = {
 		}),
 
 		typography,
-		
+
 		leadingTrim,
 
 		({ addVariant, e }) => {

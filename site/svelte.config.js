@@ -1,6 +1,7 @@
 const { mdsvex } = require("mdsvex");
 const link = require("rehype-autolink-headings");
 const slug = require("rehype-slug");
+const externalLinks = require("remark-external-links");
 const sveltePreprocess = require("svelte-preprocess");
 const postcss = require("./postcss.config");
 
@@ -20,9 +21,22 @@ const createPreprocessors = ({ sourceMap }) => [
 		layout: {
 			_: "./src/layouts/all.svelte",
 		},
+		remarkPlugins: [
+			[externalLinks, {
+				content: {
+					type: "text",
+					value: "Opens in a new window",
+				},
+				contentProperties: {
+					"class": "sr-only",
+				},
+			}],
+		],
 		rehypePlugins: [
 			slug,
-			link,
+			[link, {
+				behavior: "wrap",
+			}],
 		],
 		smartypants: true,
 	}),
