@@ -57,7 +57,9 @@ After also enabling `"light"` and `"dark"` variants for `textColor` and bringing
 
 ```html
 <html class="light-theme"> <!-- Change to dark-theme -->
-    <button class="light:bg-teal-200 dark:bg-teal-800 light:text-teal-700 dark:text-teal-100">
+    <button class="light:bg-teal-200   dark:bg-teal-800 
+                   light:text-teal-700 dark:text-teal-100">
+        
         Sign up
     </button>
 </html>
@@ -121,4 +123,4 @@ Which generates this CSS:
 }
 ```
 
-💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. If you use the `group` feature, this will be taken care of for you!
+💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. [The `group` feature](#theme-groups) will take care of this for you!

@@ -11,7 +11,7 @@
 * **Falling back** to a certain theme when no other one could become active, like if a visitor's browser doesn't support JavaScript or the new `prefers-` media queries
 * **As many themes as you want**: light theme, dark theme, red theme, blue theme—just bring your own definitions! A future feature called "semantics" will make multiple themes even easier to work with!
 
-You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of that length is made up of long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
+You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of it is long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
 
 However, if you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you** (until the "semantics" feature is implemented). You will probably be better off using a custom properties setup; refer back to [that table 👇](#alternatives).
 
@@ -85,7 +85,9 @@ After also enabling `"light"` and `"dark"` variants for `textColor` and bringing
 
 ```html
 <html class="light-theme"> <!-- Change to dark-theme -->
-    <button class="light:bg-teal-200 dark:bg-teal-800 light:text-teal-700 dark:text-teal-100">
+    <button class="light:bg-teal-200   dark:bg-teal-800 
+                   light:text-teal-700 dark:text-teal-100">
+        
         Sign up
     </button>
 </html>
@@ -149,7 +151,7 @@ Which generates this CSS:
 }
 ```
 
-💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior. In `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. If you use the `group` feature, this will be taken care of for you!
+💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. [The `group` feature](#theme-groups) will take care of this for you!
 
 
 # ⚙️ Full configuration
@@ -189,7 +191,7 @@ Where each parameter means:
 
 - `baseSelector` (default `""` (empty string) if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
 
-- `fallback` (default `false`): if you pass `true`, then the first theme you listed in `themes` will be fallen back to when none of the media queries or selectors are active. You can think of it as the *default* theme for your site.
+- `fallback` (default `false`): when none of the given media queries or selectors are active, then the first theme you listed in `themes` will activate. You can think of it as the *default* theme for your site.
 
   If you pass `fallback: "compact"`, then your CSS file size will be drastically reduced for free because redundant things will be "canceled out." You are **recommended** to try this feature and only switch back to `true` if you encounter issues (which you should please [report 😁](https://github.com/JakeNavith/tailwindcss-theme-variants/issues)), because it will become the default option in the future.
 
@@ -382,7 +384,7 @@ themes: {
 fallback: true, // Fall back to `dark`
 ```
 
-**Fallback always chooses the first theme in your list of themes.** To choose a different theme, just change the order of `themes`.
+**Fallback always chooses the first theme in your list of themes.** To choose a different theme, change the order of `themes`.
 
 These options, with the same Tailwind config as before with `backgroundColor: ["dark", "light"]` (because that matches the order in `themes`) in `variants`, will generate:
 ```css
@@ -434,7 +436,7 @@ Which has the active theme table:
 ## Stacked variants
 💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts).
 
-You can "stack" built-in or custom variants on top of the existing theme variants. (We call it *stacking* because there are multiple variants required, like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on).
+You can "stack" built-in or custom variants on top of the existing theme variants. We call it *stacking* because multiple variants are required: like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on.
 
 Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) with the `:hover` variant:
 ```js
@@ -462,13 +464,17 @@ module.exports = {
 };
 ```
 
-You could create a simple card that uses contrast pleasant for fully sighted visitors, but intelligently switches to functional high contrast for those who specify it:
+You could create a simple card that uses contrast pleasant for fully sighted visitors, or functional high contrast for those who specify it:
 ```html
-<div class="bg-gray-100 high-contrast:bg-white text-gray-800 high-contrast:text-black">
+<div class="bg-gray-100   high-contrast:bg-white
+            text-gray-800 high-contrast:text-black">
+    
     <h1>Let me tell you all about...</h1>
     <h2>... this great idea I have!</h2>
 
-    <a href="text-blue-500 high-contrast:text-blue-700 hover:text-blue-600 high-contrast:hover:text-blue-900">
+    <a href="text-blue-500       high-contrast:text-blue-700
+             hover:text-blue-600 high-contrast:hover:text-blue-900">
+
         See more
     </a>
 </div>
@@ -510,7 +516,7 @@ module.exports = {
             // If you haven't seen "compact" yet, it's the same as true
             // but reduces resulting CSS file size by a lot
             variants: {
-                // The custom variant function, written by you
+                // The custom variant function you wrote
                 hocus: (selector) => `${selector}:hover, ${selector}:focus`,
             },
         }),
@@ -518,7 +524,7 @@ module.exports = {
 };
 ```
 
-With this, let's try making an icon button that's overlaid on top of an image in HTML. This button is generally translucent and becomes more opaque on hover or focus, but now can be made more visually distinct for visitors who need it.
+With this, let's try making an icon button that's overlaid on top of an image in HTML. This button is generally translucent and becomes more opaque on hover or focus, but can be more visually distinct for visitors who need it.
 ```html
 <div>
     <button 
@@ -560,7 +566,7 @@ module.exports = {
                 "orange-accent": { selector: ".themed-orange" },
             },
             variants: {
-                // The custom variant function, written by you
+                // The custom variant function you wrote
                 "odd-hover": (selector) => `${selector}:nth-child(odd):hover`,
 
                 // By the way, the ordering here doesn't matter
@@ -571,9 +577,7 @@ module.exports = {
 };
 ```
 
-💡 By the way, you might have noticed the `"odd-hover"` function would result in the same thing as calling `hover(odd(selector))`. This gives you the perfect opportunity to use function composition, like [Lodash's `flow`](https://lodash.com/docs/4.17.15#flow) or the [pipeline operator](https://github.com/tc39/proposal-pipeline-operator), to reuse the built-in variant functions in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) or write your own. For instance, you could create a `"focused-alert-placeholder"` variant with value ``_.flow([focus, (selector) => `${selector}[aria-role=alert]`, placeholder])`` variant to style anything `:focus[role=alert]::placeholder`! *If you don't know what the heck I'm talking about, just pretend this isn't even here.*
-
-Back to the topic at hand: we can then implement the themeable table in HTML (Svelte) like so:
+We can then implement the themeable table in HTML (Svelte) like so:
 
 ```html
 <table class="themed themed-green"> <!-- Try changing themed-green to themed-orange or removing it -->
@@ -594,9 +598,9 @@ Back to the topic at hand: we can then implement the themeable table in HTML (Sv
 
 
 ### Responsive variants
-Responsive variants let you distinguish the current breakpoint per theme, letting you say `lg:green-theme:border-green-200` to have a `green-200` border only when the breakpoint is `lg` (or larger) **and** the `green-theme` is active, for instance.
+Responsive variants let you distinguish the current breakpoint per theme. For example, `lg:green-theme:border-green-200` will have a `green-200` border *only* when the breakpoint is `lg` (or larger) **and** `green-theme` is active.
 
-⚠️ Responsive variants are automatically generated whenever `responsive` is listed in the utility's `variants` in the Tailwind CSS configuration, **not** this plugin's configuration. Also, because this feature is provided by Tailwind CSS rather than this plugin, you have to type `breakpoint:` **before** the `theme-name:` instead of after.
+⚠️ Responsive variants generate for utilities with `"responsive"` in *Tailwind*'s `variants` config, **not** this plugin's config. Also, because this feature is provided by Tailwind CSS rather than this plugin, you have to type `breakpoint:` **before** the `theme-name:` instead of after.
 
 ```js
 const { themeVariants } = require("tailwindcss-theme-variants");
@@ -668,7 +672,7 @@ This will allow us to configure the padding for each theme for each breakpoint, 
 ```
 
 #### Extra stacked variants
-You can still stack extra variants even while using responsive variants.
+You can still stack extra variants even while using responsive variants, but this is not commonly needed.
 
 Here's an example:
 ```js
@@ -678,8 +682,8 @@ module.exports = {
     theme: {}
     variants: {
         // If you haven't seen the `group` feature yet:
-        // Instead of needing to write out ["landscape", "portrait", "landscape:hover", "portrait:hover"],
-        // We can just name the group "orientation" and write ["orientation", "orientation:hover"]
+        // Instead of needing to write out "landscape", "portrait", "landscape:hover", "portrait:hover",
+        // We can name the group "orientation" and only write "orientation", "orientation:hover"
         fontSize: ["responsive", "hover", "orientation", "orientation:hover"],
     },
     plugins: [
@@ -714,7 +718,7 @@ We can make an `h1` change size based on orientation *and* breakpoint *and* hove
 ## Using both selectors and media queries
 ⚠️ If you use both selectors and media queries to activate themes, then **make sure that each specified class is specified as an *all or nothing* approach**. For instance, if you have `winter` and `summer` themes and want to add the `winter:bg-teal-100` class, then you also need to add the `summer:bg-orange-200` class. If you don't do this, then it will look like the values from an theme that's *supposed* to be inactive are "leaking" into the active theme.
 
-**Every feature previously discussed will still work as you'd expect**, even when you decide to also add selectors or media queries to theme control. When both selectors and media queries are in use, **selectors will always take priority over media queries**. This allows the flexibility of *defaulting* to media queries while still being able to override with JavaScript-controlled selectors (like classes and data attributes)!
+**Every feature previously discussed will still work as you'd expect**, even when you decide to also add selectors or media queries to theme control. When both selectors and media queries are in use, **selectors will always take priority over media queries**. This allows the flexibility of *defaulting* to media queries and *overriding* with JavaScript!
 
 For example, see this plugin call:
 ```js
@@ -770,7 +774,7 @@ It has the corresponding active theme table:
 </tbody>
 </table>
 
-As previously noted, when a required selector is present, it takes precendence over the media queries; stated another way, the media queries only matter when no selector matches.
+As previously noted, when a required selector is present, it takes precendence over the media queries. Stated another way, the media queries only matter when no selector matches.
 
 ⚠️ If you are stacking variants on while using both selectors and media queries to activate themes, then **make sure that each stacked variant is specified as an *all or nothing* approach** on each element. For instance, if you have `normal-motion` and `reduced-motion` themes and want to add the `reduced-motion:hover:transition-none` class, then you also need to add the `normal-motion:hover:transition` class (or any [value of `transitionProperty`](https://tailwindcss.com/docs/transition-property/)). If you don't do this, then it will look like the values from a theme that's *supposed* to be inactive are "leaking" into the active theme.
 
@@ -891,7 +895,7 @@ plugins: [
 
 Now you have magic `"themes"` and `"motion-preference"` variants that are guaranteed to generate the CSS in the correct order, so you should use these instead of `"light", "dark"` and `"motion", "no-motion"` respectively. You'll even get stacked variants like `"themes:group-focus"` or `"motion-preference:hover"`.
 
-## The ultimate example: how I use every feature together in production
+## The ultimate example: how I use every feature together
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
 
 ```js
@@ -899,7 +903,6 @@ const defaultConfig = require("tailwindcss/defaultConfig");
 const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
 
 const { theme: defaultTheme, variants: defaultVariants } = defaultConfig;
-
 
 module.exports = {
     theme: { 
@@ -941,16 +944,188 @@ module.exports = {
 }
 ```
 
+## Usage with the Tailwind CSS Typography plugin
+To use theme variants with the official [Tailwind CSS Typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin, create `prose` modifiers for each theme and list the theme variants in the `typography` variants array.
+
+Here's an example of changing the prose colors with your themes. This covers all of the color settings in the [default typography styles](https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js):
+
+```js
+const typography = require("@tailwindcss/typography");
+const { themeVariants } = require("tailwindcss-theme-variants");
+
+module.exports = {
+    theme: {
+        typography: (theme) => ({
+            light: {
+                css: {
+                    color: theme("colors.gray.700"),
+
+                    "a": {
+                        color: theme("colors.blue.700"),
+                    },
+
+                    "strong": {   
+                        color: theme("colors.gray.900"),
+                    },
+
+					"ol > li::before": {
+						color: theme("colors.gray.600"),
+                    },
+					"ul > li::before": {
+						backgroundColor: theme("colors.gray.400"),
+                    },
+                    
+                    "hr": {
+                        borderColor: theme("colors.gray.300"),
+                    },
+
+                    "blockquote": {
+                        color: theme("colors.gray.900"),
+                        borderLeftColor: theme("colors.gray.300"),
+                    },
+
+                    "h1": {
+                        color: theme("colors.gray.900"),
+                    },
+                    "h2": {
+                        color: theme("colors.gray.900"),
+                    },
+                    "h3": {
+                        color: theme("colors.gray.900"),
+                    },
+                    "h4": {
+                        color: theme("colors.gray.900"),
+                    },
+
+                    "figure figcaption": {
+                        color: theme("colors.gray.600"),
+                    },
+
+                    "code": {
+                        color: theme("colors.gray.900"),
+                    },
+                    "pre": {
+                        color: theme("colors.gray.900"),
+                        backgroundColor: theme("colors.gray.100"),
+                    },
+                    
+                    "thead": {
+                        color: theme("colors.gray.900"),
+                        borderBottomColor: theme("colors.gray.400"),
+                    },
+                    "tbody tr": {
+                        borderBottomColor: theme("colors.gray.300"),
+                    },
+                },
+            },
+
+            dark: {
+                css: {
+                    // These colors were chosen with gray-900 presumed to be the background color
+                    color: theme("colors.gray.200"),
+
+                    "a": {
+                        color: theme("colors.blue.400"),
+                    },
+
+                    "strong": {   
+                        color: theme("colors.white"),
+                    },
+
+					"ol > li::before": {
+						color: theme("colors.gray.300"),
+                    },
+					"ul > li::before": {
+						backgroundColor: theme("colors.gray.500"),
+                    },
+                    
+                    "hr": {
+                        borderColor: theme("colors.gray.600"),
+                    },
+
+                    "blockquote": {
+                        color: theme("colors.white"),
+                        borderLeftColor: theme("colors.gray.600"),
+                    },
+
+                    "h1": {
+                        color: theme("colors.white"),
+                    },
+                    "h2": {
+                        color: theme("colors.white"),
+                    },
+                    "h3": {
+                        color: theme("colors.white"),
+                    },
+                    "h4": {
+                        color: theme("colors.white"),
+                    },
+
+                    "figure figcaption": {
+                        color: theme("colors.gray.300"),
+                    },
+
+                    "code": {
+                        color: theme("colors.white"),
+                    },
+                    "pre": {
+                        color: theme("colors.white"),
+                        backgroundColor: theme("colors.gray.800"),
+                    },
+                    
+                    "thead": {
+                        color: theme("colors.white"),
+                        borderBottomColor: theme("colors.gray.600"),
+                    },
+                    "tbody tr": {
+                        borderBottomColor: theme("colors.gray.600"),
+                    },
+                },
+            },
+        }),
+    },
+
+    variants: {
+        typography: ({ after }) => after(["themes"]),
+    },
+
+    plugins: [
+        typography,
+        themeVariants({
+            group: "themes",
+            themes: {
+                "light-theme": { ... },
+                "dark-theme": { ... },
+            },
+            fallback: "compact",
+        }),
+    ],
+};
+```
+
+Thanks to @stefanzweifel's [article on the subject](https://stefanzweifel.io/posts/2020/07/20/add-dark-mode-support-to-at-tailwindcsstypography/) and @pspeter3's [issue](https://github.com/tailwindlabs/tailwindcss-typography/issues/69)!
+
+Now that you have appropriate variants for `prose`, let's upgrade our HTML to use them:
+
+```html
+<article class="prose light-theme:prose-light dark-theme:prose-dark">
+    <p>
+        Content...
+    </p>
+</article>
+```
+
+We will revisit this example in the Semantics section below once the semantics feature is implemented 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) for a general (but messy!) guide.
 
 
 # Semantics
-Semantics are a planned / work in progress feature for this plugin that are meant to be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
+Semantics are a work in progress feature for this plugin that will be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
 
-**The following sections are written in present tense but talk about features that are not implemented yet, so don't try to use them:**
+**The following sections are in present tense but talk about features that are not implemented yet, so don't try to use them:**
 
 **Semantics require Tailwind CSS 1.7 or higher. Also, the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/pull/2159) will be enabled for you if you use semantics because it's required for them to work.**
 
-TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because they have to be written by me (the plugin author 👋), only certain utilities are supported so far:
+TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
 * `backgroundColor`
 * `borderColor`
 * `boxShadow`
@@ -1000,18 +1175,18 @@ Now you have classes like `bg-body` and `text-on-body` that represent `light:bg-
 TODO
 
 ## Variables
-TODO. Variables are an optional extension on top of constants. If you specify `target: "ie11"` in your **Tailwind** config, then they will be disabled.
+TODO. Variables are an optional extension on top of constants. If you specify `target: "ie11"` in your **Tailwind** config, then they will be excluded, reducing the generated CSS size.
 
-⚠️ Don't give the same semantic name to multiple utilities in `semantics`; when using variables, they'll collide because they share a global "namespace".
+⚠️ Don't give the same semantic name to multiple utilities in `semantics`; when using variables, they'll collide because they share a global "namespace". TODO: make this not the case.
 
-TODO. Every semantic name also has a corresponding variable; the variable defaults to each theme's constant declared in the theme's `semantics` configuration. Variables are automatically used by the semantic utility classes, so you don't have to do anything special to make them work.
+TODO. Every semantic name also has a corresponding variable. Each variable defaults to the active theme's constant declared in its `semantics` configuration. Variables are automatically used by the semantic utility classes, so you don't have to do anything special to make them work.
 
 For that reason, you can also assign values to semantic variables with the typical custom property syntax
 ```css
 --semantic-variable: 0, 128, 255;
 ```
 
-All semantic colors need to be written as `r, g, b` to maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities.
+To maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities, write semantic colors as `r, g, b`.
 
 ### Examples
 TODO
@@ -1184,15 +1359,15 @@ As for theme plugins that are controlled with CSS selectors like classes and dat
 
 **Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
 
-**Responsive**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
+**Responsive**: While "inside" of a theme, it must be possible to "activate" classes depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
 
-**Stacked variants**: While "inside" of a theme, it must be possible to "activate" classes / variants depending on pseudoselector conditions, such as `:focus`, `:nth-child(even)`, `.group:hover `, etc.
+**Stacked variants**: While "inside" of a theme, it must be possible to "activate" classes depending on pseudoselector conditions. For instance, it has to be possible to change the text color when **both** the theme is `green` **and** the text is `:hover`ed over.
 
 Plugins that have a 🟡 support only some of the variants in Tailwind's core, and none that come from other variant-registering plugins.
 
-**Supports `prefers-color-scheme` or other media queries**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like can be seen in the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) that some theme plugins recommend. This approach still comes with the caveats that
+**Supports `prefers-color-scheme` or other media queries**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) does. This approach still comes with the caveats that
 1. JavaScriptless visitors will not have the site's theme reflect their preferred one
-2. It could still be possible for a flash of unthemed content to appear before the appropriate theme is activated
+2. It could still be possible for a flash of unthemed content to appear before the appropriate theme is activated (unless you block rendering by executing the script immediately in `head`)
 3. Your site will immediately jump between light and dark instead of smoothly transitioning with the rest of the screen on macOS
 
 **[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)** and **[experimental `darkModeVariant`](https://github.com/tailwindlabs/tailwindcss/pull/2279)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.

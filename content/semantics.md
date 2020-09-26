@@ -1,11 +1,11 @@
 # Semantics
-Semantics are a planned / work in progress feature for this plugin that are meant to be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
+Semantics are a work in progress feature for this plugin that will be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
 
-**The following sections are written in present tense but talk about features that are not implemented yet, so don't try to use them:**
+**The following sections are in present tense but talk about features that are not implemented yet, so don't try to use them:**
 
 **Semantics require Tailwind CSS 1.7 or higher. Also, the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/pull/2159) will be enabled for you if you use semantics because it's required for them to work.**
 
-TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because they have to be written by me (the plugin author 👋), only certain utilities are supported so far:
+TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
 * `backgroundColor`
 * `borderColor`
 * `boxShadow`
@@ -55,18 +55,18 @@ Now you have classes like `bg-body` and `text-on-body` that represent `light:bg-
 TODO
 
 ## Variables
-TODO. Variables are an optional extension on top of constants. If you specify `target: "ie11"` in your **Tailwind** config, then they will be disabled.
+TODO. Variables are an optional extension on top of constants. If you specify `target: "ie11"` in your **Tailwind** config, then they will be excluded, reducing the generated CSS size.
 
-⚠️ Don't give the same semantic name to multiple utilities in `semantics`; when using variables, they'll collide because they share a global "namespace".
+⚠️ Don't give the same semantic name to multiple utilities in `semantics`; when using variables, they'll collide because they share a global "namespace". TODO: make this not the case.
 
-TODO. Every semantic name also has a corresponding variable; the variable defaults to each theme's constant declared in the theme's `semantics` configuration. Variables are automatically used by the semantic utility classes, so you don't have to do anything special to make them work.
+TODO. Every semantic name also has a corresponding variable. Each variable defaults to the active theme's constant declared in its `semantics` configuration. Variables are automatically used by the semantic utility classes, so you don't have to do anything special to make them work.
 
 For that reason, you can also assign values to semantic variables with the typical custom property syntax
 ```css
 --semantic-variable: 0, 128, 255;
 ```
 
-All semantic colors need to be written as `r, g, b` to maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities.
+To maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities, write semantic colors as `r, g, b`.
 
 ### Examples
 TODO

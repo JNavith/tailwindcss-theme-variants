@@ -35,7 +35,7 @@ Where each parameter means:
 
 - `baseSelector` (default `""` (empty string) if you **only** use media queries to activate your themes, otherwise `":root"`): the selector that each theme's `selector` will be applied to to determine the active theme.
 
-- `fallback` (default `false`): if you pass `true`, then the first theme you listed in `themes` will be fallen back to when none of the media queries or selectors are active. You can think of it as the *default* theme for your site.
+- `fallback` (default `false`): when none of the given media queries or selectors are active, then the first theme you listed in `themes` will activate. You can think of it as the *default* theme for your site.
 
   If you pass `fallback: "compact"`, then your CSS file size will be drastically reduced for free because redundant things will be "canceled out." You are **recommended** to try this feature and only switch back to `true` if you encounter issues (which you should please [report 😁](https://github.com/JakeNavith/tailwindcss-theme-variants/issues)), because it will become the default option in the future.
 
