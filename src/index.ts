@@ -24,7 +24,7 @@ const defaultVariants: {
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
 	group, themes, baseSelector: passedBaseSelector, fallback = false, variants = {},
 }: ThisPluginOptions<GivenThemes, GroupName>) => ({
-		addUtilities, addVariant, config: lookupConfig, e, postcss, target: lookupTarget, theme: lookupTheme, variants: lookupVariants,
+		addBase, addUtilities, addVariant, config: lookupConfig, e, postcss, target: lookupTarget, theme: lookupTheme, variants: lookupVariants,
 	}: PluginTools): void => {
 		const allThemeNames = Object.keys(themes ?? {});
 		const allThemes = Object.entries(themes ?? {});
@@ -181,27 +181,36 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				}, {} as Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>,
 			);
 
-			// TODO: same logic for gradientColorStops and opacity
-			const colorUtilities: SupportedSemanticUtilities[] = ["backgroundColor", "borderColor", "divideColor", "textColor"];
-			// Use "colors" as defaults for all the other color utilities and remove it from semantics
-			Object.entries(semantics?.colors ?? {}).forEach(([colorName, colorConfiguration]) => {
-				colorUtilities.forEach((colorUtility) => {
-					if (!Object.prototype.hasOwnProperty.call(semantics, colorUtility)) {
-						semantics[colorUtility] = {};
-					}
-
-					if (!Object.prototype.hasOwnProperty.call(semantics[colorUtility], colorName)) {
-						semantics[colorUtility][colorName] = colorConfiguration;
+			const useUnlessOverriden = (source: ConfigurableSemantics, destinations: SupportedSemanticUtilities[]) => {
+				destinations.forEach((destination) => {
+					if (semantics[source] && !semantics[destination]) {
+						semantics[destination] = {};
+						Object.entries(semantics?.[source] ?? {}).forEach(([sourceName, sourceConfiguration]) => {
+							semantics[destination][sourceName] = sourceConfiguration;
+						});
 					}
 				});
-			});
+			};
 
-			// If it were possible, semantics would be retyped here as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>
-			// Instead, it'll be coerced where used below
-
+			// Use "colors" as defaults for all the other color utilities
+			useUnlessOverriden("colors", ["backgroundColor", "borderColor", "divideColor", "textColor"]);
+			// And remove it from semantics
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			delete semantics.colors;
+
+			// Use "opacity" as defaults for all the other opacity utilities
+			useUnlessOverriden("opacity", ["backgroundOpacity", "borderOpacity", "divideOpacity", "textOpacity"]);
+
+			// Use "gradientColorStops" as values for the from-, via-, and to- utilities
+			useUnlessOverriden("gradientColorStops", ["gradientFromColor", "gradientViaColor", "gradientToColor"]);
+			// And remove it from semantics
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			delete semantics.gradientColorStops;
+
+			// If it were possible, semantics would be retyped here as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>
+			// Instead, it'll be coerced where used below
 
 			// TODO: support for user-defined utilities
 			const behavior = builtinUtilities;
@@ -211,21 +220,95 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// @ts-expect-error: doesn't work yet, but might in the future
 			const noie11 = target === "modern";
 
-			// TODO: make this work
-			// if (!ie11) {
-			// addBase({
-			// ":root.light-theme": {
-			// // TODO: don't hardcode
-			// "--primary": doSomethingWith(toRgba(theme("colors.white")));
-			// // ... for each semantic variable
-			// })
-			// addBase({
-			// ":root.dark-theme": {
-			// // TODO: don't hardcode
-			// "--primary": doSomethingWith(toRgba(theme("colors.gray.900")));
-			// // ... for each semantic variable
-			// })
-			// }
+			if (!onlyie11) {
+				allThemes.forEach(([themeName, { mediaQuery, selector, semantics: themeSemantics }]) => {
+					const fixedBaseSelector = baseSelector || ":root";
+					const variables: Record<string, string> = {};
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					Object.entries(themeSemantics!).forEach(([utilityName, utilityConfig]) => {
+						Object.entries(utilityConfig ?? {}).forEach(([variable, referenceValue]) => {
+							if (variables[variable]) {
+								throw new TypeError(`tailwindcss-theme-variants: you duplicated a semantic variable name "${variable}" across your utilities in ${themeName}'s semantics configuration (found in ${utilityName} and at least one other place). this can be fixed by using a different name for one of them`);
+							}
+							// TODO: flatten logic
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any
+							let realValue: any | undefined;
+							const allHyphensAndPeriods: number[] = [];
+							// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+							// @ts-ignore -- todo: flatten logic
+							for (let i = 0; i < referenceValue.length; i += 1) {
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore -- todo: flatten logic
+								if (referenceValue[i] === "." || referenceValue[i] === "-") allHyphensAndPeriods.push(i);
+							}
+
+							const toTry = 2 ** allHyphensAndPeriods.length;
+							[...Array(toTry).keys()].forEach((bitmap) => {
+								// TODO: flatten logic
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								let lookupName = referenceValue as any as string;
+								allHyphensAndPeriods.forEach((index, bit) => {
+									// eslint-disable-next-line no-bitwise
+									lookupName = lookupName.substring(0, index) + (bitmap & (1 << bit) ? "." : "-") + lookupName.substring(index + 1);
+								});
+								const foundValue = lookupTheme(`${utilityName}.${lookupName}`, undefined);
+								if (foundValue) realValue = foundValue;
+							});
+
+							if (realValue) {
+								try {
+									const [r, g, b] = toRgba(realValue);
+									variables[`--${variable}`] = `${r}, ${g}, ${b}`;
+								} catch (error) {
+									variables[`--${variable}`] = realValue.toString();
+								}
+							} else {
+								console.log({ variables });
+								throw new TypeError(`tailwindcss-theme-variants: the initial / constant value for the semantic variable named "${variable}" for the ${themeName} theme couldn't be found; it should be something like ${referenceValue} (maybe with .s in place of -s?) in theme.${utilityName}. this can be fixed by making sure the value you referenced (${referenceValue}) is in your Tailwind CSS theme configuration under ${utilityName}. there could be a mistake here; please file an issue if it actually does exist`);
+							}
+						});
+					});
+
+					if (themeName === fallbackTheme) {
+						if (compactFallback) {
+							addBase({
+								[fixedBaseSelector]: variables,
+							});
+						} else {
+							const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
+
+							addBase({
+								[`${fixedBaseSelector}${inactiveThemes.join("")}`]: variables,
+							});
+						}
+					}
+
+					if (!compactFallback || themeName !== fallbackTheme) {
+						if (mediaQuery) {
+							if (fallbackTheme && baseSelector !== "") {
+								const inactiveThemes = selector ? allThemes.map(([_themeName, { selector: otherSelector }]) => ((selector === otherSelector) ? "" : `:not(${otherSelector})`)) : [];
+
+								addBase({
+									[mediaQuery]: {
+										[`${fixedBaseSelector}${inactiveThemes.join("")}`]: variables,
+									},
+								});
+							} else {
+								addBase({
+									[mediaQuery]: {
+										[`${fixedBaseSelector}`]: variables,
+									},
+								});
+							}
+						}
+						if (selector) {
+							addBase({
+								[`${fixedBaseSelector}${selector}`]: variables,
+							});
+						}
+					}
+				});
+			}
 
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
@@ -245,8 +328,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					});
 
 					const computedClass = semanticName === "default" ? `.${e(classPrefix)}` : `.${e(`${classPrefix}-${semanticName}`)}`;
-					// eslint-disable-next-line no-nested-ternary
-					if (noie11 ? (opacityUtility ? isUtilityEnabled(opacityUtility) : true) : true) {
+					if (!noie11) {
 						addUtilities({
 							[computedClass]: {
 								// eslint-disable-next-line no-nested-ternary
@@ -256,9 +338,10 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					}
 
 					// Use the custom properties extension if allowed
-					const computedValue = opacityVariable ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`;
+					const computedValue = (opacityUtility ? isUtilityEnabled(opacityUtility) : false) ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`;
 					if (!onlyie11) {
-						addUtilities(css({ computedClass, computedValue: `${computedValue} !important` }), dedupedVariants);
+						const withImportant = noie11 ? computedValue : `${computedValue} !important`;
+						addUtilities(css({ computedClass, computedValue: withImportant }), dedupedVariants);
 					}
 				});
 			});

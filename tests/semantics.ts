@@ -183,9 +183,12 @@ export const semantics = (): void => {
 			]);
 		});
 
-		it("divide color and opacity with relaxed target (i.e. custom properties present)", async () => {
+		it("divide color and opacity with modern target", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					target: "modern",
 					theme: {
 						colors: {
 							yellow: {
@@ -202,7 +205,7 @@ export const semantics = (): void => {
 					},
 					corePlugins: ["divideColor", "divideOpacity"],
 					variants: {
-						divideColor: ["seasons"],
+						divideColor: [],
 						divideOpacity: [],
 					},
 
@@ -233,9 +236,32 @@ export const semantics = (): void => {
 						}),
 					],
 				},
+				"@tailwind base;\n@tailwind utilities;",
 			),
 			[
-				// TODO: write this test
+				`
+					:root {
+						--primary: 102, 0, 102;
+						--accent: 221, 221, 0;
+					}
+
+					@media (prefers-color-scheme: light) {
+						:root {
+							--primary: 221, 221, 0;
+							--accent: 102, 0, 102;
+						}
+					}
+				`,
+
+				`
+					.divide-primary > :not(template) ~ :not(template) {
+						border-color: rgba(var(--primary), var(--divide-opacity, 1));
+					}
+
+					.divide-accent > :not(template) ~ :not(template) {
+						border-color: rgba(var(--accent), var(--divide-opacity, 1));
+					}
+				`,
 			]);
 		});
 	});

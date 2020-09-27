@@ -1,5 +1,6 @@
 import { kebabCase } from "lodash";
 
+import { toRgba } from "tailwindcss/lib/util/withAlphaVariable";
 import type { SemanticUtility } from "./types";
 
 const simpleCSS = (property: string): SemanticUtility["css"] => ({ computedClass, computedValue }) => ({
@@ -13,8 +14,10 @@ const simpleUtility = (utility: string, prefix?: string): SemanticUtility => ({
 	css: simpleCSS(kebabCase(utility)),
 });
 
-// TODO: "#ff0" -> "rgba(255, 255, 0, 0)"
-const sameColorFullyTransparent = (color: string) => "rgba(0, 0, 0, 0)";
+const sameColorFullyTransparent = (color: string) => {
+	const [r, g, b] = toRgba(color);
+	return `rgba(${r}, ${g}, ${b}, 0)`;
+};
 
 export const backgroundColor: SemanticUtility = {
 	prefix: "bg",

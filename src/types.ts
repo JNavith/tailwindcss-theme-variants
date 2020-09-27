@@ -30,8 +30,8 @@ type ObjectOfNestedStrings = {
 }
 
 export type SupportedSemanticUtilities = keyof typeof builtinUtilities;
-export type SpecialSemantickeys = "colors";
-export type ConfigurableSemantics = SupportedSemanticUtilities | SpecialSemantickeys;
+export type SpecialSemanticKeys = "colors" | "gradientColorStops";
+export type ConfigurableSemantics = SupportedSemanticUtilities | SpecialSemanticKeys;
 
 export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQuery> & {
 	semantics?: {
