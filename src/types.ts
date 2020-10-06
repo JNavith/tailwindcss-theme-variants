@@ -25,7 +25,7 @@ export type SemanticUtility = {
 	},
 }
 
-type ObjectOfNestedStrings = {
+export type ObjectOfNestedStrings = {
 	[property: string]: string | ObjectOfNestedStrings,
 }
 
@@ -46,6 +46,9 @@ export interface ThisPluginOptions<GivenThemes extends Themes, GroupName extends
 	themes: GivenThemes;
 	baseSelector?: string;
 	fallback?: boolean | "compact";
+	utilities?: {
+		[name: string]: SemanticUtility;
+	};
 	variants?: {
 		[name: string]: (selector: string) => string;
 	};

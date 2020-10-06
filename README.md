@@ -870,7 +870,7 @@ plugins: [
 ]
 ```
 
-By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the combinations of *every* theme and *every* stacked variant, you can bring it back down to just per group per stacked variant.
+By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the combinations of *every* theme and *every* stacked variant, you can bring it back down to just per group per stacked variant:
 
 ```js
 // Rest of the Tailwind CSS config and imports...
@@ -1023,7 +1023,8 @@ module.exports = {
 
             dark: {
                 css: {
-                    // These colors were chosen with gray-900 presumed to be the background color
+                    // These colors were chosen with gray-900 presumed 
+                    // to be the page's background color
                     color: theme("colors.gray.200"),
 
                     "a": {

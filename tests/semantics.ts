@@ -264,5 +264,126 @@ export const semantics = (): void => {
 				`,
 			]);
 		});
+
+		it("flattens nested configurations", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					target: "modern",
+
+					theme: {
+						colors: {
+							blue: {
+								100: "#00F",
+								400: "#009",
+								500: "#008",
+								600: "#007",
+								900: "#002",
+							},
+							orange: {
+								100: "#F80",
+								400: "#950",
+								500: "#840",
+								600: "#730",
+								900: "#210",
+							},
+						},
+					},
+					corePlugins: ["backgroundColor"],
+					variants: {
+						backgroundColor: [],
+					},
+
+					plugins: [
+						thisPlugin({
+							group: "colors",
+							baseSelector: "body",
+							fallback: "compact",
+							themes: {
+								blue: {
+									selector: ".blue-theme",
+									semantics: {
+										colors: {
+											primary: {
+												faint: {
+													400: "blue-100",
+													default: "blue-400",
+												},
+												default: "blue-500",
+												strong: {
+													default: "blue-600",
+													400: "blue-900",
+												},
+											},
+										},
+									},
+								},
+								orange: {
+									selector: ".orange-theme",
+									semantics: {
+										colors: {
+											primary: {
+												faint: {
+													400: "orange-100",
+													default: "orange-400",
+												},
+												default: "orange-500",
+												strong: {
+													default: "orange-600",
+													400: "orange-900",
+												},
+											},
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			),
+			[
+				`
+					body {
+						--primary-faint-400: 0, 0, 255;
+						--primary-faint: 0, 0, 153;
+						--primary: 0, 0, 136;
+						--primary-strong-400: 0, 0, 34;
+						--primary-strong: 0, 0, 119;
+					}
+
+					body.orange-theme {
+						--primary-faint-400: 255, 136, 0;
+						--primary-faint: 153, 85, 0;
+						--primary: 136, 68, 0;
+						--primary-strong-400: 34, 17, 0;
+						--primary-strong: 119, 51, 0;
+					}
+				`,
+
+				`
+					.bg-primary-faint-400 {
+						background-color: var(--primary-faint-400);
+					}
+
+					.bg-primary-faint {
+						background-color: var(--primary-faint);
+					}
+
+					.bg-primary {
+						background-color: var(--primary);
+					}
+
+					.bg-primary-strong-400 {
+						background-color: var(--primary-strong-400);
+					}
+
+					.bg-primary-strong {
+						background-color: var(--primary-strong);
+					}
+				`,
+			]);
+		});
 	});
 };
