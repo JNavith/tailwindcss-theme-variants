@@ -244,8 +244,8 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: ["high-contrast"],
-        textColor: ["high-contrast", "high-contrast:hover"],
+        backgroundColor: ({ after }) => after(["high-contrast"]),
+        textColor: ({ after }) => after(["high-contrast", "high-contrast:hover"]),
     },
 
     plugins: [
@@ -290,10 +290,10 @@ module.exports = {
     },
 
     variants: {
-        opacity: [
+        opacity: ({ after }) => after([
             "transparency-safe",        "transparency-reduce",
             "transparency-safe:hocus",  "transparency-reduce:hocus",
-        ],
+        ]),
     },
 
     plugins: [
@@ -349,7 +349,7 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: ["accents", "accents:hover", "accents:odd", "accents:odd-hover"],
+        backgroundColor: ({ after }) => after(["accents", "accents:hover", "accents:odd", "accents:odd-hover"]),
     },
 
     plugins: [
@@ -493,6 +493,7 @@ module.exports = {
                     mediaQuery: portrait,
                 },
             },
+            fallback: "compact",
         }),
     ],
 };
@@ -501,11 +502,11 @@ module.exports = {
 We can make an `h1` change size based on orientation *and* breakpoint *and* hover for readability (this is definitely a contrived example):
 
 ```html
-<h1 class="text-sm             landscape:text-base          portrait:text-xs
-           sm:text-base        sm:landscape:text-lg         sm:portrait:text-sm
-           sm:hover:text-lg    sm:landscape:hover:text-xl   sm:portrait:hover:text-md
-           lg:text-xl          lg:landscape:text-2xl        lg:portrait:text-lg
-           lg:hover:text-2xl   lg:landscape:hover:text-3xl  lg:portrait:hover:text-xl">
+<h1 class="landscape:text-base          portrait:text-xs
+           sm:landscape:text-lg         sm:portrait:text-sm
+           sm:landscape:hover:text-xl   sm:portrait:hover:text-md
+           lg:landscape:text-2xl        lg:portrait:text-lg
+           lg:landscape:hover:text-3xl  lg:portrait:hover:text-xl">
     
     This article title will try to change size so that it stays readable... hopefully.
 </h1>
@@ -697,10 +698,7 @@ Now you have magic `"themes"` and `"motion-preference"` variants that are guaran
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
 
 ```js
-const defaultConfig = require("tailwindcss/defaultConfig");
 const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
-
-const { theme: defaultTheme, variants: defaultVariants } = defaultConfig;
 
 module.exports = {
     theme: { 
@@ -708,30 +706,28 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: [
-            ...defaultVariants.backgroundColor,
+        backgroundColor: ({ after }) => after([
             "themes",
             "themes:hover",
             "themes:focus",
             "themes:selection",
-        ],
-        boxShadow: [...defaultVariants.boxShadow, "themes", "themes:focus"],
-        textColor: [
-            ...defaultVariants.textColor,
+        ]),
+        boxShadow: ({ after }) => after(["themes", "themes:focus"]),
+        textColor: ({ after }) => after([
             "themes",
             "themes:group-focus",
             "themes:group-hover",
             "themes:hover",
             "themes:focus",
             "themes:selection",
-        ],
+        ]),
     },
 
     plugins: [
         themeVariants({
             group: "themes",
             baseSelector: "html",
-            fallback: "light-theme",
+            fallback: "compact",
             themes: {
                 "light-theme": { selector: "[data-theme=light]", mediaQuery: prefersLight },
                 "dark-theme": { selector: "[data-theme=dark]", mediaQuery: prefersDark },
@@ -745,7 +741,7 @@ module.exports = {
 ## Usage with the Tailwind CSS Typography plugin
 To use theme variants with the official [Tailwind CSS Typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin, create `prose` modifiers for each theme and list the theme variants in the `typography` variants array.
 
-Here's an example of changing the prose colors with your themes. This covers all of the color settings in the [default typography styles](https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js):
+Here's an example of changing the prose colors with themes. This covers all of the color settings in the [default typography styles](https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js):
 
 ```js
 const typography = require("@tailwindcss/typography");
@@ -904,7 +900,7 @@ module.exports = {
 
 Thanks to @stefanzweifel's [article on the subject](https://stefanzweifel.io/posts/2020/07/20/add-dark-mode-support-to-at-tailwindcsstypography/) and @pspeter3's [issue](https://github.com/tailwindlabs/tailwindcss-typography/issues/69)!
 
-Now that you have appropriate variants for `prose`, let's upgrade our HTML to use them:
+Now that we have appropriate variants for `prose`, let's upgrade our HTML to use them:
 
 ```html
 <article class="prose light-theme:prose-light dark-theme:prose-dark">
@@ -914,4 +910,4 @@ Now that you have appropriate variants for `prose`, let's upgrade our HTML to us
 </article>
 ```
 
-We will revisit this example in the Semantics section below once the semantics feature is implemented 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) as a rough and messy guide.
+We will revisit this example in the Semantics section below once I've written that out 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) as an extremely rough guide.

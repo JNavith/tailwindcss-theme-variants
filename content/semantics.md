@@ -1,18 +1,14 @@
 # Semantics
-Semantics are a work in progress feature for this plugin that will be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
-
-**The following sections are in present tense but talk about features that are not implemented yet, so don't try to use them:**
+Semantics are an **experimental feature** for this plugin that serve as an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9).
 
 **Semantics require Tailwind CSS 1.7 or higher. Also, the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/pull/2159) will be enabled for you if you use semantics because it's required for them to work.**
 
-TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
+TODO. Semantic classes bundle up your design system with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
 * `backgroundColor`
 * `borderColor`
 * `boxShadow`
 * `divideColor`
 * `textColor`
-
-In the future it'll be possible to let you, the user, write custom utility classes for use with semantics similarly to how you can write your own variants.
 
 But, when you use the variables feature, you can use *any* utility as long as you can reference `var(--semantic-name)`.
 
@@ -70,3 +66,8 @@ To maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities,
 
 ### Examples
 TODO
+
+## Custom semantic utilities
+
+TODO. Just like you can write custom stacked variants, you can write custom semantic utilities. Pass `utilities`, an object of named utilities to `SemanticUtility` interface-compatible objects.
+
