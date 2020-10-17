@@ -192,7 +192,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				}, {} as Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>,
 			);
 
-			const useUnlessOverriden = (source: ConfigurableSemantics, destinations: SupportedSemanticUtilities[]) => {
+			const useUnlessOverriden = (source: ConfigurableSemantics, destinations: ConfigurableSemantics[]) => {
 				destinations.forEach((destination) => {
 					if (semantics[source] && !semantics[destination]) {
 						semantics[destination] = {};
@@ -203,15 +203,30 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				});
 			};
 
-			// Use "colors" as defaults for all the other color utilities
-			useUnlessOverriden("colors", ["backgroundColor", "borderColor", "divideColor", "textColor"]);
-			// And remove it from semantics
+			// Use "colors" as defaults for all the other color utilities (except "divideColor" -- see below)
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L154
+			useUnlessOverriden("colors", ["backgroundColor", "borderColor", "gradientColorStops", "textColor"]);
+			// And remove it from semantics (since it's not a utility)
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
 			delete semantics.colors;
 
-			// Use "opacity" as defaults for all the other opacity utilities
-			useUnlessOverriden("opacity", ["backgroundOpacity", "borderOpacity", "divideOpacity", "textOpacity"]);
+			// Use "borderColor" as defaults for "divideColor"
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L229
+			useUnlessOverriden("borderColor", ["divideColor"]);
+
+			// Use "opacity" as defaults for all the other opacity utilities (except "divideOpacity" -- see below)
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L188
+			useUnlessOverriden("opacity", ["backgroundOpacity", "borderOpacity", "textOpacity"]);
+
+			// Use "borderOpacity" as defaults for "divideOpacity"
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L188
+			useUnlessOverriden("borderOpacity", ["divideOpacity"]);
+
+			// TODO: implement this one
+			// Use "borderWidth" as defaults for "divideWidth"
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L188
+			// useUnlessOverriden("borderWidth", ["divideWidth"]);
 
 			// Use "gradientColorStops" as values for the from-, via-, and to- utilities
 			useUnlessOverriden("gradientColorStops", ["gradientFromColor", "gradientViaColor", "gradientToColor"]);
@@ -252,13 +267,15 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 								if (lookupName[i] === "." || lookupName[i] === "-") allHyphensAndPeriods.push(i);
 							}
 
+							const { configKey } = behavior[utilityName as SupportedSemanticUtilities];
+
 							const toTry = 2 ** allHyphensAndPeriods.length;
 							[...Array(toTry).keys()].forEach((bitmap) => {
 								allHyphensAndPeriods.forEach((index, bit) => {
 									// eslint-disable-next-line no-bitwise
 									lookupName = lookupName.substring(0, index) + (bitmap & (1 << bit) ? "." : "-") + lookupName.substring(index + 1);
 								});
-								const foundValue = lookupTheme(`${utilityName}.${lookupName}`, undefined);
+								const foundValue = lookupTheme(`${configKey}.${lookupName}`, undefined);
 								if (foundValue) realValue = foundValue;
 							});
 
@@ -271,7 +288,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 									variables[`--${variable}`] = realValue.toString();
 								}
 							} else {
-								throw new TypeError(`tailwindcss-theme-variants: the initial / constant value for the semantic variable named "${variable}" for the "${themeName}" theme couldn't be found; it should be named "${referenceValue}" ${referenceValue.includes(".") || referenceValue.includes("-") ? "(maybe with . in place of -?) " : ""}in \`theme.${utilityName}\`. this can be fixed by making sure the value you referenced (${referenceValue}) is in your Tailwind CSS \`theme\` configuration under \`${utilityName}\`.\nthere could be a mistake here; please create an issue if it actually does exist: https://github.com/JakeNavith/tailwindcss-theme-variants/issues`);
+								throw new TypeError(`tailwindcss-theme-variants: the initial / constant value for the semantic variable named "${variable}" for the "${themeName}" theme couldn't be found; it should be named "${referenceValue}" ${referenceValue.includes(".") || referenceValue.includes("-") ? "(maybe with . in place of -?) " : ""}in \`theme.${configKey}\`. this can be fixed by making sure the value you referenced (${referenceValue}) is in your Tailwind CSS \`theme\` configuration under \`${configKey}\`.\nthere could be a mistake here; please create an issue if it actually does exist: https://github.com/JakeNavith/tailwindcss-theme-variants/issues`);
 							}
 						});
 					});
@@ -317,36 +334,40 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				});
 			}
 
+			// TODO: loop over behavior instead?
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
+				const {
+					configKey, opacityUtility, opacityVariable, prefix: classPrefix, css,
+				} = behavior[utility as SupportedSemanticUtilities];
+				if (!isUtilityEnabled(configKey)) return;
+
+				const allVariants = lookupVariants(configKey, []);
+				// Drop theme variants from these utilities because they won't work
+				const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group && allThemeNames.every((themeName) => !variant.startsWith(`${themeName}:`)) && !variant.startsWith(`${group}:`));
+
+				const hasAllThemeVariants = (group ? (allVariants as string[]).includes(group) : false) || allThemeNames.every((themeName) => (allVariants as string[]).includes(themeName));
+
+				if (!noie11 && !hasAllThemeVariants) {
+					console.warn(`tailwindcss-theme-variants: ${onlyie11 ? "" : "the IE11 compatible "}semantic utility classes for the "${utility}" utility could not generate because the variants needed did not exist. this can be fixed by listing the theme group variant "${group}" in the \`variants.${configKey}\` array in your Tailwind CSS configuration. there is no way to silence this warning, so if you don't care, ignore it`);
+					if (onlyie11) {
+						return;
+					}
+				}
+
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
-					if (!isUtilityEnabled(utility)) return;
-
-					const {
-						opacityUtility, opacityVariable, prefix: classPrefix, css,
-					} = behavior[utility as SupportedSemanticUtilities];
-
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => {
 						const wholePrefix = `${themeName}${separator}${classPrefix}`;
 						if (sourceName === "default") return wholePrefix;
 						return `${wholePrefix}-${sourceName}`;
 					});
 
-					const allVariants = lookupVariants(utility, []);
-					// Drop theme variants from these utilities because they won't work
-					const dedupedVariants = allVariants.filter((variant) => !allThemeNames.includes(variant) && variant !== group && allThemeNames.every((themeName) => !variant.startsWith(`${themeName}:`)) && !variant.startsWith(`${group}:`));
-
 					const computedClass = semanticName === "default" ? `.${e(classPrefix)}` : `.${e(`${classPrefix}-${semanticName}`)}`;
-					if (!noie11) {
-						const hasAllThemeVariants = (group ? (allVariants as string[]).includes(group) : false) || allThemeNames.every((themeName) => (allVariants as string[]).includes(themeName));
-						if (hasAllThemeVariants) {
-							addUtilities({
-								[computedClass]: {
-									[`@apply ${classesToApply.join(" ")}`]: "",
-								},
-							}, dedupedVariants);
-						} else {
-							console.warn(`tailwindcss-theme-variants: semantic utilities for the "${utility}" utility could not generate because the variants needed did not exist. this can be fixed by listing the theme group variant "${group}" in the \`variants.${utility}\` array in your Tailwind CSS configuration`);
-						}
+					if (!noie11 && hasAllThemeVariants) {
+						addUtilities({
+							[computedClass]: {
+								[`@apply ${classesToApply.join(" ")}`]: "",
+							},
+						}, dedupedVariants);
 					}
 
 					// Use the custom properties extension if allowed

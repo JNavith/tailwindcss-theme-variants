@@ -10,6 +10,7 @@ const simpleCSS = (property: string): SemanticUtility["css"] => ({ computedClass
 });
 
 const simpleUtility = (utility: string, prefix?: string): SemanticUtility => ({
+	configKey: utility,
 	prefix: prefix ?? utility,
 	css: simpleCSS(kebabCase(utility)),
 });
@@ -20,23 +21,27 @@ const sameColorFullyTransparent = (color: string) => {
 };
 
 export const backgroundColor: SemanticUtility = {
+	configKey: "backgroundColor",
 	prefix: "bg",
 	opacityUtility: "backgroundOpacity",
 	opacityVariable: "bg-opacity",
 	css: simpleCSS("background-color"),
 };
 export const backgroundOpacity: SemanticUtility = {
+	configKey: "backgroundOpacity",
 	prefix: "bg-opacity",
 	css: simpleCSS("--bg-opacity"),
 };
 
 export const borderColor: SemanticUtility = {
+	configKey: "borderColor",
 	prefix: "border",
 	opacityUtility: "borderOpacity",
 	opacityVariable: "border-opacity",
 	css: simpleCSS("border-color"),
 };
 export const borderOpacity: SemanticUtility = {
+	configKey: "borderOpacity",
 	prefix: "border-opacity",
 	css: simpleCSS("--border-opacity"),
 };
@@ -44,6 +49,7 @@ export const borderOpacity: SemanticUtility = {
 export const boxShadow = simpleUtility("boxShadow", "shadow");
 
 export const divideColor: SemanticUtility = {
+	configKey: "divideColor",
 	prefix: "divide",
 	opacityUtility: "divideOpacity",
 	opacityVariable: "divide-opacity",
@@ -54,6 +60,7 @@ export const divideColor: SemanticUtility = {
 	}),
 };
 export const divideOpacity: SemanticUtility = {
+	configKey: "divideOpacity",
 	prefix: "divide-opacity",
 	css: ({ computedClass, computedValue }) => ({
 		[`${computedClass} > :not(template) ~ :not(template)`]: {
@@ -62,6 +69,7 @@ export const divideOpacity: SemanticUtility = {
 	}),
 };
 export const divideStyle: SemanticUtility = {
+	configKey: "divideStyle",
 	prefix: "divide",
 	css: ({ computedClass, computedValue }) => ({
 		[`${computedClass} > :not(template) ~ :not(template)`]: {
@@ -75,6 +83,7 @@ export const fontSize = simpleUtility("fontSize", "text");
 export const fontWeight = simpleUtility("fontWeight", "font");
 
 export const gradientFromColor: SemanticUtility = {
+	configKey: "gradientColorStops",
 	prefix: "from",
 	css: ({ computedClass, computedValue }) => ({
 		[computedClass]: {
@@ -84,6 +93,7 @@ export const gradientFromColor: SemanticUtility = {
 	}),
 };
 export const gradientViaColor: SemanticUtility = {
+	configKey: "gradientColorStops",
 	prefix: "via",
 	css: ({ computedClass, computedValue }) => ({
 		[computedClass]: {
@@ -93,6 +103,7 @@ export const gradientViaColor: SemanticUtility = {
 	}),
 };
 export const gradientToColor: SemanticUtility = {
+	configKey: "gradientColorStops",
 	prefix: "to",
 	css: simpleCSS("--gradient-to-color"),
 };
@@ -100,12 +111,14 @@ export const gradientToColor: SemanticUtility = {
 export const opacity = simpleUtility("opacity");
 
 export const textColor: SemanticUtility = {
+	configKey: "textColor",
 	prefix: "text",
 	opacityUtility: "textOpacity",
 	opacityVariable: "text-opacity",
 	css: simpleCSS("color"),
 };
 export const textOpacity: SemanticUtility = {
+	configKey: "textOpacity",
 	prefix: "text-opacity",
 	css: simpleCSS("--text-opacity"),
 };
