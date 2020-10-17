@@ -10,6 +10,8 @@ export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Prom
 			theme: {},
 			corePlugins: false,
 			future: {
+				defaultLineHeights: true,
+				standardFontWeights: true,
 				removeDeprecatedGapUtilities: true,
 				purgeLayersByDefault: true,
 			},
