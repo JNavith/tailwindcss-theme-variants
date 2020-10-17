@@ -2,10 +2,11 @@ const { mdsvex } = require("mdsvex");
 const link = require("rehype-autolink-headings");
 const slug = require("rehype-slug");
 const externalLinks = require("remark-external-links");
+const github = require("remark-github");
 const sveltePreprocess = require("svelte-preprocess");
 const postcss = require("./postcss.config");
 
-const extensions = [".svx", ".md"];
+const extensions = [".svx"];
 
 const createPreprocessors = ({ sourceMap }) => [
 	sveltePreprocess({
@@ -19,13 +20,15 @@ const createPreprocessors = ({ sourceMap }) => [
 	mdsvex({
 		extensions,
 		layout: {
-			_: "./src/layouts/all.svelte",
+			_: "./src/layouts/transparent.svelte",
+			"brag-about": "./src/layouts/brag-about.svelte",
 		},
 		remarkPlugins: [
+			github,
 			[externalLinks, {
 				content: {
 					type: "text",
-					value: "Opens in a new window",
+					value: " (opens in a new window)",
 				},
 				contentProperties: {
 					"class": "sr-only",

@@ -1,0 +1,30 @@
+---
+layout: "brag-about"
+cardColor: "bg-brag-about-cyan-bg"
+titleColor: "text-brag-about-cyan-heading"
+iconColor: "text-brag-about-cyan-icon"
+iconBackgroundColor: "bg-brag-about-cyan-icon-bg"
+bodyColor: "text-brag-about-cyan-body"
+dividerColor: "border-brag-about-cyan-icon-bg"
+---
+
+<script context="module">
+	import viewGrid from "@iconify/icons-heroicons-solid/view-grid";
+	
+	// @ts-ignore
+	metadata.icon = viewGrid;
+</script>
+
+<span slot="title">
+
+Stack extra variants
+
+</span>
+
+<span slot="body">
+
+Use variants like `theme:hover` to change a link's color on hover *depending on the theme*.
+
+Use responsive variants to set a border color depending on the breakpoint *and* theme.
+
+</span>

@@ -1,0 +1,28 @@
+---
+layout: "brag-about"
+cardColor: "bg-brag-about-red-bg"
+titleColor: "text-brag-about-red-heading"
+iconColor: "text-brag-about-red-icon"
+iconBackgroundColor: "bg-brag-about-red-icon-bg"
+bodyColor: "text-brag-about-red-body"
+dividerColor: "border-brag-about-red-icon-bg"
+---
+
+<script context="module">
+	import colorSwatch from "@iconify/icons-heroicons-solid/color-swatch";
+	
+	// @ts-ignore
+	metadata.icon = colorSwatch;
+</script>
+
+<span slot="title">
+
+Stick to your design system
+
+</span>
+
+<span slot="body">
+
+It's **impossible to deviate** from your Tailwind configuration when using this plugin's variants and semantics.
+
+</span>

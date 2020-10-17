@@ -5,16 +5,23 @@
 	View the full documentation at https://tailwindcss.com.
 */
 
+const d3 = require("d3-color");
 const htmlTags = require("html-tags");
 const leadingTrim = require("tailwindcss-leading-trim");
 const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
 const typography = require("@tailwindcss/typography");
-const typographyStyles = require("@tailwindcss/typography/src/styles");
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+const proseStyles = require("./prose-styles");
+const redesignedColorPalette = require("./unstable_colors");
+
+const lch = (l, c, h) => d3.lch(l, c, h).formatHex();
 
 /** @type{import("@navith/tailwindcss-plugin-author-types").TailwindCSSConfig} */
 const tailwindcssConfig = {
 	purge: {
-		content: ["./src/**/*.svelte", "./src/**/*.html"],
+		content: ["./src/**/*.svelte", "./src/routes/**/*.svx", "./src/**/*.html"],
 		options: {
 			defaultExtractor: (content) => [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
 			keyframes: true,
@@ -22,245 +29,91 @@ const tailwindcssConfig = {
 		},
 	},
 	theme: {
+		colors: {
+			white: lch(100, 0, 0),
+			black: lch(0, 0, 0),
+
+			gray: redesignedColorPalette.coolGray,
+			red: redesignedColorPalette.red,
+			amber: redesignedColorPalette.amber,
+			yellow: redesignedColorPalette.yellow,
+			lime: redesignedColorPalette.lime,
+			green: redesignedColorPalette.green,
+			cyan: redesignedColorPalette.cyan,
+			"light-blue": redesignedColorPalette.lightBlue,
+			blue: redesignedColorPalette.blue,
+			indigo: redesignedColorPalette.indigo,
+			purple: redesignedColorPalette.fuchsia,
+
+			"code-yellow": {
+				200: lch(92, 63.324 + 5, 97.837),
+				800: lch(31 + 3, 39.878 + 70, 58.146 + 27),
+			},
+			"code-green": {
+				300: lch(83 - 2.5, 37.279 + 35, 165.238 - 20),
+				800: lch(31, 28.507 + 75, 167.587 - 5),
+			},
+			"code-teal": {
+				300: lch(82, 28.809 + 50, 203.877 - 15),
+				800: lch(31 - 2.5, 20.456 + 80, 219.205 - 23),
+			},
+			"code-blue": {
+				300: lch(80 + 1, 29.564 + 70, 269.349 + 15),
+				800: lch(31 + 3, 58.694 + 26, 292.926),
+			},
+			"code-purple": {
+				300: lch(80, 33.365 + 60, 299.190 + 10),
+				800: lch(30, 88.129 + 5, 309.133 + 17),
+			}
+		},
+
 		extend: {
+			backgroundImage: {
+				"gradient-45deg": "linear-gradient(45deg, var(--gradient-color-stops))",
+			},
+
+			borderRadius: {
+				"2.5xl": "1.25rem",
+			},
+
 			boxShadow: {
 				"lg-faint": "0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)",
+				"xl-blue": "0 15px 30px -5px rgba(59, 130, 246, 0.2), 0 10px 25px -5px rgba(96, 165, 250, 0.6)",
+				"2xl-blue": "0 18px 40px -12px rgba(59, 130, 246, 0.4), 0 13px 27px -5px rgba(96, 165, 250, 0.8)",
 			},
+
+			fontFamily: {
+				"heading": ["Syne", ...defaultTheme.fontFamily.sans],
+			},
+
+			letterSpacing: {
+				"snug": "-0.0125em",
+			},
+
+			minWidth: (theme) => ({
+				...theme("maxWidth"),
+			})
 		},
+
 		screens: {
 			"sm": "640px",
 			"md": "768px",
 			"lg": "1024px",
 			"xl": "1280px",
-			"2xl": "1920px",
+			"2xl": "1536px",
+			"3xl": "1920px",
 		},
-		typography: {
-			default: {
-				css: {
-					color: false,
-					"@apply text-on-primary": "",
-					"@apply transition-theme": "",
-					width: "72ch",
-					maxWidth: "100%",
-					lineHeight: "2",
 
-					"a": {
-						color: false,
-						textDecoration: false,
-						"@apply text-accent": "",
-						"@apply transition-theme": "",
-					},
-					"a:hover, a:focus": {
-						textDecoration: "underline",
-						"@apply text-accent-strong-100": "",
-					},
-
-					// Begin code styles
-					"code": {
-						color: "inherit",
-						fontWeight: false,
-						"@apply bg-primary-faint-100": "",
-						"@apply transition-theme": "",
-						"@apply p-1 -m-0.5 rounded": "",
-						boxDecorationBreak: "clone",
-					},
-					"code::before": {
-						content: false,
-					},
-					"code::after": {
-						content: false,
-					},
-					"code a, a code": {
-						"@apply text-accent-strong-100 bg-accent-faint-600": "",
-					},
-					"a:hover code, a:focus code": {
-						"@apply text-accent-strong-200 bg-accent-faint-500": "",
-					},
-					"pre code, table code": {
-						backgroundColor: "transparent !important",
-					},
-					// End code styles
-
-					"h1": {
-						color: false,
-
-						marginTop: typographyStyles.default.css[1].h2.marginTop,
-						marginBottom: typographyStyles.default.css[1].h1.marginTop,
-
-						fontWeight: false,
-						"@apply font-semibold": "",
-					},
-					"h2": {
-						color: false,
-
-						marginTop: typographyStyles.default.css[1].h1.marginBottom,
-
-						fontWeight: false,
-						"@apply font-semibold": "",
-					},
-					"h3": {
-						color: false,
-					},
-
-					"h1 a, h2 a, h3 a": {
-						"@apply text-on-primary": "",
-						"@apply transition-theme": "",
-					},
-
-					// Begin list styles
-					"li": {
-						marginTop: "0.25em",
-						marginBottom: "0.25em",
-					},
-					"ul > li > :first-child": {
-						marginTop: false,
-					},
-					"ul > li > :last-child": {
-						marginBottom: false,
-					},
-					"ul > li::before": {
-						backgroundColor: false,
-						"@apply bg-on-primary-faint-500": "",
-						"@apply transition-theme": "",
-						top: "0.875em",
-					},
-					"ol > li::before": {
-						backgroundColor: false,
-						"@apply text-on-primary-faint-200": "",
-						"@apply transition-theme": "",
-					},
-					// End list styles
-
-					"strong": {
-						color: false,
-						"@apply text-on-primary": "",
-						"@apply transition-theme": "",
-					},
-
-					// Begin table styles
-					"table": {
-						"@apply block": "",
-						maxHeight: "calc(40vh + 10rem)",
-						"@apply overflow-x-auto overflow-y-auto": "",
-						"@apply rounded-md": "",
-					},
-
-					"thead": {
-						borderBottomWidth: false,
-						color: false,
-					},
-
-					"thead:first-child tr:first-child th:first-child, tbody:first-child tr:first-child th:first-child, tbody:first-child tr:first-child td:first-child": {
-						"@apply rounded-tl-md": "",
-					},
-					"thead:first-child tr:first-child th:last-child, tbody:first-child tr:first-child th:last-child, tbody:first-child tr:first-child td:last-child": {
-						"@apply rounded-tr-md": "",
-					},
-					"thead:last-child tr:last-child th:last-child, tbody:last-child tr:last-child th:last-child, tbody:last-child tr:last-child td:last-child": {
-						"@apply rounded-br-md": "",
-					},
-					"thead:last-child tr:last-child th:first-child, tbody:last-child tr:last-child th:first-child, tbody:last-child tr:last-child td:first-child": {
-						"@apply rounded-bl-md": "",
-					},
-
-					"tbody tr": {
-						borderBottomWidth: false,
-					},
-
-					"thead th:first-child:empty": {
-						"@apply z-10": "",
-					},
-
-					"tbody th:first-child, thead th": {
-						"@apply sticky top-0 left-0": "",
-						"@apply bg-primary-faint-100": "",
-					},
-
-					"thead th:first-child": {
-						paddingLeft: false,
-					},
-					"thead th:last-child": {
-						paddingRight: false,
-					},
-
-					"tbody td:first-child": {
-						paddingLeft: false,
-					},
-					"tbody td:last-child": {
-						paddingRight: false,
-					},
-
-					"th": {
-						"@apply font-semibold": "",
-					},
-
-					"th, td": {
-						"@apply p-2": "",
-						"@apply bg-primary-faint-100": "",
-						"@apply transition-theme": "",
-					},
-
-					"tbody tr:nth-child(odd) th, tbody tr:nth-child(odd) td": {
-						"@apply bg-primary-faint-200": "",
-					},
-					// End table styles
-				},
-			},
-
-			sm: {
-				css: {
-					lineHeight: "2.5",
-
-					// Begin heading styles
-					"h1": {
-						marginTop: typographyStyles.sm.css[0].h2.marginTop,
-						marginBottom: typographyStyles.sm.css[0].h1.marginTop,
-					},
-					"h2": {
-						marginTop: typographyStyles.sm.css[0].h1.marginBottom,
-					},
-					// End heading styles
-
-					// Begin list styles
-					"ul > li::before": {
-						top: "1em",
-					},
-					// End list styles
-
-					// Begin table styles
-					"thead th:first-child": {
-						paddingLeft: false,
-					},
-					"thead th:last-child": {
-						paddingRight: false,
-					},
-
-					"tbody td:first-child": {
-						paddingLeft: false,
-					},
-					"tbody td:last-child": {
-						paddingRight: false,
-					},
-					// End table styles
-				}
-			},
-
-			lg: {
-				css: {
-					// Begin table styles
-					"table": {
-						maxHeight: "calc(80vh - 8rem)",
-					},
-					// End table styles
-				},
-			}
-		},
+		typography: proseStyles.typography,
 	},
 	variants: {
 		backgroundColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
-		boxShadow: ({ after }) => after(["themes"]),
+		borderColor: ({ after }) => after(["themes"]),
+		boxShadow: ({ after }) => after(["hocus", "themes", "themes:hocus"]),
+		gradientColorStops: ({ after }) => after(["themes"]),
 		textDecoration: ({ after }) => after(["group-hocus", "hocus"]),
 		textColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
+		scale: ({ after }) => after(["hocus"]),
 	},
 	plugins: [
 		themeVariants({
@@ -273,63 +126,178 @@ const tailwindcssConfig = {
 					mediaQuery: prefersLight,
 					semantics: {
 						colors: {
-							"accent-faint-600": "blue-100",
-							"accent-faint-500": "blue-200",
-							"accent-faint-400": "blue-300",
-							"accent-faint-300": "blue-400",
-							"accent-faint-200": "blue-500",
-							"accent-faint-100": "blue-600",
-							"accent": "blue-700",
-							"accent-strong-100": "blue-800",
-							"accent-strong-200": "blue-900",
+							"accent": {
+								faint: {
+									600: "blue-100",
+									500: "blue-200",
+								},
+								default: "blue-700",
+								strong: {
+									100: "blue-800",
+									200: "blue-900",
+								},
+							},
 
-							"primary-faint-200": "gray-200",
-							"primary-faint-100": "gray-100",
-							"primary": "white",
+							"primary": {
+								faint: {
+									200: "gray-200",
+									100: "gray-100",
+								},
+								default: "white",
+							},
 
-							"on-primary": "gray-800",
-							"on-primary-faint-100": "gray-700",
-							"on-primary-faint-200": "gray-600",
-							"on-primary-faint-300": "gray-500",
-							"on-primary-faint-500": "gray-300",
+							"on-primary": {
+								faint: {
+									500: "gray-300",
+									400: "gray-400",
+									300: "gray-500",
+									200: "gray-600",
+									100: "gray-700",
+								},
+								default: "gray-800",
+							},
 
-							"header": "white",
-						},
-						boxShadow: {
-							"header": "lg-faint",
+							"brag-about-red": {
+								"bg": "red-100",
+								"icon": "red-800",
+								"icon-bg": "red-300",
+								"heading": "red-800",
+								"body": "red-900",
+							},
+
+							"brag-about-yellow": {
+								"bg": "amber-100",
+								"icon": "amber-800",
+								"icon-bg": "amber-300",
+								"heading": "amber-800",
+								"body": "amber-900",
+							},
+
+							"brag-about-green": {
+								"bg": "lime-100",
+								"icon": "lime-800",
+								"icon-bg": "lime-300",
+								"heading": "lime-800",
+								"body": "lime-900",
+							},
+
+							"brag-about-cyan": {
+								"bg": "cyan-100",
+								"icon": "cyan-800",
+								"icon-bg": "cyan-300",
+								"heading": "cyan-800",
+								"body": "cyan-900",
+							},
+
+							"brag-about-blue": {
+								"bg": "blue-100",
+								"icon": "blue-800",
+								"icon-bg": "blue-300",
+								"heading": "blue-800",
+								"body": "blue-900",
+							},
+
+							"brag-about-purple": {
+								"bg": "purple-100",
+								"icon": "purple-800",
+								"icon-bg": "purple-300",
+								"heading": "purple-800",
+								"body": "purple-900",
+							},
 						},
 					},
 				},
+
 				"dark-theme": {
 					selector: "[data-theme=dark]",
 					mediaQuery: prefersDark,
 					semantics: {
 						colors: {
-							"accent-faint-600": "blue-900",
-							"accent-faint-500": "blue-800",
-							"accent": "blue-400",
-							"accent-strong-100": "blue-200",
-							"accent-strong-200": "blue-100",
+							"accent": {
+								faint: {
+									600: "blue-900",
+									500: "blue-800",
+								},
+								default: "blue-400",
+								strong: {
+									100: "blue-200",
+									200: "blue-100",
+								},
+							},
 
-							"primary-faint-200": "gray-700",
-							"primary-faint-100": "gray-800",
-							"primary": "gray-900",
+							"primary": {
+								faint: {
+									200: "gray-700",
+									100: "gray-800",
+								},
+								default: "gray-900",
+							},
 
-							"on-primary": "gray-100",
-							"on-primary-faint-100": "gray-200",
-							"on-primary-faint-200": "gray-300",
-							"on-primary-faint-300": "gray-400",
-							"on-primary-faint-400": "gray-500",
-							"on-primary-faint-500": "gray-600",
+							"on-primary": {
+								faint: {
+									500: "gray-600",
+									400: "gray-500",
+									300: "gray-400",
+									200: "gray-300",
+									100: "gray-200",
+								},
+								default: "gray-100",
+							},
 
-							"header": "gray-800",
-						},
-						boxShadow: {
-							"header": "lg",
+							"brag-about-red": {
+								"bg": "red-900",
+								"icon": "white",
+								"icon-bg": "red-600",
+								"heading": "white",
+								"body": "red-100",
+							},
+
+							"brag-about-yellow": {
+								"bg": "yellow-900",
+								"icon": "white",
+								"icon-bg": "yellow-600",
+								"heading": "white",
+								"body": "yellow-50",
+							},
+
+							"brag-about-green": {
+								"bg": "green-900",
+								"icon": "white",
+								"icon-bg": "green-600",
+								"heading": "white",
+								"body": "green-100",
+							},
+
+							"brag-about-cyan": {
+								"bg": "light-blue-900",
+								"icon": "white",
+								"icon-bg": "light-blue-600",
+								"heading": "white",
+								"body": "light-blue-100",
+							},
+
+							"brag-about-blue": {
+								"bg": "blue-900",
+								"icon": "white",
+								"icon-bg": "blue-600",
+								"heading": "white",
+								"body": "blue-100",
+							},
+
+							"brag-about-purple": {
+								"bg": "purple-900",
+								"icon": "white",
+								"icon-bg": "purple-600",
+								"heading": "white",
+								"body": "purple-100",
+							},
 						},
 					},
 				},
 			},
+			variants: {
+				hocus: (selector) => `${selector}:hover, ${selector}:focus`,
+			}
 		}),
 
 		typography,
@@ -353,20 +321,19 @@ const tailwindcssConfig = {
 	],
 
 	target: ["relaxed", {
-		// Semantic variables are not fully implemented yet, so leaving them enabled breaks things
+		// We don't need semantic variables on this site
 		themeVariants: "ie11",
 	}],
 
 	experimental: {
 		applyComplexClasses: true,
 		extendedSpacingScale: true,
-		uniformColorPalette: true,
 	},
 
-	future: {
-		removeDeprecatedGapUtilities: true,
-		purgeLayersByDefault: true,
-	},
+	future: "all",
+
+	// We have our own!
+	dark: false,
 };
 
 module.exports = tailwindcssConfig;

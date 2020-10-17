@@ -1,0 +1,30 @@
+---
+layout: "brag-about"
+cardColor: "bg-brag-about-blue-bg"
+titleColor: "text-brag-about-blue-heading"
+iconColor: "text-brag-about-blue-icon"
+iconBackgroundColor: "bg-brag-about-blue-icon-bg"
+bodyColor: "text-brag-about-blue-body"
+dividerColor: "border-brag-about-blue-icon-bg"
+---
+
+<script context="module">
+	import globeAlt from "@iconify/icons-heroicons-solid/globe-alt";
+	
+	// @ts-ignore
+	metadata.icon = globeAlt;
+</script>
+
+<span slot="title">
+
+Extreme browser support
+
+</span>
+
+<span slot="body">
+
+You can easily theme browsers **as far back as IE9**, especially when you use the `fallback` feature.
+
+No CSS custom properties needed!
+
+</span>

@@ -1,6 +1,6 @@
 {
 	"short_name": "Theme Variants",
-	"name": "Tailwind CSS Theme Variants",
+	"name": "Theme Variants for Tailwind CSS",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"categories": [
 		"personalization",

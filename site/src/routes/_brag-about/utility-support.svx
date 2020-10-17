@@ -1,0 +1,30 @@
+---
+layout: "brag-about"
+cardColor: "bg-brag-about-purple-bg"
+titleColor: "text-brag-about-purple-heading"
+iconColor: "text-brag-about-purple-icon"
+iconBackgroundColor: "bg-brag-about-purple-icon-bg"
+bodyColor: "text-brag-about-purple-body"
+dividerColor: "border-brag-about-purple-icon-bg"
+---
+
+<script context="module">
+	import collection from "@iconify/icons-heroicons-solid/collection";
+	
+	// @ts-ignore
+	metadata.icon = collection;
+</script>
+
+<span slot="title">
+
+For every utility
+
+</span>
+
+<span slot="body">
+
+***Any* utility can have theme variants**, thanks to how Tailwind CSS's variant system works.
+
+Theme text colors, box shadows, opacities--even utilities from other plugins!
+
+</span>

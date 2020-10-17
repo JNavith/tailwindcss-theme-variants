@@ -1,92 +1,64 @@
 <script>
 	// @ts-nocheck
 	import Icon from "@iconify/svelte";
-	import github from "@iconify/icons-mdi/github";
-	import npm from "@iconify/icons-mdi/npm-variant";
-	import colorSwatch from "@iconify/icons-heroicons-solid/color-swatch";
-	import moon from "@iconify/icons-heroicons-solid/moon";
-	import sun from "@iconify/icons-heroicons-solid/sun";
 
-	import Metadata from "../components/Metadata.svelte";
+	import chevronRight from "@iconify/icons-heroicons-solid/chevron-right";
 
-	import SiteAll from "../rendered-content/site-all.svx";
-	import SiteTOC from "../rendered-content/site-toc.svx";
+	import BrowserSupport from "./_brag-about/browser-support.svx";
+	import UtilitySupport from "./_brag-about/utility-support.svx";
+	import DesignSystem from "./_brag-about/design-system.svx";
+	import UnlimitedThemes from "./_brag-about/unlimited-themes.svx";
+	import MeaningfulClasses from "./_brag-about/meaningful-classes.svx";
+	import StackedVariants from "./_brag-about/stacked-variants.svx";
 
-	import { localStore } from "local-store";
-	
-	const theme = localStore("theme", process.browser ? "system" : undefined);
-
-	let themeOptions = [];
-	if (process.browser) {
-		themeOptions = ["light", "dark"]
-		if (matchMedia("(prefers-color-scheme: light)").matches || matchMedia("(prefers-color-scheme: dark)").matches) themeOptions = [...themeOptions, "system"];
-	}
-
-	const themeIcons = {
-		light: sun,
-		dark: moon,
-		system: colorSwatch,
-	}
-
-	$: if (process.browser) {
-		if ($theme === "system") document.documentElement.removeAttribute("data-theme");
-		else document.documentElement.setAttribute("data-theme", $theme);
-	}
+	const order = [
+		BrowserSupport,
+		UtilitySupport,
+		DesignSystem,
+		UnlimitedThemes,
+		MeaningfulClasses,
+		StackedVariants,
+	];
 </script>
 
-<Metadata  />
-
-<div class="flex flex-col h-screen overflow-y-hidden">
-	<header class="z-20 flex flex-row items-baseline justify-between bg-header shadow-header">
-		<!-- Homepage link -->
-		<div class="p-5 lg:pl-10">
-			<a href="/" class="text-base sm:text-xl font-medium hocus:underline"><span class="hidden md:inline">Tailwind CSS </span>Theme Variants</a>
-		</div>
-		<!-- End homepage link -->
+<main class="flex-1 overflow-y-auto">
+	<section class="px-5 py-12 lg:py-16 xl:py-32 md:px-15">
+		<h1 class="text-center text-on-primary transition-theme">
+			<strong class="text-5xl font-normal leading-relaxed font-heading">theme variants</strong>
+			<br class="block lg:hidden" />
+			<span class="font-medium text-4xl lg:text-5xl md:pl-2 lg:font-normal">for Tailwind CSS</span>
+		</h1>
 		
-		<!-- Theme selection -->
-		<div class="px-5 text-on-primary-faint-100">
-			{#if themeOptions.length > 0}
-				<span id="theme-label" class="sr-only md:not-sr-only">Theme:</span>
-			{/if}
-			{#each themeOptions as themeOption}
-				<div class="inline-block">
-					<button aria-labelledby="theme-label" class="px-2 py-2 sm:py-5 group" on:click={() => $theme = themeOption}>
-						<div class="p-1 -m-1 rounded transition-theme {$theme === themeOption ? 'font-semibold bg-primary-faint-200' : 'group-hocus:bg-primary-faint-200'}">
-							<Icon icon={themeIcons[themeOption]} style="font-size: 125%" class="inline align-middle transition-theme {$theme === themeOption ? '' : 'text-on-primary-faint-300 group-hocus:text-on-primary'}" /><span class="lg:pl-1 sr-only lg:not-sr-only">{themeOption.slice(0, 1).toUpperCase() + themeOption.slice(1)}</span>
-						</div>
-					</button>
+		<p class="pt-10 lg:pt-6 text-xl leading-loose text-center">
+			<code class="text-lg">tailwindcss-theme-variants</code> is an <strong class="font-semibold">easy-to-use</strong><br class="hidden sm:block lg:hidden" /> <strong class="font-semibold">theming plugin</strong> for Tailwind CSS<br class="hidden lg:block" /> with a <strong class="font-semibold">powerful featureset</strong>: 
+		</p>
+	</section>
+
+	<div class="flex justify-center">
+		<section class="flex flex-wrap max-w-screen-3xl md:px-5">
+			{#each order as Point}
+				<div class="flex justify-center flex-1 p-5">
+					<Point />
 				</div>
 			{/each}
-		</div>
-		<!-- End theme selection -->
-
-		<!-- External links for the package -->
-		<div class="pr-5">
-			{#each [[github, "GitHub", "https://github.com/JakeNavith/tailwindcss-theme-variants"], [npm, "NPM", "https://www.npmjs.com/package/tailwindcss-theme-variants"]] as [icon, name, link]}
-				<a title={name} class="p-2 pr-0 lg:p-5 lg:pr-5 group text-on-primary-faint-200 hocus:text-on-primary transition-theme" href={link}><Icon {icon} style="font-size: 125%" class="inline align-middle text-on-primary-faint-300 group-hocus:text-on-primary transition-theme" /><span class="md:pl-1 align-middle group-hocus:underline sr-only md:not-sr-only">{name}</span></a>
-			{/each}
-		</div>
-		<!-- End external links for the package -->
-	</header>
-
-	<div class="flex flex-1 flex-shrink-0 overflow-y-hidden">
-		<!-- Left sidebar for navigation -->
-		<aside class="hidden max-w-xs overflow-y-auto xl:max-w-md 2xl:max-w-xl lg:block">
-			<nav class="p-10 sidebar">
-				<SiteTOC />
-			</nav>
-		</aside>
-		<!-- End left sidebar for navigation -->
-
-		<!-- Main page content -->
-		<div class="flex-1 overflow-y-auto">
-			<div class="flex justify-center p-5 lg:p-10">
-				<article class="prose-sm prose md:prose 2xl:prose-lg">
-					<SiteAll />
-				</article>
-			</div>
-		</div>
-		<!-- End main page content -->
+		</section>
 	</div>
-</div>
+
+	<!-- 
+	Choose your learning path:
+
+	<section class="">
+
+	</section>
+	-->
+
+	<section class="pt-16 pb-32">
+		<div class="pb-6 text-center">
+			<span class="text-4xl font-heading font-normal tracking-snug">Convinced?</span>
+		</div>
+		<div class="flex justify-center px-5 text-center md:px-15">
+			<!-- Alternatively, -->
+			<a href="/all#installation" class="inline-block p-5 py-4 pr-2 text-2xl font-semibold text-white transition duration-200 ease-out transform bg-gradient-45deg light-theme:from-indigo-600 light-theme:bg-blue-500 dark-theme:from-indigo-800 dark-theme:bg-blue-600 rounded-2xl hocus:scale-105 light-theme:shadow-xl-blue light-theme:hocus:shadow-2xl-blue dark-theme:shadow-xl dark-theme:hocus:shadow-2xl">Read all the documentation on a single page <Icon class="inline -ml-1.5" style="font-size: 125%" icon={chevronRight} /></a>
+		</div>
+	</section>
+</main>

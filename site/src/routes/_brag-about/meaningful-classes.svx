@@ -1,0 +1,28 @@
+---
+layout: "brag-about"
+cardColor: "bg-brag-about-green-bg"
+titleColor: "text-brag-about-green-heading"
+iconColor: "text-brag-about-green-icon"
+iconBackgroundColor: "bg-brag-about-green-icon-bg"
+bodyColor: "text-brag-about-green-body"
+dividerColor: "border-brag-about-green-icon-bg"
+---
+
+<script context="module">
+	import academicCap from "@iconify/icons-heroicons-solid/academic-cap";
+	
+	// @ts-ignore
+	metadata.icon = academicCap;
+</script>
+
+<span slot="title">
+
+Write smart classes
+
+</span>
+
+<span slot="body">
+
+The experimental `semantics` feature glues your design system and theme variants together--creating meaningful classes like "text-primary" that synchronize with your themes.
+
+</span>

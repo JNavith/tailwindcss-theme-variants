@@ -1,5 +1,5 @@
 <script>
-	const siteName = "Tailwind CSS Theme Variants";
+	const siteName = "Theme Variants";
 	const siteAuthor = "Navith";
 	const siteDomain = "https://tailwindcss-theme-variants.web.app";
 

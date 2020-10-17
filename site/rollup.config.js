@@ -22,7 +22,7 @@ const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 const preprocess = createPreprocessors({ sourceMap: !!sourcemap });
 
 // Changes in these files will trigger a rebuild of the global CSS
-const globalCSSWatchFiles = ["postcss.config.js", "tailwind.config.js", "src/base.pcss", "src/code-theme.pcss", "src/components.pcss", "src/global.pcss"];
+const globalCSSWatchFiles = ["postcss.config.js", "tailwind.config.js", "prose-styles.js", "src/base.pcss", "src/code-theme.pcss", "src/components.pcss", "src/global.pcss"];
 
 const warningIsIgnored = (warning) => warning.message.includes(
 	"Use of eval is strongly discouraged, as it poses security risks and may cause issues with minification",
@@ -79,9 +79,9 @@ export default {
 				],
 			}),
 
-			// !dev && terser({
-			// 	module: true,
-			// }),
+			!dev && terser({
+				module: true,
+			}),
 			
 			(() => {
 				let builder;
@@ -105,8 +105,12 @@ export default {
 								const elapsed = parseInt(performance.now() - start, 10);
 								console.log(`${colors.bold().green("✔ global css")} (src/global.pcss → static/global.css${sourcemap === true ? " + static/global.css.map" : ""}) ${colors.gray(`(${elapsed}ms)`)}`);
 							} else if (code !== null) {
-								console.error(`global css builder exited with code ${code}`);
-								console.log(colors.bold().red("✗ global css"));
+								if (dev) {
+									console.error(`global css builder exited with code ${code}`);
+									console.log(colors.bold().red("✗ global css"));
+								} else {
+									throw new Error(`global css builder exited with code ${code}`);
+								}
 							}
 
 							builder = undefined;

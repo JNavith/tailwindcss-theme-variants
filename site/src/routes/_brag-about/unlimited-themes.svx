@@ -1,0 +1,30 @@
+---
+layout: "brag-about"
+cardColor: "bg-brag-about-yellow-bg"
+titleColor: "text-brag-about-yellow-heading"
+iconColor: "text-brag-about-yellow-icon"
+iconBackgroundColor: "bg-brag-about-yellow-icon-bg"
+bodyColor: "text-brag-about-yellow-body"
+dividerColor: "border-brag-about-yellow-icon-bg"
+---
+
+<script context="module">
+	import lightningBolt from "@iconify/icons-heroicons-solid/lightning-bolt";
+	
+	// @ts-ignore
+	metadata.icon = lightningBolt;
+</script>
+
+<span slot="title">
+
+Unlimited themes
+
+</span>
+
+<span slot="body">
+
+Go beyond just light and dark modes--write **any number of themes** and any number of theme groups.
+
+They can be controlled by **media queries**, **classes**, or **attributes**.
+
+</span>
