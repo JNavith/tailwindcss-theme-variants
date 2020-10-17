@@ -123,4 +123,6 @@ Which generates this CSS:
 }
 ```
 
-💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. [The `group` feature](#theme-groups) will take care of this for you!
+Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. 
+
+💡 [The `group` feature](#theme-groups) will take care of this for you!

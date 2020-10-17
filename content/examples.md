@@ -405,9 +405,11 @@ module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
     },
+
     variants: {
         textColor: ["responsive", "day", "night"]
     },
+    
     plugins: [
         themeVariants({
             themes: {
@@ -439,9 +441,11 @@ module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
     },
+
     variants: {
         padding: ["responsive", "density"]
     },
+
     plugins: [
         themeVariants({
             group: "density",
@@ -451,7 +455,7 @@ module.exports = {
                 compact: { selector: "[data-density=compact]" },
             },
             // Fall back to the first theme listed (comfortable) when density is not configured
-            fallback: true,
+            fallback: "compact",
         }),
     ],
 };
@@ -475,13 +479,17 @@ Here's an example:
 const { themeVariants, landscape, portrait } = require("tailwindcss-theme-variants");
 
 module.exports = {
-    theme: {}
+    theme: {
+        // Your Tailwind CSS theme configuration
+    },
+    
     variants: {
         // If you haven't seen the `group` feature yet:
         // Instead of needing to write out "landscape", "portrait", "landscape:hover", "portrait:hover",
         // We can name the group "orientation" and only write "orientation", "orientation:hover"
         fontSize: ["responsive", "hover", "orientation", "orientation:hover"],
     },
+
     plugins: [
         themeVariants({
             group: "orientation",
@@ -600,8 +608,8 @@ plugins: [
         // Since `inverted-colors` has limited browser support, 
         // assume visitors using unsupported browsers do not have their colors inverted
         // and fall back to the "not-inverted" theme
-        fallback: true,
-        // Since selectors are being used too, we could even provide 
+        fallback: "compact",
+        // 💡 Since selectors are being used too, we could even provide 
         // a button on the site that will manually enable/disable inverted colors
     }),
 ],
@@ -662,7 +670,7 @@ plugins: [
             "motion": { mediaQuery: prefersAnyMotion },
             "no-motion": { mediaQuery: prefersReducedMotion },
         },
-        fallback: true,
+        fallback: "compact",
     }),
 ]
 ```
@@ -687,7 +695,7 @@ plugins: [
             "motion": { mediaQuery: prefersAnyMotion },
             "no-motion": { mediaQuery: prefersReducedMotion },
         },
-        fallback: true,
+        fallback: "compact",
     }),
 ]
 ```
@@ -886,6 +894,7 @@ module.exports = {
 
     plugins: [
         typography,
+
         themeVariants({
             group: "themes",
             themes: {
@@ -903,11 +912,13 @@ Thanks to @stefanzweifel's [article on the subject](https://stefanzweifel.io/pos
 Now that we have appropriate variants for `prose`, let's upgrade our HTML to use them:
 
 ```html
-<article class="prose light-theme:prose-light dark-theme:prose-dark">
-    <p>
-        Content...
-    </p>
-</article>
+<body class="light-theme:bg-white dark-theme:bg-gray-900">
+    <article class="prose light-theme:prose-light dark-theme:prose-dark">
+        <p>
+            Content...
+        </p>
+    </article>
+</body>
 ```
 
 We will revisit this example in the Semantics section below once I've written that out 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) as an extremely rough guide.

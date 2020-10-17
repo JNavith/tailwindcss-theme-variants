@@ -9,11 +9,9 @@
 * **Responsive** variants
 * **Stacking** on extra **variants**, like `hover` so you can change a link's hover color depending on the theme
 * **Falling back** to a certain theme when no other one could become active, like if a visitor's browser doesn't support JavaScript or the new `prefers-` media queries
-* **As many themes as you want**: light theme, dark theme, red theme, blue theme—just bring your own definitions! A future feature called "semantics" will make multiple themes even easier to work with!
+* **As many themes as you want**: light theme, dark theme, red theme, blue theme—just bring your own definitions! The experimental `semantics` feature makes multiple themes easy to deal with!
 
 You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of it is long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
-
-However, if you want your site to have a very large number of themes (say, 4 or more) or potentially infinite themes (such as could be configured by your users), then **this plugin is not for you** (until the "semantics" feature is implemented). You will probably be better off using a custom properties setup; refer back to [that table 👇](#alternatives).
 
 ## What about Tailwind's upcoming official dark mode?
 **This plugin will still be maintained!** Light and dark mode support is just *one* thing this plugin can do, and the complexity this plugin can provide [will not be reflected in Tailwind core (see Design Rationale)](https://github.com/tailwindlabs/tailwindcss/pull/2279), so I will still need this around.
@@ -151,7 +149,9 @@ Which generates this CSS:
 }
 ```
 
-💡 Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. [The `group` feature](#theme-groups) will take care of this for you!
+Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. 
+
+💡 [The `group` feature](#theme-groups) will take care of this for you!
 
 
 # ⚙️ Full configuration
@@ -448,8 +448,8 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: ["high-contrast"],
-        textColor: ["high-contrast", "high-contrast:hover"],
+        backgroundColor: ({ after }) => after(["high-contrast"]),
+        textColor: ({ after }) => after(["high-contrast", "high-contrast:hover"]),
     },
 
     plugins: [
@@ -494,10 +494,10 @@ module.exports = {
     },
 
     variants: {
-        opacity: [
+        opacity: ({ after }) => after([
             "transparency-safe",        "transparency-reduce",
             "transparency-safe:hocus",  "transparency-reduce:hocus",
-        ],
+        ]),
     },
 
     plugins: [
@@ -553,7 +553,7 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: ["accents", "accents:hover", "accents:odd", "accents:odd-hover"],
+        backgroundColor: ({ after }) => after(["accents", "accents:hover", "accents:odd", "accents:odd-hover"]),
     },
 
     plugins: [
@@ -609,9 +609,11 @@ module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
     },
+
     variants: {
         textColor: ["responsive", "day", "night"]
     },
+    
     plugins: [
         themeVariants({
             themes: {
@@ -643,9 +645,11 @@ module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
     },
+
     variants: {
         padding: ["responsive", "density"]
     },
+
     plugins: [
         themeVariants({
             group: "density",
@@ -655,7 +659,7 @@ module.exports = {
                 compact: { selector: "[data-density=compact]" },
             },
             // Fall back to the first theme listed (comfortable) when density is not configured
-            fallback: true,
+            fallback: "compact",
         }),
     ],
 };
@@ -679,13 +683,17 @@ Here's an example:
 const { themeVariants, landscape, portrait } = require("tailwindcss-theme-variants");
 
 module.exports = {
-    theme: {}
+    theme: {
+        // Your Tailwind CSS theme configuration
+    },
+    
     variants: {
         // If you haven't seen the `group` feature yet:
         // Instead of needing to write out "landscape", "portrait", "landscape:hover", "portrait:hover",
         // We can name the group "orientation" and only write "orientation", "orientation:hover"
         fontSize: ["responsive", "hover", "orientation", "orientation:hover"],
     },
+
     plugins: [
         themeVariants({
             group: "orientation",
@@ -697,6 +705,7 @@ module.exports = {
                     mediaQuery: portrait,
                 },
             },
+            fallback: "compact",
         }),
     ],
 };
@@ -705,11 +714,11 @@ module.exports = {
 We can make an `h1` change size based on orientation *and* breakpoint *and* hover for readability (this is definitely a contrived example):
 
 ```html
-<h1 class="text-sm             landscape:text-base          portrait:text-xs
-           sm:text-base        sm:landscape:text-lg         sm:portrait:text-sm
-           sm:hover:text-lg    sm:landscape:hover:text-xl   sm:portrait:hover:text-md
-           lg:text-xl          lg:landscape:text-2xl        lg:portrait:text-lg
-           lg:hover:text-2xl   lg:landscape:hover:text-3xl  lg:portrait:hover:text-xl">
+<h1 class="landscape:text-base          portrait:text-xs
+           sm:landscape:text-lg         sm:portrait:text-sm
+           sm:landscape:hover:text-xl   sm:portrait:hover:text-md
+           lg:landscape:text-2xl        lg:portrait:text-lg
+           lg:landscape:hover:text-3xl  lg:portrait:hover:text-xl">
     
     This article title will try to change size so that it stays readable... hopefully.
 </h1>
@@ -803,8 +812,8 @@ plugins: [
         // Since `inverted-colors` has limited browser support, 
         // assume visitors using unsupported browsers do not have their colors inverted
         // and fall back to the "not-inverted" theme
-        fallback: true,
-        // Since selectors are being used too, we could even provide 
+        fallback: "compact",
+        // 💡 Since selectors are being used too, we could even provide 
         // a button on the site that will manually enable/disable inverted colors
     }),
 ],
@@ -865,7 +874,7 @@ plugins: [
             "motion": { mediaQuery: prefersAnyMotion },
             "no-motion": { mediaQuery: prefersReducedMotion },
         },
-        fallback: true,
+        fallback: "compact",
     }),
 ]
 ```
@@ -890,7 +899,7 @@ plugins: [
             "motion": { mediaQuery: prefersAnyMotion },
             "no-motion": { mediaQuery: prefersReducedMotion },
         },
-        fallback: true,
+        fallback: "compact",
     }),
 ]
 ```
@@ -901,10 +910,7 @@ Now you have magic `"themes"` and `"motion-preference"` variants that are guaran
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
 
 ```js
-const defaultConfig = require("tailwindcss/defaultConfig");
 const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
-
-const { theme: defaultTheme, variants: defaultVariants } = defaultConfig;
 
 module.exports = {
     theme: { 
@@ -912,30 +918,28 @@ module.exports = {
     },
 
     variants: {
-        backgroundColor: [
-            ...defaultVariants.backgroundColor,
+        backgroundColor: ({ after }) => after([
             "themes",
             "themes:hover",
             "themes:focus",
             "themes:selection",
-        ],
-        boxShadow: [...defaultVariants.boxShadow, "themes", "themes:focus"],
-        textColor: [
-            ...defaultVariants.textColor,
+        ]),
+        boxShadow: ({ after }) => after(["themes", "themes:focus"]),
+        textColor: ({ after }) => after([
             "themes",
             "themes:group-focus",
             "themes:group-hover",
             "themes:hover",
             "themes:focus",
             "themes:selection",
-        ],
+        ]),
     },
 
     plugins: [
         themeVariants({
             group: "themes",
             baseSelector: "html",
-            fallback: "light-theme",
+            fallback: "compact",
             themes: {
                 "light-theme": { selector: "[data-theme=light]", mediaQuery: prefersLight },
                 "dark-theme": { selector: "[data-theme=dark]", mediaQuery: prefersDark },
@@ -949,7 +953,7 @@ module.exports = {
 ## Usage with the Tailwind CSS Typography plugin
 To use theme variants with the official [Tailwind CSS Typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin, create `prose` modifiers for each theme and list the theme variants in the `typography` variants array.
 
-Here's an example of changing the prose colors with your themes. This covers all of the color settings in the [default typography styles](https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js):
+Here's an example of changing the prose colors with themes. This covers all of the color settings in the [default typography styles](https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js):
 
 ```js
 const typography = require("@tailwindcss/typography");
@@ -1094,6 +1098,7 @@ module.exports = {
 
     plugins: [
         typography,
+
         themeVariants({
             group: "themes",
             themes: {
@@ -1108,34 +1113,32 @@ module.exports = {
 
 Thanks to @stefanzweifel's [article on the subject](https://stefanzweifel.io/posts/2020/07/20/add-dark-mode-support-to-at-tailwindcsstypography/) and @pspeter3's [issue](https://github.com/tailwindlabs/tailwindcss-typography/issues/69)!
 
-Now that you have appropriate variants for `prose`, let's upgrade our HTML to use them:
+Now that we have appropriate variants for `prose`, let's upgrade our HTML to use them:
 
 ```html
-<article class="prose light-theme:prose-light dark-theme:prose-dark">
-    <p>
-        Content...
-    </p>
-</article>
+<body class="light-theme:bg-white dark-theme:bg-gray-900">
+    <article class="prose light-theme:prose-light dark-theme:prose-dark">
+        <p>
+            Content...
+        </p>
+    </article>
+</body>
 ```
 
-We will revisit this example in the Semantics section below once the semantics feature is implemented 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) as a rough and messy guide.
+We will revisit this example in the Semantics section below once I've written that out 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) as an extremely rough guide.
 
 
 # Semantics
-Semantics are a work in progress feature for this plugin that will be an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9). If you're really eager, you can keep up with `semantics` development by watching the test suite in `tests/semantics.ts` grow with time 😎.
-
-**The following sections are in present tense but talk about features that are not implemented yet, so don't try to use them:**
+Semantics are an **experimental feature** for this plugin that serve as an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9).
 
 **Semantics require Tailwind CSS 1.7 or higher. Also, the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/pull/2159) will be enabled for you if you use semantics because it's required for them to work.**
 
-TODO. Semantics are available as utility classes that bundle up your provided values with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
+TODO. Semantic classes bundle up your design system with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
 * `backgroundColor`
 * `borderColor`
 * `boxShadow`
 * `divideColor`
 * `textColor`
-
-In the future it'll be possible to let you, the user, write custom utility classes for use with semantics similarly to how you can write your own variants.
 
 But, when you use the variables feature, you can use *any* utility as long as you can reference `var(--semantic-name)`.
 
@@ -1193,6 +1196,11 @@ To maintain compatibility with the `text-opacity`, `bg-opacity`, etc, utilities,
 
 ### Examples
 TODO
+
+## Custom semantic utilities
+
+TODO. Just like you can write custom stacked variants, you can write custom semantic utilities. Pass `utilities`, an object of named utilities to `SemanticUtility` interface-compatible objects.
+
 
 
 # Alternatives
