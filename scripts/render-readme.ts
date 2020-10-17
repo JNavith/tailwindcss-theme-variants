@@ -10,7 +10,6 @@ const contentOrder = [
 	"semantics",
 	"alternatives",
 	"license-and-contributing",
-	"about-this-repository",
 ];
 
 const main = async () => {
