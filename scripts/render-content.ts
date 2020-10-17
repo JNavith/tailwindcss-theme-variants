@@ -34,7 +34,7 @@ const main = async () => {
 	const withEscapedBackslashes = combined.replace(/\\/gm, "\\\\");
 
 	const withEmojisDroppedFromHeadings = withEscapedBackslashes
-		.replace("# 🌗 Tailwind CSS Theme Variants", "# Introducing: Tailwind CSS Theme Variants")
+		.replace("# 🌗 Tailwind CSS Theme Variants", "# Introducing: Theme Variants for Tailwind CSS")
 		.replace("# ⬇️", "# ")
 		.replace("# 🛠", "# ")
 		.replace("# ⚙️", "# ")
