@@ -371,7 +371,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					}
 
 					// Use the custom properties extension if allowed
-					const computedValue = (opacityUtility ? isUtilityEnabled(opacityUtility) : false) ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `var(--${semanticName})`;
+					const computedValue = (opacityUtility ? isUtilityEnabled(opacityUtility) : false) ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `rgb(var(--${semanticName}))`;
 					if (!onlyie11) {
 						const withImportant = noie11 ? computedValue : `${computedValue} !important`;
 						addUtilities(css({ computedClass, computedValue: withImportant }), dedupedVariants);

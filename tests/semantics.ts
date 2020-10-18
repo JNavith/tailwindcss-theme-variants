@@ -364,22 +364,23 @@ export const semantics = (): void => {
 
 				`
 					.bg-primary-faint-400 {
-						background-color: var(--primary-faint-400);
+						background-color: rgb(var(--primary-faint-400));
 					}
 
 					.bg-primary-faint {
-						background-color: var(--primary-faint);
+						background-color: rgb(var(--primary-faint));
 					}
 
 					.bg-primary {
-						background-color: var(--primary);
+						background-color: rgb(var(--primary));
 					}
 
 					.bg-primary-strong-400 {
-						background-color: var(--primary-strong-400);
+						background-color: rgb(var(--primary-strong-400));
 					}
 
 					.bg-primary-strong {
+						background-color: rgb(var(--primary-strong));
 						background-color: var(--primary-strong);
 					}
 				`,
