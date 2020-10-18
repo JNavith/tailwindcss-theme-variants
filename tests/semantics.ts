@@ -381,7 +381,97 @@ export const semantics = (): void => {
 
 					.bg-primary-strong {
 						background-color: rgb(var(--primary-strong));
-						background-color: var(--primary-strong);
+					}
+				`,
+			]);
+		});
+
+		it("gradient color stops with modern target", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					target: "modern",
+					theme: {
+						colors: {
+							yellow: {
+								200: "#DD0",
+							},
+							purple: {
+								600: "#606",
+							},
+						},
+					},
+					corePlugins: ["gradientColorStops"],
+					variants: {
+						gradientColorStops: [],
+					},
+
+					plugins: [
+						thisPlugin({
+							fallback: "compact",
+							themes: {
+								day: {
+									mediaQuery: prefersLight,
+									semantics: {
+										colors: {
+											primary: "yellow-200",
+											accent: "purple-600",
+										},
+									},
+								},
+								night: {
+									mediaQuery: prefersDark,
+									semantics: {
+										colors: {
+											primary: "purple-600",
+											accent: "yellow-200",
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			),
+			[
+				`
+					:root {
+						--primary: 221, 221, 0;
+						--accent: 102, 0, 102;
+					}
+
+					@media (prefers-color-scheme: dark) {
+						:root {
+							--primary: 102, 0, 102;
+							--accent: 221, 221, 0;
+						}
+					}
+				`,
+
+				`
+					.from-primary {
+						--gradient-from-color: rgb(var(--primary));
+						--gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(var(--primary), 0));
+					}
+					.from-accent {
+						--gradient-from-color: rgb(var(--accent));
+						--gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(var(--accent), 0));
+					}
+					.via-primary {
+						--gradient-via-color: rgb(var(--primary));
+						--gradient-color-stops: var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, rgba(var(--primary), 0));
+					}
+					.via-accent {
+						--gradient-via-color: rgb(var(--accent));
+						--gradient-color-stops: var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, rgba(var(--accent), 0));
+					}
+					.to-primary {
+						--gradient-to-color: rgb(var(--primary));
+					}
+					.to-accent {
+						--gradient-to-color: rgb(var(--accent));
 					}
 				`,
 			]);

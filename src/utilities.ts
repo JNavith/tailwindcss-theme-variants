@@ -16,6 +16,14 @@ const simpleUtility = (utility: string, prefix?: string): SemanticUtility => ({
 });
 
 const sameColorFullyTransparent = (color: string) => {
+	if (color.startsWith("var(--")) {
+		return `rgba(${color}, 0)`;
+	}
+	const match = color.match(/^rgb\((.+)\)$/);
+	if (match) {
+		const variable = match[1];
+		return `rgba(${variable}, 0)`;
+	}
 	const [r, g, b] = toRgba(color);
 	return `rgba(${r}, ${g}, ${b}, 0)`;
 };
