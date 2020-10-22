@@ -1,12 +1,16 @@
 import { describe, it } from "mocha";
+import { createSandbox } from "sinon";
 
 import thisPlugin, { prefersDark, prefersLight } from "../src/index";
 import { assertContainsCSS, generatePluginCSS } from "./_utils";
 
 export const semantics = (): void => {
 	describe("semantics", () => {
-		it("background color with constants", async () => {
-			assertContainsCSS(await generatePluginCSS(
+		it("background color with constants (1.x) or with variables (2.x)", async () => {
+			const sandbox = createSandbox();
+			const consoleStub = sandbox.stub(console, "warn");
+
+			const generated = await generatePluginCSS(
 				{
 					target: "ie11",
 
@@ -51,9 +55,43 @@ export const semantics = (): void => {
 						}),
 					],
 				},
-			),
-			[
-				`
+				"@tailwind base;\n@tailwind utilities;",
+			);
+
+			if (consoleStub.calledWith(
+				"\x1B[1m\x1B[33mwarn\x1B[39m\x1B[22m",
+				"-",
+				"The `target` feature has been removed in Tailwind CSS v2.0.",
+			)) {
+				assertContainsCSS(generated, [
+					`
+					@media (prefers-color-scheme: light) {
+						html {
+							--primary: #FF;
+							--on-primary: #22;
+						}
+					}
+
+					@media (prefers-color-scheme: dark){
+						html {
+							--primary: #11;
+							--on-primary: #EE;
+						}
+					}
+				`,
+					`
+					.bg-primary {
+						background-color: rgb(var(--primary));
+					}
+
+					.bg-on-primary {
+						background-color: rgb(var(--on-primary));
+					}
+				`,
+				]);
+			} else {
+				assertContainsCSS(generated, [
+					`
 					@media (prefers-color-scheme: light) {
 						.bg-primary {
 							background-color: #FF;
@@ -66,7 +104,7 @@ export const semantics = (): void => {
 					}
 				`,
 
-				`
+					`
 					@media (prefers-color-scheme: light) {
 						.bg-on-primary {
 							background-color: #22;
@@ -78,11 +116,17 @@ export const semantics = (): void => {
 						}
 					}
 				`,
-			]);
+				]);
+			}
+
+			sandbox.restore();
 		});
 
-		it("text color with constants with hover variants", async () => {
-			assertContainsCSS(await generatePluginCSS(
+		it("text color with constants (1.x) or with variables (2.x) with hover variants", async () => {
+			const sandbox = createSandbox();
+			const consoleStub = sandbox.stub(console, "warn");
+
+			const generated = await generatePluginCSS(
 				{
 					target: "ie11",
 
@@ -134,9 +178,52 @@ export const semantics = (): void => {
 						}),
 					],
 				},
-			),
-			[
-				`
+				"@tailwind base;\n@tailwind utilities;",
+			);
+
+			if (consoleStub.calledWith(
+				"\x1B[1m\x1B[33mwarn\x1B[39m\x1B[22m",
+				"-",
+				"The `target` feature has been removed in Tailwind CSS v2.0.",
+			)) {
+				assertContainsCSS(generated, [
+					`
+						:root:not(.green-theme) {
+							--primary: 68, 0, 0;
+							--accent: 102, 0, 102;
+						}
+
+						:root.red-theme {
+							--primary: 68, 0, 0;
+							--accent: 102, 0, 102;
+						}
+
+						:root.green-theme {
+							--primary: 0, 68, 0;
+							--accent: 0, 102, 102;
+						}
+					`,
+					`
+						.text-primary {
+							color: rgb(var(--primary));
+						}
+
+						.hover\\:text-primary:hover {
+							color: rgb(var(--primary));
+						}
+
+						.text-accent {
+							color: rgb(var(--accent));
+						}
+
+						.hover\\:text-accent:hover {
+							color: rgb(var(--accent));
+						}
+					`,
+				]);
+			} else {
+				assertContainsCSS(generated, [
+					`
 					:root:not(.green-theme) .text-primary {
 						color: #400;
 					}
@@ -147,7 +234,7 @@ export const semantics = (): void => {
 						color: #040;
 					}
 				`,
-				`
+					`
 					:root:not(.green-theme) .text-accent {
 						color: #606;
 					}
@@ -158,7 +245,7 @@ export const semantics = (): void => {
 						color: #066;
 					}
 				`,
-				`
+					`
 					:root:not(.green-theme) .hover\\:text-primary:hover {
 						color: #400;
 					}
@@ -169,7 +256,7 @@ export const semantics = (): void => {
 						color: #040;
 					}
 				`,
-				`
+					`
 					:root:not(.green-theme) .hover\\:text-accent:hover {
 						color: #606;
 					}
@@ -180,7 +267,8 @@ export const semantics = (): void => {
 						color: #066;
 					}
 				`,
-			]);
+				]);
+			}
 		});
 
 		it("divide color and opacity with modern target", async () => {

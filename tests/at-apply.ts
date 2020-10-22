@@ -10,7 +10,16 @@ export const atApply = (): void => {
 		it("lets you experimentally @apply with selectors", async () => {
 			assertExactCSS(await generatePluginCSS(
 				{
-					theme: {},
+					theme: {
+						colors: {
+							white: "#fff",
+							gray: {
+								100: "#f7fafc",
+								800: "#2d3748",
+								900: "#1a202c",
+							},
+						},
+					},
 					corePlugins: ["backgroundColor", "textColor"],
 					variants: {
 						backgroundColor: ["light", "dark"],
@@ -57,7 +66,16 @@ export const atApply = (): void => {
 		it("lets you experimentally @apply with selectors with fallback with grouping and stacking variants", async () => {
 			assertExactCSS(await generatePluginCSS(
 				{
-					theme: {},
+					theme: {
+						colors: {
+							green: {
+								100: "#f0fff4",
+								300: "#9ae6b4",
+								400: "#68d391",
+								600: "#38a169",
+							},
+						},
+					},
 					corePlugins: ["backgroundColor"],
 					variants: {
 						backgroundColor: ["food", "food:hover"],
@@ -123,7 +141,14 @@ export const atApply = (): void => {
 		it("lets you experimentally @apply with media queries", async () => {
 			assertExactCSS(await generatePluginCSS(
 				{
-					theme: {},
+					theme: {
+						colors: {
+							white: "#fff",
+							yellow: {
+								300: "#faf089",
+							},
+						},
+					},
 					corePlugins: ["backgroundColor"],
 					variants: {
 						backgroundColor: ["screen", "print"],
@@ -171,7 +196,16 @@ export const atApply = (): void => {
 		it("lets you experimentally @apply with media queries and responsive variants", async () => {
 			assertExactCSS(await generatePluginCSS(
 				{
-					theme: {},
+					theme: {
+						colors: {
+							gray: {
+								100: "#f7fafc",
+								300: "#e2e8f0",
+								600: "#718096",
+								800: "#2d3748",
+							},
+						},
+					},
 					corePlugins: ["textColor"],
 					variants: {
 						textColor: ["responsive", "normal", "inverted"],
@@ -233,7 +267,14 @@ export const atApply = (): void => {
 		it("lets you experimentally @apply with media queries with fallback", async () => {
 			assertExactCSS(await generatePluginCSS(
 				{
-					theme: {},
+					theme: {
+						colors: {
+							white: "#fff",
+							green: {
+								300: "#9ae6b4",
+							},
+						},
+					},
 					corePlugins: ["backgroundColor"],
 					variants: {
 						backgroundColor: ["screen2", "print2"],
@@ -347,68 +388,6 @@ export const atApply = (): void => {
 					box-shadow: 0 0 8px black;
 				}
 
-			`);
-		});
-
-		it("lets you experimentally @apply with media queries and responsive variants", async () => {
-			assertExactCSS(await generatePluginCSS(
-				{
-					theme: {},
-					corePlugins: ["textColor"],
-					variants: {
-						textColor: ["responsive", "normal", "inverted"],
-					},
-
-					plugins: [
-						thisPlugin({
-							themes: {
-								normal: {
-									mediaQuery: colorsNotInverted,
-								},
-								inverted: {
-									mediaQuery: colorsInverted,
-								},
-							},
-						}),
-					],
-
-					experimental: {
-						applyComplexClasses: true,
-					},
-				},
-				`
-					.caption span {
-						@apply normal:text-gray-100 inverted:text-gray-800;
-						@apply md:normal:text-gray-300 md:inverted:text-gray-600;
-					}
-				`,
-			),
-			`
-				@media (inverted-colors: none) {
-					.caption span {
-						color: #f7fafc;
-					}
-				}
-
-				@media (inverted-colors: inverted) {
-					.caption span {
-						color: #2d3748;
-					}
-				}
-
-				@media (min-width: 768px) {
-					@media (inverted-colors: none) {
-						.caption span {
-							color: #e2e8f0;
-						}
-					}
-
-					@media (inverted-colors: inverted) {
-						.caption span {
-							color: #718096;
-						}
-					}
-				}
 			`);
 		});
 	});

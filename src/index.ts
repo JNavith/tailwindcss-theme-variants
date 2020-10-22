@@ -239,9 +239,10 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 
 			const behavior = { ...builtinUtilities, utilities };
 
-			const target = lookupTarget("themeVariants");
+			// target and IE11 compatibility are removed from 2.0
+			const target = lookupTarget?.("themeVariants") ?? "modern";
 			const onlyie11 = target === "ie11";
-			// @ts-expect-error: doesn't work yet, but might in the future
+			// @ts-expect-error: will and has never worked, but I rely on it
 			const noie11 = target === "modern";
 
 			if (!onlyie11) {
