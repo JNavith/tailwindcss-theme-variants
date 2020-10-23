@@ -24,16 +24,14 @@
 		"sapper:export": "cross-env NODE_ENV=production sapper export",
 		"static:rmdir": "rimraf - __sapper__/export",
 		"static:mkdir": "mkdirp __sapper__/export",
-		"shimport:cp:build": "ncp ./node_modules/shimport/index.dev.js ./__sapper__/build/client/shimport@1.0.1.js",
-		"shimport:cp:export": "ncp ./node_modules/shimport/index.dev.js ./__sapper__/export/client/shimport@1.0.1.js",
 		"static:cp": "ncp static __sapper__/export",
 		"static:404:cp": "ncp __sapper__/export/404/index.html __sapper__/export/404.html",
 		"static:404:rmdir": "rimraf - __sapper__/export/404",
 		"dev": "run-p validate:dev sapper:dev",
-		"prod": "run-s validate sapper:build static:rmdir static:mkdir static:cp shimport:cp:build",
+		"prod": "run-s validate sapper:build static:rmdir static:mkdir static:cp",
 		"start": "node __sapper__/build",
 		"deploy": "run-s prod firebase:deploy",
-		"export": "run-s validate sapper:export static:404:cp static:404:rmdir shimport:cp:export",
+		"export": "run-s validate sapper:export static:404:cp static:404:rmdir",
 		"deploy:export": "run-s export firebase:deploy:hosting"
 	},
 	"dependencies": {
