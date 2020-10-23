@@ -1125,7 +1125,7 @@ Now that we have appropriate variants for `prose`, let's upgrade our HTML to use
 </body>
 ```
 
-We will revisit this example in the Semantics section below once I've written that out 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/tailwind.config.js) as an extremely rough guide.
+We will revisit this example in the Semantics section below once I've written that out 😁. Until then, you can reference [this plugin's documentation site's configuration](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/site/prose-styles.js) as an extremely rough guide.
 
 
 # Semantics
