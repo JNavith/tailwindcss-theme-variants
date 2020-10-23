@@ -269,6 +269,8 @@ export const semantics = (): void => {
 				`,
 				]);
 			}
+
+			sandbox.restore();
 		});
 
 		it("divide color and opacity with modern target", async () => {
