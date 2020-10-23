@@ -33,7 +33,7 @@ const tailwindcssConfig = {
 			white: lch(100, 0, 0),
 			black: lch(0, 0, 0),
 
-			gray: redesignedColorPalette.blueGray,
+			gray: redesignedColorPalette.coolGray,
 			red: redesignedColorPalette.red,
 			amber: redesignedColorPalette.amber,
 			yellow: redesignedColorPalette.yellow,
