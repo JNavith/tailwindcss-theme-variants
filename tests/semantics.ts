@@ -2,7 +2,7 @@ import { describe, it } from "mocha";
 import { createSandbox } from "sinon";
 
 import thisPlugin, { prefersDark, prefersLight } from "../src/index";
-import { assertContainsCSS, generatePluginCSS } from "./_utils";
+import { assertContainsCSS, generatePluginCSS, onTailwind2 } from "./_utils";
 
 export const semantics = (): void => {
 	describe("semantics", () => {
@@ -58,11 +58,7 @@ export const semantics = (): void => {
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (consoleStub.calledWith(
-				"\x1B[1m\x1B[33mwarn\x1B[39m\x1B[22m",
-				"-",
-				"The `target` feature has been removed in Tailwind CSS v2.0.",
-			)) {
+			if (onTailwind2(consoleStub.getCalls())) {
 				assertContainsCSS(generated, [
 					`
 					@media (prefers-color-scheme: light) {
@@ -181,11 +177,7 @@ export const semantics = (): void => {
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (consoleStub.calledWith(
-				"\x1B[1m\x1B[33mwarn\x1B[39m\x1B[22m",
-				"-",
-				"The `target` feature has been removed in Tailwind CSS v2.0.",
-			)) {
+			if (onTailwind2(consoleStub.getCalls())) {
 				assertContainsCSS(generated, [
 					`
 						:root:not(.green-theme) {
