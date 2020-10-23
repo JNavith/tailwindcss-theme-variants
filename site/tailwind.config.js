@@ -14,7 +14,7 @@ const typography = require("@tailwindcss/typography");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const proseStyles = require("./prose-styles");
-const redesignedColorPalette = require("./unstable_colors");
+const redesignedColorPalette = require("./tailwind_colors");
 
 const lch = (l, c, h) => d3.lch(l, c, h).formatHex();
 
@@ -33,7 +33,7 @@ const tailwindcssConfig = {
 			white: lch(100, 0, 0),
 			black: lch(0, 0, 0),
 
-			gray: redesignedColorPalette.coolGray,
+			gray: redesignedColorPalette.blueGray,
 			red: redesignedColorPalette.red,
 			amber: redesignedColorPalette.amber,
 			yellow: redesignedColorPalette.yellow,
