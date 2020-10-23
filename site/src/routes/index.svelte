@@ -30,7 +30,7 @@
 		</h1>
 		
 		<p class="pt-10 lg:pt-6 text-xl leading-loose text-center">
-			<code class="text-lg">tailwindcss-theme-variants</code> is an <strong class="font-semibold">easy-to-use</strong><br class="hidden sm:block lg:hidden" /> <strong class="font-semibold">theming plugin</strong> for Tailwind CSS<br class="hidden lg:block" /> with a <strong class="font-semibold">powerful featureset</strong>: 
+			<code class="text-lg">tailwindcss-theme-variants</code> is a <strong class="font-semibold">powerful</strong><br class="hidden sm:block lg:hidden" /> <strong class="font-semibold">theming plugin</strong> for Tailwind CSS: 
 		</p>
 	</section>
 
@@ -44,18 +44,15 @@
 		</section>
 	</div>
 
-	<!-- 
-	Choose your learning path:
-
-	<section class="">
-
-	</section>
-	-->
-
 	<section class="pt-16 pb-32">
 		<div class="pb-6 text-center">
 			<span class="text-4xl font-heading font-normal tracking-snug">Convinced?</span>
 		</div>
+		<!-- 
+			
+		Read the quick start guide
+
+		-->
 		<div class="flex justify-center px-5 text-center md:px-15">
 			<!-- Alternatively, -->
 			<a href="/all#installation" class="inline-block p-5 py-4 pr-2 text-2xl font-semibold text-white transition duration-200 ease-out transform bg-gradient-45deg light-theme:from-indigo-600 light-theme:bg-blue-500 dark-theme:from-indigo-800 dark-theme:bg-blue-600 rounded-2xl hocus:scale-105 light-theme:shadow-xl-blue light-theme:hocus:shadow-2xl-blue dark-theme:shadow-xl dark-theme:hocus:shadow-2xl">Read all the documentation on a single page <Icon class="inline -ml-1.5" style="font-size: 125%" icon={chevronRight} /></a>
