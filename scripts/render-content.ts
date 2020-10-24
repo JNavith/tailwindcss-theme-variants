@@ -31,17 +31,28 @@ const main = async () => {
 	const content = order.map((stem) => readFile(`${source}/${stem}.md`));
 
 	const combined = (await Promise.all(content)).join("\n\n");
-	const withEscapedBackslashes = combined.replace(/\\/gm, "\\\\");
+	let formatted = combined.replace(/\\/gm, "\\\\");
 
-	const withEmojisDroppedFromHeadings = withEscapedBackslashes
+	formatted = formatted
 		.replace("# 🌗 Tailwind CSS Theme Variants", "# Introducing: Theme Variants for Tailwind CSS")
 		.replace("# ⬇️", "# ")
 		.replace("# 🛠", "# ")
 		.replace("# ⚙️", "# ")
 		.replace("# 📄", "# ");
 
-	writeFile(`${destination}/site-all.svx`, withEmojisDroppedFromHeadings);
-	writeFile(`${destination}/site-toc.svx`, toc(withEmojisDroppedFromHeadings).content);
+	formatted = formatted.replace(/^⚠️ (.+)$/gm, "<WatchOut>\n\n$1\n\n</WatchOut>");
+	formatted = formatted.replace(/^💡 (.+)$/gm, "<Idea>\n\n$1\n\n</Idea>");
+	formatted = `
+<script>
+	import WatchOut from "../components/WatchOut.svelte";
+	import Idea from "../components/Idea.svelte";
+</script>
+
+
+${formatted}`;
+
+	writeFile(`${destination}/site-all.svx`, formatted);
+	writeFile(`${destination}/site-toc.svx`, toc(formatted).content);
 };
 
 main();

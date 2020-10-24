@@ -35,6 +35,7 @@ const tailwindcssConfig = {
 
 			gray: redesignedColorPalette.coolGray,
 			red: redesignedColorPalette.red,
+			orange: redesignedColorPalette.orange,
 			amber: redesignedColorPalette.amber,
 			yellow: redesignedColorPalette.yellow,
 			lime: redesignedColorPalette.lime,
@@ -106,6 +107,7 @@ const tailwindcssConfig = {
 
 		typography: proseStyles.typography,
 	},
+	
 	variants: {
 		backgroundColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
 		borderColor: ({ after }) => after(["themes"]),
@@ -115,6 +117,7 @@ const tailwindcssConfig = {
 		textColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
 		scale: ({ after }) => after(["hocus"]),
 	},
+
 	plugins: [
 		themeVariants({
 			group: "themes",
@@ -155,6 +158,21 @@ const tailwindcssConfig = {
 									100: "gray-700",
 								},
 								default: "gray-800",
+							},
+
+							"idea": {
+								"bg": "yellow-100",
+								"icon": "yellow-800",
+								"icon-bg": "yellow-300",
+								"body": "yellow-900",
+							},
+
+							"warning": {
+								"bg": "orange-100",
+								"icon": "orange-800",
+								"icon-bg": "orange-300",
+								"heading": "orange-800",
+								"body": "orange-900",
 							},
 
 							"brag-about-red": {
@@ -244,16 +262,31 @@ const tailwindcssConfig = {
 								default: "gray-100",
 							},
 
+							"idea": {
+								"bg": "yellow-900",
+								"icon": "white",
+								"icon-bg": "yellow-500",
+								"body": "white",
+							},
+
+							"warning": {
+								"bg": "orange-900",
+								"icon": "white",
+								"icon-bg": "orange-600",
+								"heading": "white",
+								"body": "white",
+							},
+
 							"brag-about-red": {
-								"bg": "red-900",
+								"bg": "red-800",
 								"icon": "white",
 								"icon-bg": "red-600",
 								"heading": "white",
-								"body": "red-100",
+								"body": "red-50",
 							},
 
 							"brag-about-yellow": {
-								"bg": "yellow-900",
+								"bg": "yellow-800",
 								"icon": "white",
 								"icon-bg": "yellow-600",
 								"heading": "white",
@@ -261,35 +294,35 @@ const tailwindcssConfig = {
 							},
 
 							"brag-about-green": {
-								"bg": "green-900",
+								"bg": "green-800",
 								"icon": "white",
 								"icon-bg": "green-600",
 								"heading": "white",
-								"body": "green-100",
+								"body": "green-50",
 							},
 
 							"brag-about-cyan": {
-								"bg": "light-blue-900",
+								"bg": "light-blue-800",
 								"icon": "white",
 								"icon-bg": "light-blue-600",
 								"heading": "white",
-								"body": "light-blue-100",
+								"body": "light-blue-50",
 							},
 
 							"brag-about-blue": {
-								"bg": "blue-900",
+								"bg": "blue-800",
 								"icon": "white",
 								"icon-bg": "blue-600",
 								"heading": "white",
-								"body": "blue-100",
+								"body": "blue-50",
 							},
 
 							"brag-about-purple": {
-								"bg": "purple-900",
+								"bg": "purple-800",
 								"icon": "white",
 								"icon-bg": "purple-600",
 								"heading": "white",
-								"body": "purple-100",
+								"body": "purple-50",
 							},
 						},
 					},

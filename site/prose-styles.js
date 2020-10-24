@@ -11,6 +11,8 @@ module.exports = {
                 maxWidth: "100%",
                 lineHeight: "2",
 
+                '[class~="lead"]': false,
+
                 "a": {
                     color: false,
                     textDecoration: false,
@@ -55,7 +57,6 @@ module.exports = {
                     marginBottom: typographyStyles.default.css[1].h1.marginTop,
 
                     fontWeight: false,
-                    "@apply font-semibold tracking-snug": "",
                 },
                 "h2": {
                     color: false,
@@ -63,13 +64,17 @@ module.exports = {
                     marginTop: typographyStyles.default.css[1].h1.marginBottom,
 
                     fontWeight: false,
-                    "@apply font-semibold": "",
                 },
                 "h3": {
                     color: false,
                 },
                 "h4": {
                     color: false,
+                },
+
+                "h1, h2, h3, h4": {
+                    "@apply font-heading": "",
+                    "@apply font-medium tracking-snug": "",
                 },
 
                 "h1 a, h2 a, h3 a, h4 a": {
@@ -103,7 +108,6 @@ module.exports = {
 
                 "strong": {
                     color: false,
-                    "@apply text-on-primary": "",
                     "@apply transition-theme": "",
                 },
 
@@ -180,6 +184,8 @@ module.exports = {
         sm: {
             css: {
                 lineHeight: "2.5",
+
+                '[class~="lead"]': false,
 
                 // Begin heading styles
                 "h1": {
