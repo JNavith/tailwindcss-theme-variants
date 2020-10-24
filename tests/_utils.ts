@@ -40,6 +40,4 @@ export const assertContainsCSS = (superString: string, expectedToContain: string
 	});
 };
 
-export const onTailwind2 = (warnings: { args: string[] }[]) => {
-	return warnings.some((warning) => warning.args.some(arg => arg.includes("The `target` feature has been removed in Tailwind CSS v2.0.")))
-}
+export const onTailwind2 = (warnings: { args: string[] }[]): boolean => warnings.some((warning) => warning.args.some((arg) => arg.includes("The `target` feature has been removed in Tailwind CSS v2.0.")));
