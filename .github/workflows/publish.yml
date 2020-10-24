@@ -32,7 +32,7 @@ jobs:
     needs: test
     strategy:
       matrix:
-        node-version: [15]
+        node-version: [14]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
