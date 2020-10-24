@@ -137,6 +137,12 @@ module.exports = {
                     "@apply rounded-bl-md": "",
                 },
 
+                "thead th": {
+                    paddingRight: false,
+                    paddingBottom: false,
+                    paddingLeft: false,
+                },
+
                 "tbody tr": {
                     borderBottomWidth: false,
                 },
@@ -226,6 +232,34 @@ module.exports = {
                 // Begin table styles
                 "table": {
                     maxHeight: "calc(80vh - 8rem)",
+                },
+
+                "th, td": {
+                    "@apply p-4": "",
+                },
+
+                "thead th": {
+                    paddingRight: false,
+                    paddingBottom: false,
+                    paddingLeft: false,
+                },
+                "thead th:first-child": {
+                    paddingLeft: false,
+                },
+                "thead th:last-child": {
+                    paddingRight: false,
+                },
+                "tbody td": {
+                    paddingTop: false,
+                    paddingRight: false,
+                    paddingBottom: false,
+                    paddingLeft: false,
+                },
+                "tbody td:first-child": {
+                    paddingLeft: false,
+                },
+                "tbody td:last-child": {
+                    paddingRight: false,
                 },
                 // End table styles
             },
