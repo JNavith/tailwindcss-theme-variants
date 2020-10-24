@@ -176,4 +176,4 @@ Plugins that have a 🟡 support only some of the variants in Tailwind's core, a
 2. It could still be possible for a flash of unthemed content to appear before the appropriate theme is activated (unless you block rendering by executing the script immediately in `head`)
 3. Your site will immediately jump between light and dark instead of smoothly transitioning with the rest of the screen on macOS
 
-**[`tailwindcss-prefers-dark-mode`](https://github.com/javifm86/tailwindcss-prefers-dark-mode)** and **[experimental `darkModeVariant`](https://github.com/tailwindlabs/tailwindcss/pull/2279)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
+**[tailwindcss-prefers-dark-mode](https://github.com/javifm86/tailwindcss-prefers-dark-mode)** and **[experimental `darkModeVariant`](https://github.com/tailwindlabs/tailwindcss/pull/2279)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
