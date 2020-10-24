@@ -7,7 +7,6 @@
 
 const d3 = require("d3-color");
 const htmlTags = require("html-tags");
-const leadingTrim = require("tailwindcss-leading-trim");
 const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
 const typography = require("@tailwindcss/typography");
 
@@ -334,8 +333,6 @@ const tailwindcssConfig = {
 		}),
 
 		typography,
-
-		leadingTrim,
 
 		({ addVariant, e }) => {
 			addVariant("hocus", ({ modifySelectors, separator }) => {
