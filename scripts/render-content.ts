@@ -42,10 +42,15 @@ const main = async () => {
 
 	formatted = formatted.replace(/^⚠️ (.+)$/gm, "<WatchOut>\n\n$1\n\n</WatchOut>");
 	formatted = formatted.replace(/^💡 (.+)$/gm, "<Idea>\n\n$1\n\n</Idea>");
+	formatted = formatted.replace(/✅/gm, "<Feature type='yes' />");
+	formatted = formatted.replace(/🟡/gm, "<Feature type='kinda' />");
+	formatted = formatted.replace(/❌/gm, "<Feature type='no' />");
 	formatted = `
 <script>
 	import WatchOut from "../components/WatchOut.svelte";
 	import Idea from "../components/Idea.svelte";
+
+	import Feature from "../components/Feature.svelte";
 </script>
 
 
