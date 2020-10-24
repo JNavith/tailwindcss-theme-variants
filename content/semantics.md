@@ -8,6 +8,7 @@ TODO. Semantic classes bundle up your design system with this plugin's generated
 * `borderColor`
 * `boxShadow`
 * `divideColor`
+* `gradientColorStops`
 * `textColor`
 
 But, when you use the variables feature, you can use *any* utility as long as you can reference `var(--semantic-name)`.
