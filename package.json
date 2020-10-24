@@ -34,7 +34,7 @@
 	"dependencies": {
 		"lodash": "^4.17.20",
 		"postcss-selector-parser": "^6.0.4",
-		"tailwindcss": "^1.9.5"
+		"tailwindcss": "^1.9.6"
 	},
 	"devDependencies": {
 		"@navith/tailwindcss-plugin-author-types": "^1.8.1-0.1",
@@ -46,13 +46,13 @@
 		"@typescript-eslint/eslint-plugin": "^4.5.0",
 		"@typescript-eslint/parser": "^4.5.0",
 		"cross-env": "^7.0.2",
-		"eslint": "^7.11.0",
+		"eslint": "^7.12.0",
 		"eslint-config-airbnb-base": "^14.2.0",
 		"eslint-plugin-import": "^2.22.1",
 		"markdown-toc": "^1.2.0",
 		"mocha": "^8.2.0",
 		"npm-run-all": "^4.1.5",
-		"postcss": "^8.1.2",
+		"postcss": "^8.1.4",
 		"remark-parse": "^9.0.0",
 		"remark-retext": "^4.0.0",
 		"remark-stringify": "^9.0.0",
