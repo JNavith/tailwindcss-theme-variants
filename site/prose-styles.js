@@ -210,6 +210,11 @@ module.exports = {
                 // End list styles
 
                 // Begin table styles
+                "thead th": {
+                    paddingRight: false,
+                    paddingBottom: false,
+                    paddingLeft: false,
+                },
                 "thead th:first-child": {
                     paddingLeft: false,
                 },
