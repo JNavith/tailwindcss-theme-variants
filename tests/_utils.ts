@@ -26,7 +26,7 @@ const strip = (str: string): string => str.replace(/^\s+/gm, "").replace(/;/g, "
 	.replace(/}\s+/g, "}")
 	.replace(/\n+/g, "\n");
 const prettify = (str: string): string => str.replace(/}/g, "\n}").replace(/{/g, "{\n");
-const clean = (str:string):string => prettify(strip(str));
+const clean = (str: string): string => prettify(strip(str));
 
 export const assertExactCSS = (actual: string, expected: string): void => {
 	assert.strictEqual(clean(actual), clean(expected));
