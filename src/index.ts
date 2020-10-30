@@ -237,7 +237,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// If it were possible, semantics would be retyped here as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>
 			// Instead, it'll be coerced where used below
 
-			const behavior = { ...builtinUtilities, utilities };
+			const behavior = { ...builtinUtilities, ...utilities };
 
 			// target and IE11 compatibility are removed from 2.0
 			const target = lookupTarget?.("themeVariants") ?? "modern";
