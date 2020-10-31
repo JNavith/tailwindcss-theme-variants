@@ -567,8 +567,8 @@ export const semantics = (): void => {
 					target: "modern",
 					theme: {
 						fontFamily: {
-							slab: ["Roboto Slab", "Times New Roman"],
-							serif: ["Times New Roman", "Roboto Slab"],
+							slab: ["\"Roboto Slab\"", "\"Times New Roman\""],
+							serif: ["\"Times New Roman\"", "\"Roboto Slab\""],
 							sans: ["Inter", "Poppins"],
 							display: ["Poppins", "Inter"],
 						},
@@ -583,7 +583,7 @@ export const semantics = (): void => {
 							fallback: "compact",
 							themes: {
 								simple: {
-									selector: ".sophiscated",
+									selector: ".sophisticated",
 									semantics: {
 										fontFamily: {
 											heading: "display",
@@ -591,7 +591,7 @@ export const semantics = (): void => {
 										},
 									},
 								},
-								sophiscated: {
+								sophisticated: {
 									selector: ".simple",
 									semantics: {
 										fontFamily: {
@@ -609,13 +609,13 @@ export const semantics = (): void => {
 			[
 				`
 					:root {
-						--heading: Poppins,Inter;
-						--body: Inter,Poppins;
+						--heading: Poppins, Inter;
+						--body: Inter, Poppins;
 					}
 
 					:root.simple {
-						--heading: Roboto Slab,Times New Roman;
-						--body: Times New Roman,Roboto Slab;
+						--heading: "Roboto Slab", "Times New Roman";
+						--body: "Times New Roman", "Roboto Slab";
 					}
 				`,
 
