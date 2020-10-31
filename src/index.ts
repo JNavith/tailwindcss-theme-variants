@@ -338,9 +338,13 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// TODO: loop over behavior instead?
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
 				const {
-					configKey, opacityUtility, opacityVariable, prefix: classPrefix, css,
+					configKey, opacityUtility, isColorUtility, opacityVariable, prefix: classPrefix, css,
 				} = behavior[utility as SupportedSemanticUtilities];
-				if (!isUtilityEnabled(configKey)) return;
+				// If it's a core plugin and it's not enabled, return early (and do nothing)
+				if (!isUtilityEnabled(configKey)) {
+					// But if it's a user-defined utility, stay in
+					if (!utilities[configKey]) return;
+				}
 
 				const allVariants = lookupVariants(configKey, []);
 				// Drop theme variants from these utilities because they won't work
@@ -372,7 +376,18 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					}
 
 					// Use the custom properties extension if allowed
-					const computedValue = (opacityUtility ? isUtilityEnabled(opacityUtility) : false) ? `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))` : `rgb(var(--${semanticName}))`;
+					let computedValue = `var(--${semanticName})`;
+					if (isColorUtility) {
+						computedValue = `rgb(var(--${semanticName}))`;
+
+						if (opacityUtility) {
+							if (isUtilityEnabled(opacityUtility)) {
+								computedValue = `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))`;
+							} else {
+								computedValue = `rgb(var(--${semanticName}))`;
+							}
+						}
+					}
 					if (!onlyie11) {
 						const withImportant = noie11 ? computedValue : `${computedValue} !important`;
 						addUtilities(css({ computedClass, computedValue: withImportant }), dedupedVariants);

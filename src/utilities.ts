@@ -9,8 +9,9 @@ const simpleCSS = (property: string): SemanticUtility["css"] => ({ computedClass
 	},
 });
 
-const simpleUtility = (utility: string, prefix?: string): SemanticUtility => ({
+const simpleUtility = (utility: string, prefix?: string, isColorUtility?: boolean): SemanticUtility => ({
 	configKey: utility,
+	isColorUtility: isColorUtility ?? false,
 	prefix: prefix ?? utility,
 	css: simpleCSS(kebabCase(utility)),
 });
@@ -31,6 +32,7 @@ const sameColorFullyTransparent = (color: string) => {
 export const backgroundColor: SemanticUtility = {
 	configKey: "backgroundColor",
 	prefix: "bg",
+	isColorUtility: true,
 	opacityUtility: "backgroundOpacity",
 	opacityVariable: "bg-opacity",
 	css: simpleCSS("background-color"),
@@ -38,12 +40,14 @@ export const backgroundColor: SemanticUtility = {
 export const backgroundOpacity: SemanticUtility = {
 	configKey: "backgroundOpacity",
 	prefix: "bg-opacity",
+	isColorUtility: false,
 	css: simpleCSS("--bg-opacity"),
 };
 
 export const borderColor: SemanticUtility = {
 	configKey: "borderColor",
 	prefix: "border",
+	isColorUtility: true,
 	opacityUtility: "borderOpacity",
 	opacityVariable: "border-opacity",
 	css: simpleCSS("border-color"),
@@ -51,6 +55,7 @@ export const borderColor: SemanticUtility = {
 export const borderOpacity: SemanticUtility = {
 	configKey: "borderOpacity",
 	prefix: "border-opacity",
+	isColorUtility: false,
 	css: simpleCSS("--border-opacity"),
 };
 
@@ -59,6 +64,7 @@ export const boxShadow = simpleUtility("boxShadow", "shadow");
 export const divideColor: SemanticUtility = {
 	configKey: "divideColor",
 	prefix: "divide",
+	isColorUtility: true,
 	opacityUtility: "divideOpacity",
 	opacityVariable: "divide-opacity",
 	css: ({ computedClass, computedValue }) => ({
@@ -70,6 +76,7 @@ export const divideColor: SemanticUtility = {
 export const divideOpacity: SemanticUtility = {
 	configKey: "divideOpacity",
 	prefix: "divide-opacity",
+	isColorUtility: false,
 	css: ({ computedClass, computedValue }) => ({
 		[`${computedClass} > :not(template) ~ :not(template)`]: {
 			"--divide-opacity": computedValue,
@@ -79,6 +86,7 @@ export const divideOpacity: SemanticUtility = {
 export const divideStyle: SemanticUtility = {
 	configKey: "divideStyle",
 	prefix: "divide",
+	isColorUtility: false,
 	css: ({ computedClass, computedValue }) => ({
 		[`${computedClass} > :not(template) ~ :not(template)`]: {
 			"border-style": computedValue,
@@ -93,6 +101,7 @@ export const fontWeight = simpleUtility("fontWeight", "font");
 export const gradientFromColor: SemanticUtility = {
 	configKey: "gradientColorStops",
 	prefix: "from",
+	isColorUtility: true,
 	css: ({ computedClass, computedValue }) => ({
 		[computedClass]: {
 			"--gradient-from-color": computedValue,
@@ -103,6 +112,7 @@ export const gradientFromColor: SemanticUtility = {
 export const gradientViaColor: SemanticUtility = {
 	configKey: "gradientColorStops",
 	prefix: "via",
+	isColorUtility: true,
 	css: ({ computedClass, computedValue }) => ({
 		[computedClass]: {
 			"--gradient-via-color": computedValue,
@@ -113,6 +123,7 @@ export const gradientViaColor: SemanticUtility = {
 export const gradientToColor: SemanticUtility = {
 	configKey: "gradientColorStops",
 	prefix: "to",
+	isColorUtility: true,
 	css: simpleCSS("--gradient-to-color"),
 };
 
@@ -121,6 +132,7 @@ export const opacity = simpleUtility("opacity");
 export const textColor: SemanticUtility = {
 	configKey: "textColor",
 	prefix: "text",
+	isColorUtility: true,
 	opacityUtility: "textOpacity",
 	opacityVariable: "text-opacity",
 	css: simpleCSS("color"),
@@ -128,6 +140,7 @@ export const textColor: SemanticUtility = {
 export const textOpacity: SemanticUtility = {
 	configKey: "textOpacity",
 	prefix: "text-opacity",
+	isColorUtility: false,
 	css: simpleCSS("--text-opacity"),
 };
 

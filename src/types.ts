@@ -16,6 +16,7 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 
 export type SemanticUtility = {
 	configKey: string;
+	isColorUtility: boolean;
 	opacityUtility?: string;
 	opacityVariable?: string;
 	prefix: string;

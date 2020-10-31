@@ -558,5 +558,151 @@ export const semantics = (): void => {
 				`,
 			]);
 		});
+
+		it("supports non-color utilities (font family) with modern target", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					target: "modern",
+					theme: {
+						fontFamily: {
+							slab: ["Roboto Slab", "Times New Roman"],
+							serif: ["Times New Roman", "Roboto Slab"],
+							sans: ["Inter", "Poppins"],
+							display: ["Poppins", "Inter"],
+						},
+					},
+					corePlugins: ["fontFamily"],
+					variants: {
+						fontFamily: [],
+					},
+
+					plugins: [
+						thisPlugin({
+							fallback: "compact",
+							themes: {
+								simple: {
+									selector: ".sophiscated",
+									semantics: {
+										fontFamily: {
+											heading: "display",
+											body: "sans",
+										},
+									},
+								},
+								sophiscated: {
+									selector: ".simple",
+									semantics: {
+										fontFamily: {
+											heading: "slab",
+											body: "serif",
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			),
+			[
+				`
+					:root {
+						--heading: Poppins,Inter;
+						--body: Inter,Poppins;
+					}
+
+					:root.simple {
+						--heading: Roboto Slab,Times New Roman;
+						--body: Times New Roman,Roboto Slab;
+					}
+				`,
+
+				`
+					.font-heading {
+						font-family: var(--heading);
+					}
+
+					.font-body {
+						font-family: var(--body);
+					} 
+				`,
+			]);
+		});
+
+		it("supports user-defined utilities with modern target", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
+					target: "modern",
+					theme: {
+						backgroundBlendMode: {
+							overlay: "overlay",
+							multiply: "multiply",
+						},
+					},
+					corePlugins: [],
+					variants: {
+						backgroundBlendMode: [],
+					},
+
+					plugins: [
+						thisPlugin({
+							fallback: "compact",
+							themes: {
+								darken: {
+									selector: "[data-blend=darken]",
+									semantics: {
+										backgroundBlendMode: {
+											standard: "multiply",
+										},
+									},
+								},
+								shine: {
+									selector: "[data-blend=shine]",
+									semantics: {
+										backgroundBlendMode: {
+											standard: "overlay",
+										},
+									},
+								},
+							},
+							utilities: {
+								backgroundBlendMode: {
+									configKey: "backgroundBlendMode",
+									prefix: "bg-blend",
+									isColorUtility: false,
+									css: ({ computedClass, computedValue }) => ({
+										[computedClass]: {
+											backgroundBlendMode: computedValue,
+										},
+									}),
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			),
+			[
+				`
+					:root {
+						--standard: multiply;
+					}
+
+					:root[data-blend=shine] {
+						--standard: overlay;
+					}
+				`,
+
+				`
+					.bg-blend-standard {
+						background-blend-mode: var(--standard);
+					}
+				`,
+			]);
+		});
 	});
 };
