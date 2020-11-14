@@ -1,6 +1,8 @@
 const esbuild = require("esbuild");
-const { readdir } = require("fs/promises");
+const { promises } = require("fs");
 const { join, resolve } = require("path");
+
+const { readdir } = promises;
 
 const main = async () => {
 	const srcFiles = await readdir(resolve(__dirname, "../src"));
