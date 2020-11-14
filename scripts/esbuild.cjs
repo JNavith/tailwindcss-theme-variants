@@ -18,18 +18,18 @@ const main = async () => {
 		format: "cjs",
 		target: "node12",
 		outExtension: {
-			".js": ".cjs",
+			".js": ".js",
 		},
 	});
 
-	// await esbuild.build({
-	// 	...options,
-	// 	format: "esm",
-	// 	target: "es2020",
-	// 	outExtension: {
-	// 		".js": ".mjs",
-	// 	},
-	// });
+	await esbuild.build({
+		...options,
+		format: "esm",
+		target: "es2020",
+		outExtension: {
+			".js": ".mjs",
+		},
+	});
 };
 
 main();

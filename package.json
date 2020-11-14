@@ -1,12 +1,14 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-alpha.5",
+	"version": "1.10.0-alpha.6",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
 		"tailwind",
 		"tailwindcss",
-		"tailwindcss-plugin"
+		"tailwindcss-plugin",
+		"tailwindcss-theme",
+		"tailwindcss-themes"
 	],
 	"author": "Navith <navithnavithnavith+git@gmail.com>",
 	"license": "MIT",
@@ -19,26 +21,39 @@
 	"files": [
 		"dist"
 	],
+	"type": "commonjs",
+	"main": "dist/index.mjs",
+	"types": "dist/index.d.ts",
 	"exports": {
 		".": {
-			"node": "./dist/index.cjs",
-			"require": "./dist/index.cjs"
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"node": "./dist/index.js",
+			"default": "./dist/index.mjs"
 		},
 		"./media-queries": {
-			"node": "./dist/media-queries.cjs",
-			"require": "./dist/media-queries.cjs"
+			"import": "./dist/media-queries.mjs",
+			"require": "./dist/media-queries.js",
+			"node": "./dist/media-queries.js",
+			"default": "./dist/media-queries.mjs"
 		},
 		"./selectors": {
-			"node": "./dist/selectors.cjs",
-			"require": "./dist/selectors.cjs"
+			"import": "./dist/selectors.mjs",
+			"require": "./dist/selectors.js",
+			"node": "./dist/selectors.js",
+			"default": "./dist/selectors.mjs"
 		},
 		"./utilities": {
-			"node": "./dist/utilities.cjs",
-			"require": "./dist/utilities.cjs"
+			"import": "./dist/utilities.mjs",
+			"require": "./dist/utilities.js",
+			"node": "./dist/utilities.js",
+			"default": "./dist/utilities.mjs"
 		},
 		"./variants": {
-			"node": "./dist/variants.cjs",
-			"require": "./dist/variants.cjs"
+			"import": "./dist/variants.mjs",
+			"require": "./dist/variants.js",
+			"node": "./dist/variants.js",
+			"default": "./dist/variants.mjs"
 		}
 	},
 	"scripts": {
@@ -49,7 +64,7 @@
 		"render:content": "ts-node scripts/render-content.ts",
 		"render:readme": "ts-node scripts/render-readme.ts",
 		"render": "run-p render:content render:readme",
-		"build:js": "node scripts/esbuild.cjs",
+		"build:js": "node scripts/esbuild.js",
 		"build:dts": "tsc --project tsconfig-src.json",
 		"prepare": "run-p build:js build:dts"
 	},
