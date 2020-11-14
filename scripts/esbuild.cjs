@@ -13,14 +13,14 @@ const main = async () => {
 		platform: "node",
 	};
 
-	// await esbuild.build({
-	// 	...options,
-	// 	format: "cjs",
-	// 	target: "node12",
-	// 	outExtension: {
-	// 		".js": ".cjs",
-	// 	},
-	// });
+	await esbuild.build({
+		...options,
+		format: "cjs",
+		target: "node12",
+		outExtension: {
+			".js": ".cjs",
+		},
+	});
 
 	await esbuild.build({
 		...options,

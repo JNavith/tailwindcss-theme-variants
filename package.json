@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-alpha.2",
+	"version": "1.10.0-alpha.3",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -23,7 +23,8 @@
 	"types": "dist/index.d.ts",
 	"exports": {
 		"default": "./dist/index.mjs",
-		"import": "./dist/index.mjs"
+		"import": "./dist/index.mjs",
+		"require": "./dist/index.cjs"
 	},
 	"scripts": {
 		"eslint:fix": "eslint --fix ./src/**/*.ts ./scripts/**/*.ts ./tests/**/*.ts",
