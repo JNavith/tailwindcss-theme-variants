@@ -1,9 +1,10 @@
 import { describe, it } from "mocha";
+import { createSandbox } from "sinon";
 
 import thisPlugin, {
 	canHover, colorsInverted, colorsNotInverted, hover, noHover, print, screen,
 } from "../src/index";
-import { assertExactCSS, generatePluginCSS } from "./_utils";
+import { assertExactCSS, generatePluginCSS, onTailwind2 } from "./_utils";
 
 export const atApply = (): void => {
 	describe("@apply", () => {
@@ -325,8 +326,13 @@ export const atApply = (): void => {
 		});
 
 		it("lets you experimentally @apply with media queries and selectors with grouping", async () => {
-			assertExactCSS(await generatePluginCSS(
+			const sandbox = createSandbox();
+			const consoleStub = sandbox.stub(console, "warn");
+
+			const generated = await generatePluginCSS(
 				{
+					target: "relaxed",
+
 					theme: {
 						boxShadow: {
 							sm: "0 0 2px black",
@@ -365,30 +371,63 @@ export const atApply = (): void => {
 						@apply can-hover:shadow-lg;
 					}
 				`,
-			),
-			`
-			
-				@media (hover: none) {
-					button {
+			);
+
+			if (onTailwind2(consoleStub.getCalls())) {
+				assertExactCSS(
+					generated,
+				`
+					@media (hover: none) {
+						button {
+							--box-shadow: 0 0 2px black;
+							box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+						}
+					}
+
+					html.touch-screen button {
+						--box-shadow: 0 0 2px black;
+						box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+					}
+
+					@media (hover: hover) {
+						button {
+							--box-shadow: 0 0 8px black;
+							box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+						}
+					}
+
+					html.touchless-screen button {
+						--box-shadow: 0 0 8px black;
+						box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+					}
+				`);
+			} else {
+				assertExactCSS(
+					generated,
+				`
+					@media (hover: none) {
+						button {
+							box-shadow: 0 0 2px black;
+						}
+					}
+
+					html.touch-screen button {
 						box-shadow: 0 0 2px black;
 					}
-				}
 
-				html.touch-screen button {
-					box-shadow: 0 0 2px black
-				}
+					@media (hover: hover) {
+						button {
+							box-shadow: 0 0 8px black;
+						}
+					}
 
-				@media (hover: hover) {
-					button {
+					html.touchless-screen button {
 						box-shadow: 0 0 8px black;
 					}
-				}
+				`);
+			}
 
-				html.touchless-screen button {
-					box-shadow: 0 0 8px black;
-				}
-
-			`);
+			sandbox.restore();
 		});
 	});
 };
