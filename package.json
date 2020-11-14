@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-alpha.6",
+	"version": "1.10.0-alpha.7",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -64,7 +64,7 @@
 		"render:content": "ts-node scripts/render-content.ts",
 		"render:readme": "ts-node scripts/render-readme.ts",
 		"render": "run-p render:content render:readme",
-		"build:js": "node scripts/esbuild.js",
+		"build:js": "node scripts/esbuild.cjs",
 		"build:dts": "tsc --project tsconfig-src.json",
 		"prepare": "run-p build:js build:dts"
 	},
