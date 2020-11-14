@@ -22,14 +22,14 @@ const main = async () => {
 		},
 	});
 
-	await esbuild.build({
-		...options,
-		format: "esm",
-		target: "es2020",
-		outExtension: {
-			".js": ".mjs",
-		},
-	});
+	// await esbuild.build({
+	// 	...options,
+	// 	format: "esm",
+	// 	target: "es2020",
+	// 	outExtension: {
+	// 		".js": ".mjs",
+	// 	},
+	// });
 };
 
 main();

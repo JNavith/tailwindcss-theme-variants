@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-alpha.4",
+	"version": "1.10.0-alpha.5",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -19,36 +19,24 @@
 	"files": [
 		"dist"
 	],
-	"main": "dist/index.mjs",
-	"types": "dist/index.d.ts",
 	"exports": {
 		".": {
-			"default": "./dist/index.mjs",
-			"import": "./dist/index.mjs",
 			"node": "./dist/index.cjs",
 			"require": "./dist/index.cjs"
 		},
 		"./media-queries": {
-			"default": "./dist/media-queries.mjs",
-			"import": "./dist/media-queries.mjs",
 			"node": "./dist/media-queries.cjs",
 			"require": "./dist/media-queries.cjs"
 		},
 		"./selectors": {
-			"default": "./dist/selectors.mjs",
-			"import": "./dist/selectors.mjs",
 			"node": "./dist/selectors.cjs",
 			"require": "./dist/selectors.cjs"
 		},
 		"./utilities": {
-			"default": "./dist/utilities.mjs",
-			"import": "./dist/utilities.mjs",
 			"node": "./dist/utilities.cjs",
 			"require": "./dist/utilities.cjs"
 		},
 		"./variants": {
-			"default": "./dist/variants.mjs",
-			"import": "./dist/variants.mjs",
 			"node": "./dist/variants.cjs",
 			"require": "./dist/variants.cjs"
 		}
