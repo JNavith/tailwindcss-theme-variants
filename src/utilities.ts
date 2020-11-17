@@ -35,7 +35,14 @@ export const backgroundColor: SemanticUtility = {
 	isColorUtility: true,
 	opacityUtility: "backgroundOpacity",
 	opacityVariable: "bg-opacity",
-	css: simpleCSS("background-color"),
+	css: ({
+		computedClass, computedValue, opacityVariable, opacityVariableUsed,
+	}) => ({
+		[computedClass]: {
+			...opacityVariableUsed ? { [`--${opacityVariable}`]: "1" } : {},
+			"background-color": computedValue,
+		},
+	}),
 };
 export const backgroundOpacity: SemanticUtility = {
 	configKey: "backgroundOpacity",
@@ -50,7 +57,14 @@ export const borderColor: SemanticUtility = {
 	isColorUtility: true,
 	opacityUtility: "borderOpacity",
 	opacityVariable: "border-opacity",
-	css: simpleCSS("border-color"),
+	css: ({
+		computedClass, computedValue, opacityVariable, opacityVariableUsed,
+	}) => ({
+		[computedClass]: {
+			...opacityVariableUsed ? { [`--${opacityVariable}`]: "1" } : {},
+			"border-color": computedValue,
+		},
+	}),
 };
 export const borderOpacity: SemanticUtility = {
 	configKey: "borderOpacity",
@@ -59,7 +73,19 @@ export const borderOpacity: SemanticUtility = {
 	css: simpleCSS("--border-opacity"),
 };
 
-export const boxShadow = simpleUtility("boxShadow", "shadow");
+export const boxShadow: SemanticUtility = {
+	configKey: "boxShadow",
+	prefix: "shadow",
+	isColorUtility: false,
+	css: ({ computedClass, computedValue, onTailwind2 }) => ({
+		[computedClass]: {
+			...(onTailwind2 ? {
+				"--tw-shadow": computedValue,
+				"box-shadow": "var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)",
+			} : { "box-shadow": computedValue }),
+		},
+	}),
+};
 
 export const divideColor: SemanticUtility = {
 	configKey: "divideColor",
@@ -67,8 +93,11 @@ export const divideColor: SemanticUtility = {
 	isColorUtility: true,
 	opacityUtility: "divideOpacity",
 	opacityVariable: "divide-opacity",
-	css: ({ computedClass, computedValue }) => ({
+	css: ({
+		computedClass, computedValue, opacityVariable, opacityVariableUsed,
+	}) => ({
 		[`${computedClass} > :not(template) ~ :not(template)`]: {
+			...opacityVariableUsed ? { [`--${opacityVariable}`]: "1" } : {},
 			"border-color": computedValue,
 		},
 	}),
@@ -135,7 +164,14 @@ export const textColor: SemanticUtility = {
 	isColorUtility: true,
 	opacityUtility: "textOpacity",
 	opacityVariable: "text-opacity",
-	css: simpleCSS("color"),
+	css: ({
+		computedClass, computedValue, opacityVariable, opacityVariableUsed,
+	}) => ({
+		[computedClass]: {
+			...opacityVariableUsed ? { [`--${opacityVariable}`]: "1" } : {},
+			color: computedValue,
+		},
+	}),
 };
 export const textOpacity: SemanticUtility = {
 	configKey: "textOpacity",

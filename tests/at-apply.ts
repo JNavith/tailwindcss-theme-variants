@@ -376,35 +376,36 @@ export const atApply = (): void => {
 			if (onTailwind2(consoleStub.getCalls())) {
 				assertExactCSS(
 					generated,
-				`
+					`
 					@media (hover: none) {
 						button {
-							--box-shadow: 0 0 2px black;
-							box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+							--tw-shadow: 0 0 2px black;
+							box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 						}
 					}
 
 					html.touch-screen button {
-						--box-shadow: 0 0 2px black;
-						box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+						--tw-shadow: 0 0 2px black;
+						box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 					}
 
 					@media (hover: hover) {
 						button {
-							--box-shadow: 0 0 8px black;
-							box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+							--tw-shadow: 0 0 8px black;
+							box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 						}
 					}
 
 					html.touchless-screen button {
-						--box-shadow: 0 0 8px black;
-						box-shadow: var(--ring-offset-shadow, 0 0 #0000), var(--ring-shadow, 0 0 #0000), var(--box-shadow);
+						--tw-shadow: 0 0 8px black;
+						box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 					}
-				`);
+				`,
+				);
 			} else {
 				assertExactCSS(
 					generated,
-				`
+					`
 					@media (hover: none) {
 						button {
 							box-shadow: 0 0 2px black;
@@ -424,7 +425,8 @@ export const atApply = (): void => {
 					html.touchless-screen button {
 						box-shadow: 0 0 8px black;
 					}
-				`);
+				`,
+				);
 			}
 
 			sandbox.restore();

@@ -337,11 +337,13 @@ export const semantics = (): void => {
 
 				`
 					.divide-primary > :not(template) ~ :not(template) {
-						border-color: rgba(var(--primary), var(--divide-opacity, 1));
+						--divide-opacity: 1;
+						border-color: rgba(var(--primary), var(--divide-opacity));
 					}
 
 					.divide-accent > :not(template) ~ :not(template) {
-						border-color: rgba(var(--accent), var(--divide-opacity, 1));
+						--divide-opacity: 1;
+						border-color: rgba(var(--accent), var(--divide-opacity));
 					}
 				`,
 			]);

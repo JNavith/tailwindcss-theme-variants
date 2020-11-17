@@ -20,7 +20,7 @@ export type SemanticUtility = {
 	opacityUtility?: string;
 	opacityVariable?: string;
 	prefix: string;
-	css: ({ computedClass, computedValue }: { computedClass: string, computedValue: string }) => {
+	css: (args: { computedClass: string, computedValue: string, onTailwind2: boolean, opacityVariable: string | undefined, opacityVariableUsed: boolean }) => {
 		[selector: string]: {
 			[property: string]: string,
 		},

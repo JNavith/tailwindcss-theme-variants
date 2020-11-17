@@ -140,6 +140,10 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 		const someSemantics = Object.values(themes).some((theme) => Object.prototype.hasOwnProperty.call(theme, "semantics"));
 		const everySemantics = Object.values(themes).every((theme) => Object.prototype.hasOwnProperty.call(theme, "semantics"));
 
+		const onTailwind2 = lookupTarget === undefined;
+		// TODO should this be dependent on tailwind version and how would I even make the test cases for that work?
+		const DEFAULT = ["DEFAULT", "default"];
+
 		if (everySemantics) {
 			const separator = lookupConfig("separator", ":");
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -166,7 +170,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 							const thing = semanticsAccumulating[utility as ConfigurableSemantics];
 							const flatten = ([name, value]: [string, string | ObjectOfNestedStrings]) => {
 								if (typeof value === "string") {
-									const computedName = name === "default" ? rootName : `${rootName}-${name}`;
+									const computedName = DEFAULT.includes(name) ? rootName : `${rootName}-${name}`;
 									if (!thing[computedName]) {
 										// Use Maps to guarantee order matches theme order
 										thing[computedName] = new Map();
@@ -174,14 +178,14 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 									thing[computedName].set(themeName, value);
 								} else {
 									Object.entries(value).forEach(([nestedName, nestedValue]) => {
-										const computedName = nestedName === "default" ? name : `${name}-${nestedName}`;
+										const computedName = DEFAULT.includes(nestedName) ? name : `${name}-${nestedName}`;
 										flatten([computedName, nestedValue]);
 									});
 								}
 							};
 
 							if (typeof rootValue === "string") {
-								flatten(["default", rootValue]);
+								flatten([DEFAULT[0], rootValue]);
 							} else {
 								Object.entries(rootValue).forEach(flatten);
 							}
@@ -207,8 +211,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L154
 			useUnlessOverriden("colors", ["backgroundColor", "borderColor", "gradientColorStops", "textColor"]);
 			// And remove it from semantics (since it's not a utility)
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
+			// @ts-expect-error delete is not allowed but we need it
 			delete semantics.colors;
 
 			// Use "borderColor" as defaults for "divideColor"
@@ -220,19 +223,18 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			useUnlessOverriden("opacity", ["backgroundOpacity", "borderOpacity", "textOpacity"]);
 
 			// Use "borderOpacity" as defaults for "divideOpacity"
-			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L188
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L230
 			useUnlessOverriden("borderOpacity", ["divideOpacity"]);
 
 			// TODO: implement this one
 			// Use "borderWidth" as defaults for "divideWidth"
-			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L188
+			// https://github.com/tailwindlabs/tailwindcss/blob/v1.9.2/stubs/defaultConfig.stub.js#L231
 			// useUnlessOverriden("borderWidth", ["divideWidth"]);
 
 			// Use "gradientColorStops" as values for the from-, via-, and to- utilities
 			useUnlessOverriden("gradientColorStops", ["gradientFromColor", "gradientViaColor", "gradientToColor"]);
 			// And remove it from semantics
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore
+			// @ts-expect-error delete is not allowed but we need it
 			delete semantics.gradientColorStops;
 			// If it were possible, semantics would be retyped here as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>
 			// Instead, it'll be coerced where used below
@@ -240,9 +242,8 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			const behavior = { ...builtinUtilities, ...utilities };
 
 			// target and IE11 compatibility are removed from 2.0
-			const target = lookupTarget?.("themeVariants") ?? "modern";
+			const target = onTailwind2 ? "modern" : lookupTarget("themeVariants");
 			const onlyie11 = target === "ie11";
-			// @ts-expect-error: will and has never worked, but I rely on it
 			const noie11 = target === "modern";
 
 			if (!onlyie11) {
@@ -335,7 +336,6 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				});
 			}
 
-			// TODO: loop over behavior instead?
 			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
 				const {
 					configKey, opacityUtility, isColorUtility, opacityVariable, prefix: classPrefix, css,
@@ -362,11 +362,11 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => {
 						const wholePrefix = `${themeName}${separator}${classPrefix}`;
-						if (sourceName === "default") return wholePrefix;
+						if (DEFAULT.includes(sourceName)) return wholePrefix;
 						return `${wholePrefix}-${sourceName}`;
 					});
 
-					const computedClass = semanticName === "default" ? `.${e(classPrefix)}` : `.${e(`${classPrefix}-${semanticName}`)}`;
+					const computedClass = DEFAULT.includes(semanticName) ? `.${e(classPrefix)}` : `.${e(`${classPrefix}-${semanticName}`)}`;
 					if (!noie11 && hasAllThemeVariants) {
 						addUtilities({
 							[computedClass]: {
@@ -377,12 +377,14 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 
 					// Use the custom properties extension if allowed
 					let computedValue = `var(--${semanticName})`;
+					let opacityVariableUsed = false;
 					if (isColorUtility) {
 						computedValue = `rgb(var(--${semanticName}))`;
 
 						if (opacityUtility) {
 							if (isUtilityEnabled(opacityUtility)) {
-								computedValue = `rgba(var(--${semanticName}), var(--${opacityVariable}, 1))`;
+								computedValue = `rgba(var(--${semanticName}), var(--${opacityVariable}))`;
+								opacityVariableUsed = true;
 							} else {
 								computedValue = `rgb(var(--${semanticName}))`;
 							}
@@ -390,7 +392,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					}
 					if (!onlyie11) {
 						const withImportant = noie11 ? computedValue : `${computedValue} !important`;
-						addUtilities(css({ computedClass, computedValue: withImportant }), dedupedVariants);
+						addUtilities(css({
+							computedClass, computedValue: withImportant, onTailwind2, opacityVariable, opacityVariableUsed,
+						}), dedupedVariants);
 					}
 				});
 			});
