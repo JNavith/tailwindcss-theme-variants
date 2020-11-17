@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v1.2.0
+      - uses: pnpm/action-setup@v1.2.1
         with:
           version: 5.11.x
       - run: pnpm install
@@ -42,7 +42,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v1.2.0
+      - uses: pnpm/action-setup@v1.2.1
         with:
           version: 5.11.x
       - run: pnpm install
