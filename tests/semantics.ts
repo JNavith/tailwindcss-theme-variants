@@ -118,7 +118,267 @@ export const semantics = (): void => {
 			sandbox.restore();
 		});
 
+		it("background color with constants (1.x) or with variables (2.x) with a custom prefix", async () => {
+			const sandbox = createSandbox();
+			const consoleStub = sandbox.stub(console, "warn");
+
+			const generated = await generatePluginCSS(
+				{
+					prefix: "custom_prefix_",
+					target: "ie11",
+
+					theme: {
+						colors: {
+							white: "#FF",
+							gray: {
+								100: "#EE",
+								800: "#22",
+								900: "#11",
+							},
+						},
+					},
+					corePlugins: ["backgroundColor"],
+					variants: {
+						backgroundColor: ["light", "dark"],
+					},
+
+					plugins: [
+						thisPlugin({
+							baseSelector: "html",
+							themes: {
+								light: {
+									mediaQuery: prefersLight,
+									semantics: {
+										colors: {
+											primary: "white",
+											"on-primary": "gray-800",
+										},
+									},
+								},
+								dark: {
+									mediaQuery: prefersDark,
+									semantics: {
+										colors: {
+											primary: "gray-900",
+											"on-primary": "gray-100",
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			);
+
+			if (onTailwind2(consoleStub.getCalls())) {
+				assertContainsCSS(generated, [
+					`
+					@media (prefers-color-scheme: light) {
+						html {
+							--primary: #FF;
+							--on-primary: #22;
+						}
+					}
+
+					@media (prefers-color-scheme: dark){
+						html {
+							--primary: #11;
+							--on-primary: #EE;
+						}
+					}
+				`,
+					`
+					.custom_prefix_bg-primary {
+						background-color: rgb(var(--primary));
+					}
+
+					.custom_prefix_bg-on-primary {
+						background-color: rgb(var(--on-primary));
+					}
+				`,
+				]);
+			} else {
+				assertContainsCSS(generated, [
+					`
+					@media (prefers-color-scheme: light) {
+						.custom_prefix_bg-primary {
+							background-color: #FF;
+						}
+					}
+					@media (prefers-color-scheme: dark) {
+						.custom_prefix_bg-primary {
+							background-color: #11;
+						}
+					}
+				`,
+
+					`
+					@media (prefers-color-scheme: light) {
+						.custom_prefix_bg-on-primary {
+							background-color: #22;
+						}
+					}
+					@media (prefers-color-scheme: dark) {
+						.custom_prefix_bg-on-primary {
+							background-color: #EE;
+						}
+					}
+				`,
+				]);
+			}
+
+			sandbox.restore();
+		});
+
 		it("text color with constants (1.x) or with variables (2.x) with hover variants", async () => {
+			const sandbox = createSandbox();
+			const consoleStub = sandbox.stub(console, "warn");
+
+			const generated = await generatePluginCSS(
+				{
+					target: "ie11",
+
+					theme: {
+						colors: {
+							green: {
+								800: "#040",
+							},
+							teal: {
+								600: "#066",
+							},
+							pink: {
+								600: "#606",
+							},
+							red: {
+								800: "#400",
+							},
+						},
+					},
+					corePlugins: ["textColor"],
+					variants: {
+						textColor: ["colors", "hover"],
+					},
+
+					plugins: [
+						thisPlugin({
+							group: "colors",
+							fallback: true,
+							themes: {
+								red: {
+									selector: ".red-theme",
+									semantics: {
+										textColor: {
+											primary: "red-800",
+											accent: "pink-600",
+										},
+									},
+								},
+								green: {
+									selector: ".green-theme",
+									semantics: {
+										textColor: {
+											primary: "green-800",
+											accent: "teal-600",
+										},
+									},
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			);
+
+			if (onTailwind2(consoleStub.getCalls())) {
+				assertContainsCSS(generated, [
+					`
+						:root:not(.green-theme) {
+							--primary: 68, 0, 0;
+							--accent: 102, 0, 102;
+						}
+
+						:root.red-theme {
+							--primary: 68, 0, 0;
+							--accent: 102, 0, 102;
+						}
+
+						:root.green-theme {
+							--primary: 0, 68, 0;
+							--accent: 0, 102, 102;
+						}
+					`,
+					`
+						.text-primary {
+							color: rgb(var(--primary));
+						}
+
+						.hover\\:text-primary:hover {
+							color: rgb(var(--primary));
+						}
+
+						.text-accent {
+							color: rgb(var(--accent));
+						}
+
+						.hover\\:text-accent:hover {
+							color: rgb(var(--accent));
+						}
+					`,
+				]);
+			} else {
+				assertContainsCSS(generated, [
+					`
+					:root:not(.green-theme) .text-primary {
+						color: #400;
+					}
+					:root.red-theme .text-primary {
+						color: #400;
+					}
+					:root.green-theme .text-primary {
+						color: #040;
+					}
+				`,
+					`
+					:root:not(.green-theme) .text-accent {
+						color: #606;
+					}
+					:root.red-theme .text-accent {
+						color: #606;
+					}
+					:root.green-theme .text-accent {
+						color: #066;
+					}
+				`,
+					`
+					:root:not(.green-theme) .hover\\:text-primary:hover {
+						color: #400;
+					}
+					:root.red-theme .hover\\:text-primary:hover {
+						color: #400;
+					}
+					:root.green-theme .hover\\:text-primary:hover {
+						color: #040;
+					}
+				`,
+					`
+					:root:not(.green-theme) .hover\\:text-accent:hover {
+						color: #606;
+					}
+					:root.red-theme .hover\\:text-accent:hover {
+						color: #606;
+					}
+					:root.green-theme .hover\\:text-accent:hover {
+						color: #066;
+					}
+				`,
+				]);
+			}
+
+			sandbox.restore();
+		});
+
+		it("text color with constants (1.x) or with variables (2.x) with a custom prefix with hover variants", async () => {
 			const sandbox = createSandbox();
 			const consoleStub = sandbox.stub(console, "warn");
 

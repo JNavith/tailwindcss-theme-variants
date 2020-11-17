@@ -361,7 +361,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 
 				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => {
-						const wholePrefix = `${themeName}${separator}${classPrefix}`;
+						const wholePrefix = `${themeName}${separator}${lookupConfig("prefix", "")}${classPrefix}`;
 						if (DEFAULT.includes(sourceName)) return wholePrefix;
 						return `${wholePrefix}-${sourceName}`;
 					});
