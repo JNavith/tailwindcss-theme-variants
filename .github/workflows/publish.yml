@@ -24,7 +24,6 @@ jobs:
         with:
           version: 5.11.x
       - run: pnpm install
-      - run: pnpm uninstall tailwindcss
       - run: pnpm install --save tailwindcss@${{ matrix.tailwindcss-version }}
       - run: pnpm run test
   
