@@ -24,9 +24,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v1.2.0
+      - uses: pnpm/action-setup@v1.2.1
         with:
-          version: 5.10.x
+          version: 5.11.x
       - name: "Install Production and Development Dependencies"
         run: "pnpm install"
       - name: "Render Content"
