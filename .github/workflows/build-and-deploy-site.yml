@@ -26,7 +26,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - uses: pnpm/action-setup@v1.2.1
         with:
-          version: 5.11.x
+          version: 5.13.x
       - name: "Install Production and Development Dependencies"
         run: "pnpm install"
       - name: "Render Content"
