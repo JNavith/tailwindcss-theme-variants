@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-beta.4",
+	"version": "1.10.0-beta.5",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -54,10 +54,22 @@
 			"require": "./dist/variants.js",
 			"node": "./dist/variants.js",
 			"default": "./dist/variants.mjs"
+		},
+		"./presets/dark-mode": {
+			"import": "./dist/preset-light-and-dark.mjs",
+			"require": "./dist/preset-light-and-dark.js",
+			"node": "./dist/preset-light-and-dark.js",
+			"default": "./dist/preset-light-and-dark.mjs"
+		},
+		"./presets/recommended": {
+			"import": "./dist/preset-recommended.mjs",
+			"require": "./dist/preset-recommended.js",
+			"node": "./dist/preset-recommended.js",
+			"default": "./dist/preset-recommended.mjs"
 		}
 	},
 	"scripts": {
-		"eslint:fix": "eslint --fix ./src/**/*.ts ./scripts/**/*.ts ./tests/**/*.ts",
+		"eslint:fix": "eslint --fix ./src/**/*.ts ./scripts/**/*.cjs ./scripts/**/*.ts ./tests/**/*.ts",
 		"retext": "ts-node scripts/lint-content.ts",
 		"lint": "run-p retext eslint:fix",
 		"test": "cross-env TS_NODE_FILES=true mocha --require ts-node/register 'tests/index.ts'",
@@ -106,6 +118,6 @@
 		"vfile-reporter": "^6.0.1"
 	},
 	"peerDependencies": {
-		"tailwindcss": "^1.9.6 || ^2.0.0-alpha.24"
+		"tailwindcss": "^1.9.6 || ^2.0.1"
 	}
 }
