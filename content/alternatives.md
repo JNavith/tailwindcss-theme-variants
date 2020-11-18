@@ -7,7 +7,7 @@ This table is very complicated, so a text summary is also available in [tailwind
     <thead>
         <tr>
             <th></th>
-            <th><a href="https://tailwindcss.com/docs/breakpoints/#dark-mode">Native screens</a></th>
+            <th><a href="https://tailwindcss.com/docs/breakpoints#custom-media-queries">Native screens</a></th>
             <th><a href="https://tailwindcss.com/docs/dark-mode">Native <code>darkMode</code></a></th>
             <th><a href="https://github.com/benface/tailwindcss-alt">tailwindcss-alt</a></th>
             <th><a href="https://github.com/ChanceArthur/tailwindcss-dark-mode">tailwindcss-dark-mode</a></th>
