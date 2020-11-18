@@ -1,12 +1,14 @@
 # Alternatives
-Both because there are many theme plugins for Tailwind CSS, and because *what's the right way to do theming?* is a frequently asked question, we've compiled this table listing every theme plugin to compare their features and ultimately answer that question:
+Both because there are many theme plugins for Tailwind CSS, and because *what's the right way to do theming?* is a frequently asked question, we've compiled this table listing every theme plugin to compare their features and ultimately answer that question.
+
+This table is very complicated, so a text summary is also available in [tailwindcss-theming's Alternatives section](https://github.com/innocenzi/tailwindcss-theming#alternatives).
 
 <table>
     <thead>
         <tr>
             <th></th>
             <th><a href="https://tailwindcss.com/docs/breakpoints/#dark-mode">Native screens</a></th>
-            <th><a href="https://github.com/tailwindlabs/tailwindcss/pull/2279">Experimental <code>darkModeVariant</code></a></th>
+            <th><a href="https://tailwindcss.com/docs/dark-mode">Native <code>darkMode</code></a></th>
             <th><a href="https://github.com/benface/tailwindcss-alt">tailwindcss-alt</a></th>
             <th><a href="https://github.com/ChanceArthur/tailwindcss-dark-mode">tailwindcss-dark-mode</a></th>
             <th><a href="https://github.com/danestves/tailwindcss-darkmode">tailwindcss-darkmode</a></th>
@@ -19,19 +21,6 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
     </thead>
     <tbody>
         <tr>
-            <th>Classes can be <code>@apply</code>ed</th>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>✅</td>
-            <td>❌</td>
-            <td>✅</td>
-        </tr>
-        <tr>
             <th>Controllable with selectors (classes or data attributes)</th>
             <td>❌</td>
             <td>🟡</td>
@@ -42,19 +31,6 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
             <td>🟡</td>
             <td>✅</td>
             <td>✅</td>
-            <td>✅</td>
-        </tr>
-        <tr>
-            <th>Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a></th>
-            <td>❌</td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>❌</td>
-            <td>✅</td>
-            <td>❌</td>
             <td>✅</td>
         </tr>
         <tr>
@@ -126,45 +102,6 @@ Both because there are many theme plugins for Tailwind CSS, and because *what's 
 </table>
 
 ## Legend
-**Classes can be `@apply`ed**: 
-
-As of Tailwind CSS 1.7, *any* class can be `@apply`ed with the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/releases/tag/v1.7.0#use-apply-with-variants-and-other-complex-classes).
-
-```css
-.btn-blue {
-    /* Now, it all just works! */
-    @apply light:bg-blue-100 light:text-blue-800;
-    @apply dark:bg-blue-700 dark:text-white;
-}
-```
-
-**The following information is applicable to versions of Tailwind before 1.7 or without `applyComplexClasses` enabled:**
-
-[Native screens](https://tailwindcss.com/docs/breakpoints/#dark-mode) cannot have their generated classes `@apply`ed, but you can still nest an `@screen` directive within the element, like this: 
-```css
-.btn-blue {
-    @apply bg-blue-100 text-blue-800;
-    /* Wouldn't have worked: @apply dark:bg-blue-700 dark:text-white */
-    @screen dark {
-        @apply bg-blue-700 text-white;
-    }
-}
-```
-This may require nesting support, provided by [`postcss-nested`](https://github.com/postcss/postcss-nested) or [`postcss-nesting`](https://github.com/jonathantneal/postcss-nesting) (part of [`postcss-preset-env`](https://github.com/csstools/postcss-preset-env)).
-
-As for theme plugins that are controlled with CSS selectors like classes and data attributes, you can nest whatever selector that may be (in this example `.theme-dark`) inside of the component's block, similarly to `@screen`:
-```css
-.btn-blue {
-    @apply bg-blue-100 text-blue-800;
-    /* Wouldn't have worked: @apply dark:bg-blue-700 dark:text-white */
-    .theme-dark & {
-        @apply bg-blue-700 text-white;
-    }
-}
-```
-
-**Requires <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/--*">custom properties</a>**: Plugins who meet this description (have a ✅) usually have you write semantically named classes like `bg-primary`, `text-secondary`, etc, and swap out what `primary` and `secondary` mean with custom properties depending on the theme. This means that in IE11, themes cannot be controlled, and in some cases the default theme won't work at all without [preprocessing](https://github.com/postcss/postcss-custom-properties).
-
 **Responsive**: While "inside" of a theme, it must be possible to "activate" classes depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
 
 **Stacked variants**: While "inside" of a theme, it must be possible to "activate" classes depending on pseudoselector conditions. For instance, it has to be possible to change the text color when **both** the theme is `green` **and** the text is `:hover`ed over.
@@ -176,4 +113,4 @@ Plugins that have a 🟡 support only some of the variants in Tailwind's core, a
 2. It could still be possible for a flash of unthemed content to appear before the appropriate theme is activated (unless you block rendering by executing the script immediately in `head`)
 3. Your site will immediately jump between light and dark instead of smoothly transitioning with the rest of the screen on macOS
 
-**[tailwindcss-prefers-dark-mode](https://github.com/javifm86/tailwindcss-prefers-dark-mode)** and **[experimental `darkModeVariant`](https://github.com/tailwindlabs/tailwindcss/pull/2279)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.
+**[tailwindcss-prefers-dark-mode](https://github.com/javifm86/tailwindcss-prefers-dark-mode)** and **[native `darkMode`](https://tailwindcss.com/docs/dark-mode)**: cannot use selectors and media queries at the same time; it's one or the other, so you have to put a ✅ in one row and ❌ in the other.

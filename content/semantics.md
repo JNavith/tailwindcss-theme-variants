@@ -1,7 +1,5 @@
 # Semantics
-Semantics are an **experimental feature** for this plugin that serve as an alternative to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) (read: have 100% browser support since IE9).
-
-**Semantics require Tailwind CSS 1.7 or higher. Also, the [`applyComplexClasses` experimental feature](https://github.com/tailwindlabs/tailwindcss/pull/2159) will be enabled for you if you use semantics because it's required for them to work.**
+Semantics are an **experimental feature** for this plugin that serve as a better approach to [custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*). If you're on Tailwind CSS 1.7 to 1.9, this means they still work on IE11!
 
 TODO. Semantic classes bundle up your design system with this plugin's generated variants. Because I (the plugin author 👋) have to write them, only certain utilities are supported so far:
 * `backgroundColor`

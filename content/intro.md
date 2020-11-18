@@ -9,6 +9,3 @@
 * **As many themes as you want**: light theme, dark theme, red theme, blue theme—just bring your own definitions! The experimental `semantics` feature makes multiple themes easy to deal with!
 
 You are recommended to check out [the comparison table of all Tailwind CSS theming plugins below](#alternatives) before committing to any one. By the way, you might have noticed this plugin's documentation / `README` is *very* long—don't let that frighten you! I designed it to be *overdocumented* and as exhaustive as possible, and since most of it is long code snippets, it's shorter than it looks *and* you don't need to go through it all to do well!
-
-## What about Tailwind's upcoming official dark mode?
-**This plugin will still be maintained!** Light and dark mode support is just *one* thing this plugin can do, and the complexity this plugin can provide [will not be reflected in Tailwind core (see Design Rationale)](https://github.com/tailwindlabs/tailwindcss/pull/2279), so I will still need this around.
