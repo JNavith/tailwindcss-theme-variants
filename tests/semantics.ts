@@ -384,6 +384,7 @@ export const semantics = (): void => {
 
 			const generated = await generatePluginCSS(
 				{
+					prefix: "$tw$",
 					target: "ie11",
 
 					theme: {
@@ -456,19 +457,19 @@ export const semantics = (): void => {
 						}
 					`,
 					`
-						.text-primary {
+						.\\$tw\\$text-primary {
 							color: rgb(var(--primary));
 						}
 
-						.hover\\:text-primary:hover {
+						.hover\\:\\$tw\\$text-primary:hover {
 							color: rgb(var(--primary));
 						}
 
-						.text-accent {
+						.\\$tw\\$text-accent {
 							color: rgb(var(--accent));
 						}
 
-						.hover\\:text-accent:hover {
+						.hover\\:\\$tw\\$text-accent:hover {
 							color: rgb(var(--accent));
 						}
 					`,
@@ -487,35 +488,35 @@ export const semantics = (): void => {
 					}
 				`,
 					`
-					:root:not(.green-theme) .text-accent {
+					:root:not(.green-theme) .\\$tw\\$text-accent {
 						color: #606;
 					}
-					:root.red-theme .text-accent {
+					:root.red-theme .\\$tw\\$text-accent {
 						color: #606;
 					}
-					:root.green-theme .text-accent {
+					:root.green-theme .\\$tw\\$text-accent {
 						color: #066;
 					}
 				`,
 					`
-					:root:not(.green-theme) .hover\\:text-primary:hover {
+					:root:not(.green-theme) .hover\\:\\$tw\\$text-primary:hover {
 						color: #400;
 					}
-					:root.red-theme .hover\\:text-primary:hover {
+					:root.red-theme .hover\\:\\$tw\\$text-primary:hover {
 						color: #400;
 					}
-					:root.green-theme .hover\\:text-primary:hover {
+					:root.green-theme .hover\\:\\$tw\\$text-primary:hover {
 						color: #040;
 					}
 				`,
 					`
-					:root:not(.green-theme) .hover\\:text-accent:hover {
+					:root:not(.green-theme) .hover\\:\\$tw\\$text-accent:hover {
 						color: #606;
 					}
-					:root.red-theme .hover\\:text-accent:hover {
+					:root.red-theme .hover\\:\\$tw\\$text-accent:hover {
 						color: #606;
 					}
-					:root.green-theme .hover\\:text-accent:hover {
+					:root.green-theme .hover\\:\\$tw\\$text-accent:hover {
 						color: #066;
 					}
 				`,
