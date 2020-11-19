@@ -477,13 +477,13 @@ export const semantics = (): void => {
 			} else {
 				assertContainsCSS(generated, [
 					`
-					:root:not(.green-theme) .text-primary {
+					:root:not(.green-theme) .\\$tw\\$text-primary {
 						color: #400;
 					}
-					:root.red-theme .text-primary {
+					:root.red-theme .\\$tw\\$text-primary {
 						color: #400;
 					}
-					:root.green-theme .text-primary {
+					:root.green-theme .\\$tw\\$text-primary {
 						color: #040;
 					}
 				`,
