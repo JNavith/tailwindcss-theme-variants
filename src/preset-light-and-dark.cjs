@@ -24,7 +24,6 @@ module.exports = {
 								faint: {
 									200: "gray-200",
 									100: "gray-100",
-									DEFAULT: "gray-100",
 								},
 								DEFAULT: "white",
 							},
@@ -36,7 +35,6 @@ module.exports = {
 									300: "gray-500",
 									200: "gray-600",
 									100: "gray-700",
-									DEFAULT: "gray-700",
 								},
 								DEFAULT: "gray-800",
 							},
@@ -67,7 +65,7 @@ module.exports = {
 									200: "gray-700",
 									100: "gray-800",
 								},
-								default: "gray-900",
+								DEFAULT: "gray-900",
 							},
 
 							"on-primary": {
@@ -78,7 +76,7 @@ module.exports = {
 									200: "gray-300",
 									100: "gray-200",
 								},
-								default: "gray-100",
+								DEFAULT: "gray-100",
 							},
 
 							error: "red-800",
