@@ -41,9 +41,11 @@ export default {
 				"process.env.NODE_ENV": JSON.stringify(mode),
 			}),
 			svelte({
-				dev,
+				compilerOptions: {
+					dev,
+					hydratable: true,
+				},
 				extensions: [".svelte", ...extensions],
-				hydratable: true,
 				emitCss: true,
 				preprocess,
 			}),
@@ -151,8 +153,10 @@ export default {
 				"module.require": "require",
 			}),
 			svelte({
-				generate: "ssr",
-				dev,
+				compilerOptions: {
+					dev,
+					generate: "ssr",
+				},
 				extensions: [".svelte", ...extensions],
 				preprocess,
 			}),
