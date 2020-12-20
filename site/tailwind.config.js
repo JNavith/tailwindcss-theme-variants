@@ -6,14 +6,13 @@
 */
 
 const d3 = require("d3-color");
-const htmlTags = require("html-tags");
 const { themeVariants, prefersDark, prefersLight } = require("tailwindcss-theme-variants");
 const typography = require("@tailwindcss/typography");
 
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 const proseStyles = require("./prose-styles");
-const redesignedColorPalette = require("./tailwind_colors");
+const redesignedColorPalette = require("tailwindcss/colors");
 
 const lch = (l, c, h) => d3.lch(l, c, h).formatHex();
 
@@ -24,7 +23,7 @@ const tailwindcssConfig = {
 		options: {
 			defaultExtractor: (content) => [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
 			keyframes: true,
-			whitelist: ["data-theme", ...htmlTags],
+			safelist: ["data-theme"],
 		},
 	},
 	theme: {
@@ -69,7 +68,7 @@ const tailwindcssConfig = {
 
 		extend: {
 			backgroundImage: {
-				"gradient-45deg": "linear-gradient(45deg, var(--gradient-color-stops))",
+				"gradient-45deg": "linear-gradient(45deg, var(--tw-gradient-stops))",
 			},
 
 			borderRadius: {
@@ -92,7 +91,9 @@ const tailwindcssConfig = {
 
 			minWidth: (theme) => ({
 				...theme("maxWidth"),
-			})
+			}),
+
+			typography: proseStyles.typography,
 		},
 
 		screens: {
@@ -103,18 +104,18 @@ const tailwindcssConfig = {
 			"2xl": "1536px",
 			"3xl": "1920px",
 		},
-
-		typography: proseStyles.typography,
 	},
 	
 	variants: {
-		backgroundColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
-		borderColor: ({ after }) => after(["themes"]),
-		boxShadow: ({ after }) => after(["hocus", "themes", "themes:hocus"]),
-		gradientColorStops: ({ after }) => after(["themes"]),
-		textDecoration: ({ after }) => after(["group-hocus", "hocus"]),
-		textColor: ({ after }) => after(["group-hocus", "hocus", "themes"]),
-		scale: ({ after }) => after(["hocus"]),
+		extend: {
+			backgroundColor: ["group-hocus", "hocus", "themes"],
+			borderColor: ["themes"],
+			boxShadow: ["hocus", "themes", "themes:hocus"],
+			gradientColorStops: ["themes"],
+			scale: ["hocus"],
+			textDecoration: ["group-hocus", "hocus"],
+			textColor: ["group-hocus", "hocus", "themes"],
+		},
 	},
 
 	plugins: [
@@ -262,16 +263,16 @@ const tailwindcssConfig = {
 							},
 
 							"idea": {
-								"bg": "yellow-900",
+								"bg": "yellow-800",
 								"icon": "white",
 								"icon-bg": "yellow-500",
 								"body": "white",
 							},
 
 							"warning": {
-								"bg": "orange-900",
+								"bg": "orange-800",
 								"icon": "white",
-								"icon-bg": "orange-600",
+								"icon-bg": "orange-500",
 								"heading": "white",
 								"body": "white",
 							},
@@ -279,17 +280,17 @@ const tailwindcssConfig = {
 							"brag-about-red": {
 								"bg": "red-800",
 								"icon": "white",
-								"icon-bg": "red-600",
+								"icon-bg": "red-500",
 								"heading": "white",
 								"body": "red-50",
 							},
 
 							"brag-about-yellow": {
-								"bg": "yellow-800",
+								"bg": "yellow-700",
 								"icon": "white",
-								"icon-bg": "yellow-600",
+								"icon-bg": "yellow-500",
 								"heading": "white",
-								"body": "yellow-50",
+								"body": "white",
 							},
 
 							"brag-about-green": {
@@ -303,7 +304,7 @@ const tailwindcssConfig = {
 							"brag-about-cyan": {
 								"bg": "light-blue-800",
 								"icon": "white",
-								"icon-bg": "light-blue-600",
+								"icon-bg": "light-blue-500",
 								"heading": "white",
 								"body": "light-blue-50",
 							},
@@ -319,7 +320,7 @@ const tailwindcssConfig = {
 							"brag-about-purple": {
 								"bg": "purple-800",
 								"icon": "white",
-								"icon-bg": "purple-600",
+								"icon-bg": "purple-500",
 								"heading": "white",
 								"body": "purple-50",
 							},
@@ -349,21 +350,6 @@ const tailwindcssConfig = {
 			});
 		},
 	],
-
-	target: ["relaxed", {
-		// We don't need semantic variables on this site
-		themeVariants: "ie11",
-	}],
-
-	experimental: {
-		applyComplexClasses: true,
-		extendedSpacingScale: true,
-	},
-
-	future: "all",
-
-	// We have our own!
-	dark: false,
 };
 
 module.exports = tailwindcssConfig;

@@ -1,8 +1,8 @@
 const typographyStyles = require("@tailwindcss/typography/src/styles");
 
 module.exports = {
-    typography: {
-        default: {
+    typography: (theme) => ({
+        DEFAULT: {
             css: {
                 color: false,
                 "@apply text-on-primary": "",
@@ -53,15 +53,15 @@ module.exports = {
                 "h1": {
                     color: false,
 
-                    marginTop: typographyStyles.default.css[1].h2.marginTop,
-                    marginBottom: typographyStyles.default.css[1].h1.marginTop,
+                    marginTop: typographyStyles(theme).DEFAULT.css[1].h2.marginTop,
+                    marginBottom: typographyStyles(theme).DEFAULT.css[1].h1.marginTop,
 
                     fontWeight: false,
                 },
                 "h2": {
                     color: false,
 
-                    marginTop: typographyStyles.default.css[1].h1.marginBottom,
+                    marginTop: typographyStyles(theme).DEFAULT.css[1].h1.marginBottom,
 
                     fontWeight: false,
                 },
@@ -195,11 +195,11 @@ module.exports = {
 
                 // Begin heading styles
                 "h1": {
-                    marginTop: typographyStyles.sm.css[0].h2.marginTop,
-                    marginBottom: typographyStyles.sm.css[0].h1.marginTop,
+                    marginTop: typographyStyles(theme).sm.css[0].h2.marginTop,
+                    marginBottom: typographyStyles(theme).sm.css[0].h1.marginTop,
                 },
                 "h2": {
-                    marginTop: typographyStyles.sm.css[0].h1.marginBottom,
+                    marginTop: typographyStyles(theme).sm.css[0].h1.marginBottom,
                 },
                 // End heading styles
 
@@ -269,5 +269,5 @@ module.exports = {
                 // End table styles
             },
         }
-    },
+    }),
 };
