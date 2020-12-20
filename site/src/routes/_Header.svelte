@@ -40,7 +40,7 @@
             <span id="theme-label" class="sr-only md:not-sr-only">Theme:</span>
         {/if}
         {#each themeOptions as themeOption}
-            <button role="radio" class="px-2 py-2 sm:py-5 group" aria-checked={$theme === themeOption} on:click={() => $theme = themeOption}>
+            <button role="radio" class="px-2 py-2 sm:py-5 group focus:outline-none" aria-checked={$theme === themeOption} on:click={() => $theme = themeOption} title="Use the {themeOption} theme on this site">
                 <div class="p-1 -m-1 rounded transition-theme {$theme === themeOption ? 'font-semibold bg-primary-faint-200' : 'group-hocus:bg-primary-faint-200'}">
                     <Icon icon={themeIcons[themeOption]} aria-hidden="true" style="font-size: 125%" class="inline align-middle transition-theme {$theme === themeOption ? '' : 'text-on-primary-faint-300 group-hocus:text-on-primary'}" /><span class="lg:pl-1 sr-only lg:not-sr-only">{themeOption.slice(0, 1).toUpperCase() + themeOption.slice(1)}</span>
                 </div>
