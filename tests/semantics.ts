@@ -732,7 +732,10 @@ export const semantics = (): void => {
 		});
 
 		it("gradient color stops with modern target", async () => {
-			assertContainsCSS(await generatePluginCSS(
+			const sandbox = createSandbox();
+			const consoleStub = sandbox.stub(console, "warn");
+
+			const generated = await generatePluginCSS(
 				{
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
@@ -779,9 +782,11 @@ export const semantics = (): void => {
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
-			),
-			[
-				`
+			);
+
+			if (onTailwind2(consoleStub.getCalls())) {
+				assertContainsCSS(generated, [
+					`
 					:root {
 						--primary: 221, 221, 0;
 						--accent: 102, 0, 102;
@@ -795,7 +800,46 @@ export const semantics = (): void => {
 					}
 				`,
 
-				`
+					`
+					.from-primary {
+						--tw-gradient-from: rgb(var(--primary));
+						--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--primary), 0));
+					}
+					.from-accent {
+						--tw-gradient-from: rgb(var(--accent));
+						--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--accent), 0));
+					}
+					.via-primary {
+						--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--primary)), var(--tw-gradient-to, rgba(var(--primary), 0));
+					}
+					.via-accent {
+						--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--accent)), var(--tw-gradient-to, rgba(var(--accent), 0));
+					}
+					.to-primary {
+						--tw-gradient-to: rgb(var(--primary));
+					}
+					.to-accent {
+						--tw-gradient-to: rgb(var(--accent));
+					}
+					`,
+				]);
+			} else {
+				assertContainsCSS(generated, [
+					`
+					:root {
+						--primary: 221, 221, 0;
+						--accent: 102, 0, 102;
+					}
+
+					@media (prefers-color-scheme: dark) {
+						:root {
+							--primary: 102, 0, 102;
+							--accent: 221, 221, 0;
+						}
+					}
+				`,
+
+					`
 					.from-primary {
 						--gradient-from-color: rgb(var(--primary));
 						--gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(var(--primary), 0));
@@ -818,8 +862,9 @@ export const semantics = (): void => {
 					.to-accent {
 						--gradient-to-color: rgb(var(--accent));
 					}
-				`,
-			]);
+					`,
+				]);
+			}
 		});
 
 		it("supports non-color utilities (font family) with modern target", async () => {

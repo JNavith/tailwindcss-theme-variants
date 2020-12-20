@@ -131,10 +131,14 @@ export const gradientFromColor: SemanticUtility = {
 	configKey: "gradientColorStops",
 	prefix: "from",
 	isColorUtility: true,
-	css: ({ computedClass, computedValue }) => ({
+	css: ({ computedClass, computedValue, onTailwind2 }) => ({
 		[computedClass]: {
-			"--gradient-from-color": computedValue,
-			"--gradient-color-stops": `var(--gradient-from-color), var(--gradient-to-color, ${sameColorFullyTransparent(computedValue)})`,
+			[onTailwind2 ? "--tw-gradient-from" : "--gradient-from-color"]: computedValue,
+			...(onTailwind2 ? {
+				"--tw-gradient-stops": `var(--tw-gradient-from), var(--tw-gradient-to, ${sameColorFullyTransparent(computedValue)})`,
+			} : {
+				"--gradient-color-stops": `var(--gradient-from-color), var(--gradient-to-color, ${sameColorFullyTransparent(computedValue)})`,
+			}),
 		},
 	}),
 };
@@ -142,10 +146,14 @@ export const gradientViaColor: SemanticUtility = {
 	configKey: "gradientColorStops",
 	prefix: "via",
 	isColorUtility: true,
-	css: ({ computedClass, computedValue }) => ({
+	css: ({ computedClass, computedValue, onTailwind2 }) => ({
 		[computedClass]: {
-			"--gradient-via-color": computedValue,
-			"--gradient-color-stops": `var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, ${sameColorFullyTransparent(computedValue)})`,
+			...(onTailwind2 ? {
+				"--tw-gradient-stops": `var(--tw-gradient-from), ${computedValue}, var(--tw-gradient-to, ${sameColorFullyTransparent(computedValue)})`,
+			} : {
+				"--gradient-via-color": computedValue,
+				"--gradient-color-stops": `var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, ${sameColorFullyTransparent(computedValue)})`,
+			}),
 		},
 	}),
 };
@@ -153,7 +161,15 @@ export const gradientToColor: SemanticUtility = {
 	configKey: "gradientColorStops",
 	prefix: "to",
 	isColorUtility: true,
-	css: simpleCSS("--gradient-to-color"),
+	css: ({ computedClass, computedValue, onTailwind2 }) => ({
+		[computedClass]: {
+			...(onTailwind2 ? {
+				"--tw-gradient-to": computedValue,
+			} : {
+				"--gradient-to-color": computedValue,
+			}),
+		},
+	}),
 };
 
 export const opacity = simpleUtility("opacity");
