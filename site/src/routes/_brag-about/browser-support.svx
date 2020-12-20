@@ -23,8 +23,6 @@ Extreme browser support
 
 <span slot="body">
 
-You can easily theme browsers **as far back as IE9**, especially when you use the `fallback` feature.
-
-No CSS custom properties needed!
+You can easily theme browsers **as far back as IE9**, especially when you use the `fallback` feature and are still on Tailwind 1.x.
 
 </span>
