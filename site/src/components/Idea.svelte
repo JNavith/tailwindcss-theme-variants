@@ -24,7 +24,7 @@
 	<span class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-full text-idea-icon transition-theme bg-idea-icon-bg">
 		<Icon icon={lightBulb} aria-hidden="true" class="w-5 h-5" />
 	</span>
-	<div class="pl-4 self-center leading-relaxed text-idea-body body transition-theme">
+	<div class="pl-4 self-center text-idea-body body transition-theme">
 		<slot />
 	</div>
 </div>
