@@ -21,15 +21,6 @@ const main = async () => {
 			".js": ".js",
 		},
 	});
-
-	await esbuild.build({
-		...options,
-		format: "esm",
-		target: "es2020",
-		outExtension: {
-			".js": ".mjs",
-		},
-	});
 };
 
 main();

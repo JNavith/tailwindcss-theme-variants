@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-beta.9",
+	"version": "1.10.0-beta.10",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -22,50 +22,42 @@
 		"dist"
 	],
 	"type": "commonjs",
-	"main": "dist/index.mjs",
 	"types": "dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/index.mjs",
 			"require": "./dist/index.js",
 			"node": "./dist/index.js",
-			"default": "./dist/index.mjs"
+			"default": "./dist/index.js"
 		},
 		"./media-queries": {
-			"import": "./dist/media-queries.mjs",
 			"require": "./dist/media-queries.js",
 			"node": "./dist/media-queries.js",
-			"default": "./dist/media-queries.mjs"
+			"default": "./dist/media-queries.js"
 		},
 		"./selectors": {
-			"import": "./dist/selectors.mjs",
 			"require": "./dist/selectors.js",
 			"node": "./dist/selectors.js",
-			"default": "./dist/selectors.mjs"
+			"default": "./dist/selectors.js"
 		},
 		"./utilities": {
-			"import": "./dist/utilities.mjs",
 			"require": "./dist/utilities.js",
 			"node": "./dist/utilities.js",
-			"default": "./dist/utilities.mjs"
+			"default": "./dist/utilities.js"
 		},
 		"./variants": {
-			"import": "./dist/variants.mjs",
 			"require": "./dist/variants.js",
 			"node": "./dist/variants.js",
-			"default": "./dist/variants.mjs"
+			"default": "./dist/variants.js"
 		},
 		"./presets/dark-mode": {
-			"import": "./dist/preset-light-and-dark.mjs",
 			"require": "./dist/preset-light-and-dark.js",
 			"node": "./dist/preset-light-and-dark.js",
-			"default": "./dist/preset-light-and-dark.mjs"
+			"default": "./dist/preset-light-and-dark.js"
 		},
 		"./presets/recommended": {
-			"import": "./dist/preset-recommended.mjs",
 			"require": "./dist/preset-recommended.js",
 			"node": "./dist/preset-recommended.js",
-			"default": "./dist/preset-recommended.mjs"
+			"default": "./dist/preset-recommended.js"
 		}
 	},
 	"scripts": {
