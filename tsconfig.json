@@ -4,7 +4,7 @@
         "module": "CommonJS",
         "esModuleInterop": true,
         "baseUrl": ".",
-        "outDir": "./dist",
+        "outDir": ".",
         "strict": true
     },
     "include": [

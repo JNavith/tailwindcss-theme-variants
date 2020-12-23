@@ -9,7 +9,7 @@ const main = async () => {
 	const options = {
 		entryPoints: srcFiles.map((srcFile) => join("src/", srcFile)),
 		minify: true,
-		outdir: "dist",
+		outdir: ".",
 		platform: "node",
 	};
 

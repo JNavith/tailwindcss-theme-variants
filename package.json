@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-beta.10",
+	"version": "1.10.0-beta.11",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -19,45 +19,50 @@
 	"bugs": "https://github.com/JakeNavith/tailwindcss-theme-variants/issues",
 	"homepage": "https://github.com/JakeNavith/tailwindcss-theme-variants",
 	"files": [
-		"dist"
+		"index.js",
+		"media-queries.js",
+		"selectors.js",
+		"utilities.js",
+		"preset-light-and-dark.js",
+		"preset-recommended.js"
 	],
 	"type": "commonjs",
-	"types": "dist/index.d.ts",
+	"types": "index.d.ts",
 	"exports": {
 		".": {
-			"require": "./dist/index.js",
-			"node": "./dist/index.js",
-			"default": "./dist/index.js"
+			"require": "./index.js",
+			"node": "./index.js",
+			"default": "./index.js"
 		},
 		"./media-queries": {
-			"require": "./dist/media-queries.js",
-			"node": "./dist/media-queries.js",
-			"default": "./dist/media-queries.js"
+			"require": "./media-queries.js",
+			"node": "./media-queries.js",
+			"default": "./media-queries.js"
 		},
 		"./selectors": {
-			"require": "./dist/selectors.js",
-			"node": "./dist/selectors.js",
-			"default": "./dist/selectors.js"
+			"require": "./selectors.js",
+			"node": "./selectors.js",
+			"default": "./selectors.js"
 		},
 		"./utilities": {
-			"require": "./dist/utilities.js",
-			"node": "./dist/utilities.js",
-			"default": "./dist/utilities.js"
+			"require": "./utilities.js",
+			"node": "./utilities.js",
+			"default": "./utilities.js"
 		},
 		"./variants": {
-			"require": "./dist/variants.js",
-			"node": "./dist/variants.js",
-			"default": "./dist/variants.js"
+			"require": "./variants.js",
+			"node": "./variants.js",
+			"default": "./variants.js"
 		},
 		"./presets/dark-mode": {
-			"require": "./dist/preset-light-and-dark.js",
-			"node": "./dist/preset-light-and-dark.js",
-			"default": "./dist/preset-light-and-dark.js"
+			"require": "./preset-light-and-dark.js",
+			"node": "./preset-light-and-dark.js",
+			"default": "./preset-light-and-dark.js"
 		},
 		"./presets/recommended": {
-			"require": "./dist/preset-recommended.js",
-			"node": "./dist/preset-recommended.js",
-			"default": "./dist/preset-recommended.js"
+			"require": "./preset-recommended.js",
+			"node": "./preset-recommended.js",
+			"default": "./preset-recommended.js"
 		}
 	},
 	"scripts": {
