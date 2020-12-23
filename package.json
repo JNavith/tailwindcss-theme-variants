@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-beta.13",
+	"version": "1.10.0-beta.14",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -25,6 +25,8 @@
 		"media-queries.d.ts",
 		"selectors.js",
 		"selectors.d.ts",
+		"supports.js",
+		"supports.d.ts",
 		"utilities.js",
 		"utilities.d.ts",
 		"variants.js",
@@ -49,6 +51,11 @@
 			"require": "./selectors.js",
 			"node": "./selectors.js",
 			"default": "./selectors.js"
+		},
+		"./supports": {
+			"require": "./supports.js",
+			"node": "./supports.js",
+			"default": "./supports.js"
 		},
 		"./utilities": {
 			"require": "./utilities.js",
