@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-beta.12",
+	"version": "1.10.0-beta.13",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -20,10 +20,15 @@
 	"homepage": "https://github.com/JakeNavith/tailwindcss-theme-variants",
 	"files": [
 		"index.js",
+		"index.d.ts",
 		"media-queries.js",
+		"media-queries.d.ts",
 		"selectors.js",
+		"selectors.d.ts",
 		"utilities.js",
+		"utilities.d.ts",
 		"variants.js",
+		"variants.d.ts",
 		"preset-light-and-dark.js",
 		"preset-recommended.js"
 	],
