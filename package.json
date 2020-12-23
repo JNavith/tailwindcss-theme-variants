@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.10.0-beta.11",
+	"version": "1.10.0-beta.12",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -23,6 +23,7 @@
 		"media-queries.js",
 		"selectors.js",
 		"utilities.js",
+		"variants.js",
 		"preset-light-and-dark.js",
 		"preset-recommended.js"
 	],
