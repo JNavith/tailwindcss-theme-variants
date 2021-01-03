@@ -2,6 +2,7 @@ import { TailwindCSSConfig } from "@navith/tailwindcss-plugin-author-types";
 import assert from "assert";
 import { merge } from "lodash";
 import postcss from "postcss";
+// eslint-disable-next-line import/no-unresolved
 import tailwindcss from "tailwindcss";
 
 export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Promise<string> => postcss(
@@ -44,5 +45,3 @@ export const assertContainsCSS = (superString: string, expectedToContain: string
 		assert.ok(superClean.includes(containClean), `expected ${superString} to contain ${contain}`);
 	});
 };
-
-export const onTailwind2 = (warnings: { args: string[] }[]): boolean => warnings.some((warning) => warning.args.some((arg) => arg.includes("The `target` feature has been removed in Tailwind CSS v2.0.")));

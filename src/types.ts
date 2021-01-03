@@ -16,15 +16,10 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 
 export type SemanticUtility = {
 	configKey: string;
-	isColorUtility: boolean;
-	opacityUtility?: string;
-	opacityVariable?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	disassemble: (value: any) => string;
 	prefix: string;
-	css: (args: { computedClass: string, computedValue: string, onTailwind2: boolean, opacityVariable: string | undefined, opacityVariableUsed: boolean }) => {
-		[selector: string]: {
-			[property: string]: string,
-		},
-	},
+	reassemble: (value: string) => string | ((args: { opacityVariable: string, opacityValue: string }) => string);
 }
 
 export type ObjectOfNestedStrings = {
@@ -51,6 +46,7 @@ export interface ThisPluginOptions<GivenThemes extends Themes, GroupName extends
 	utilities?: {
 		[name: string]: SemanticUtility;
 	};
+	variables?: boolean | "fallback";
 	variants?: {
 		[name: string]: (selector: string) => string;
 	};

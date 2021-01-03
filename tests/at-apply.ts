@@ -4,7 +4,10 @@ import { createSandbox } from "sinon";
 import thisPlugin, {
 	canHover, colorsInverted, colorsNotInverted, hover, noHover, print, screen,
 } from "../src/index";
-import { assertExactCSS, generatePluginCSS, onTailwind2 } from "./_utils";
+import { assertExactCSS, generatePluginCSS } from "./_utils";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires,import/no-unresolved
+const onTailwind2 = require("tailwindcss/package.json").version.startsWith("2.");
 
 export const atApply = (): void => {
 	describe("@apply", () => {
@@ -327,12 +330,9 @@ export const atApply = (): void => {
 
 		it("lets you experimentally @apply with media queries and selectors with grouping", async () => {
 			const sandbox = createSandbox();
-			const consoleStub = sandbox.stub(console, "warn");
 
 			const generated = await generatePluginCSS(
 				{
-					target: "relaxed",
-
 					theme: {
 						boxShadow: {
 							sm: "0 0 2px black",
@@ -358,6 +358,7 @@ export const atApply = (): void => {
 									mediaQuery: canHover,
 								},
 							},
+							variables: "fallback",
 						}),
 					],
 
@@ -373,7 +374,7 @@ export const atApply = (): void => {
 				`,
 			);
 
-			if (onTailwind2(consoleStub.getCalls())) {
+			if (onTailwind2) {
 				assertExactCSS(
 					generated,
 					`

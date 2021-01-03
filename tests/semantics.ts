@@ -2,25 +2,25 @@ import { describe, it } from "mocha";
 import { createSandbox } from "sinon";
 
 import thisPlugin, { prefersDark, prefersLight } from "../src/index";
-import { assertContainsCSS, generatePluginCSS, onTailwind2 } from "./_utils";
+import { assertContainsCSS, generatePluginCSS } from "./_utils";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires,import/no-unresolved
+const onTailwind2 = require("tailwindcss/package.json").version.startsWith("2.");
 
 export const semantics = (): void => {
 	describe("semantics", () => {
 		it("background color with constants (1.x) or with variables (2.x)", async () => {
 			const sandbox = createSandbox();
-			const consoleStub = sandbox.stub(console, "warn");
 
 			const generated = await generatePluginCSS(
 				{
-					target: "ie11",
-
 					theme: {
 						colors: {
-							white: "#FF",
+							white: "#FFF",
 							gray: {
-								100: "#EE",
-								800: "#22",
-								900: "#11",
+								100: "#EEE",
+								800: "#222",
+								900: "#111",
 							},
 						},
 					},
@@ -52,26 +52,27 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: onTailwind2,
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2(consoleStub.getCalls())) {
+			if (onTailwind2) {
 				assertContainsCSS(generated, [
 					`
 					@media (prefers-color-scheme: light) {
 						html {
-							--primary: #FF;
-							--on-primary: #22;
+							--primary: 255, 255, 255;
+							--on-primary: 34, 34, 34;
 						}
 					}
 
 					@media (prefers-color-scheme: dark){
 						html {
-							--primary: #11;
-							--on-primary: #EE;
+							--primary: 17, 17, 17;
+							--on-primary: 238, 238, 238;
 						}
 					}
 				`,
@@ -90,12 +91,12 @@ export const semantics = (): void => {
 					`
 					@media (prefers-color-scheme: light) {
 						.bg-primary {
-							background-color: #FF;
+							background-color: #FFF;
 						}
 					}
 					@media (prefers-color-scheme: dark) {
 						.bg-primary {
-							background-color: #11;
+							background-color: #111;
 						}
 					}
 				`,
@@ -103,12 +104,12 @@ export const semantics = (): void => {
 					`
 					@media (prefers-color-scheme: light) {
 						.bg-on-primary {
-							background-color: #22;
+							background-color: #222;
 						}
 					}
 					@media (prefers-color-scheme: dark) {
 						.bg-on-primary {
-							background-color: #EE;
+							background-color: #EEE;
 						}
 					}
 				`,
@@ -120,20 +121,18 @@ export const semantics = (): void => {
 
 		it("background color with constants (1.x) or with variables (2.x) with a custom prefix", async () => {
 			const sandbox = createSandbox();
-			const consoleStub = sandbox.stub(console, "warn");
 
 			const generated = await generatePluginCSS(
 				{
 					prefix: "custom_prefix_",
-					target: "ie11",
 
 					theme: {
 						colors: {
-							white: "#FF",
+							white: "#FFF",
 							gray: {
-								100: "#EE",
-								800: "#22",
-								900: "#11",
+								100: "#EEE",
+								800: "#222",
+								900: "#111",
 							},
 						},
 					},
@@ -165,26 +164,27 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: onTailwind2,
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2(consoleStub.getCalls())) {
+			if (onTailwind2) {
 				assertContainsCSS(generated, [
 					`
 					@media (prefers-color-scheme: light) {
 						html {
-							--primary: #FF;
-							--on-primary: #22;
+							--primary: 255, 255, 255;
+							--on-primary: 34, 34, 34;
 						}
 					}
 
 					@media (prefers-color-scheme: dark){
 						html {
-							--primary: #11;
-							--on-primary: #EE;
+							--primary: 17, 17, 17;
+							--on-primary: 238, 238, 238;
 						}
 					}
 				`,
@@ -203,12 +203,12 @@ export const semantics = (): void => {
 					`
 					@media (prefers-color-scheme: light) {
 						.custom_prefix_bg-primary {
-							background-color: #FF;
+							background-color: #FFF;
 						}
 					}
 					@media (prefers-color-scheme: dark) {
 						.custom_prefix_bg-primary {
-							background-color: #11;
+							background-color: #111;
 						}
 					}
 				`,
@@ -216,12 +216,12 @@ export const semantics = (): void => {
 					`
 					@media (prefers-color-scheme: light) {
 						.custom_prefix_bg-on-primary {
-							background-color: #22;
+							background-color: #222;
 						}
 					}
 					@media (prefers-color-scheme: dark) {
 						.custom_prefix_bg-on-primary {
-							background-color: #EE;
+							background-color: #EEE;
 						}
 					}
 				`,
@@ -233,12 +233,9 @@ export const semantics = (): void => {
 
 		it("text color with constants (1.x) or with variables (2.x) with hover variants", async () => {
 			const sandbox = createSandbox();
-			const consoleStub = sandbox.stub(console, "warn");
 
 			const generated = await generatePluginCSS(
 				{
-					target: "ie11",
-
 					theme: {
 						colors: {
 							green: {
@@ -284,13 +281,14 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: onTailwind2,
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2(consoleStub.getCalls())) {
+			if (onTailwind2) {
 				assertContainsCSS(generated, [
 					`
 						:root:not(.green-theme) {
@@ -308,17 +306,20 @@ export const semantics = (): void => {
 							--accent: 0, 102, 102;
 						}
 					`,
+
 					`
 						.text-primary {
 							color: rgb(var(--primary));
 						}
 
-						.hover\\:text-primary:hover {
-							color: rgb(var(--primary));
-						}
-
 						.text-accent {
 							color: rgb(var(--accent));
+						}
+					`,
+
+					`
+						.hover\\:text-primary:hover {
+							color: rgb(var(--primary));
 						}
 
 						.hover\\:text-accent:hover {
@@ -380,12 +381,10 @@ export const semantics = (): void => {
 
 		it("text color with constants (1.x) or with variables (2.x) with a custom prefix with hover variants", async () => {
 			const sandbox = createSandbox();
-			const consoleStub = sandbox.stub(console, "warn");
 
 			const generated = await generatePluginCSS(
 				{
 					prefix: "$tw$",
-					target: "ie11",
 
 					theme: {
 						colors: {
@@ -432,13 +431,14 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: onTailwind2,
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2(consoleStub.getCalls())) {
+			if (onTailwind2) {
 				assertContainsCSS(generated, [
 					`
 						:root:not(.green-theme) {
@@ -461,12 +461,13 @@ export const semantics = (): void => {
 							color: rgb(var(--primary));
 						}
 
-						.hover\\:\\$tw\\$text-primary:hover {
-							color: rgb(var(--primary));
-						}
-
 						.\\$tw\\$text-accent {
 							color: rgb(var(--accent));
+						}
+					`,
+					`
+						.hover\\:\\$tw\\$text-primary:hover {
+							color: rgb(var(--primary));
 						}
 
 						.hover\\:\\$tw\\$text-accent:hover {
@@ -529,9 +530,6 @@ export const semantics = (): void => {
 		it("divide color and opacity with modern target", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					target: "modern",
 					theme: {
 						colors: {
 							yellow: {
@@ -576,6 +574,7 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: true,
 						}),
 					],
 				},
@@ -597,14 +596,14 @@ export const semantics = (): void => {
 				`,
 
 				`
-					.divide-primary > :not(template) ~ :not(template) {
-						--divide-opacity: 1;
-						border-color: rgba(var(--primary), var(--divide-opacity));
+					.divide-primary > :not(${onTailwind2 ? "[hidden]" : "template"}) ~ :not(${onTailwind2 ? "[hidden]" : "template"}) {
+						--${onTailwind2 ? "tw-divide-opacity" : "divide-opacity"}: 1;
+						border-color: rgba(var(--primary), var(--${onTailwind2 ? "tw-divide-opacity" : "divide-opacity"}, 1));
 					}
 
-					.divide-accent > :not(template) ~ :not(template) {
-						--divide-opacity: 1;
-						border-color: rgba(var(--accent), var(--divide-opacity));
+					.divide-accent > :not(${onTailwind2 ? "[hidden]" : "template"}) ~ :not(${onTailwind2 ? "[hidden]" : "template"}) {
+						--${onTailwind2 ? "tw-divide-opacity" : "divide-opacity"}: 1;
+						border-color: rgba(var(--accent), var(--${onTailwind2 ? "tw-divide-opacity" : "divide-opacity"}, 1));
 					}
 				`,
 			]);
@@ -613,10 +612,6 @@ export const semantics = (): void => {
 		it("flattens nested configurations", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					target: "modern",
-
 					theme: {
 						colors: {
 							blue: {
@@ -683,6 +678,7 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: true,
 						}),
 					],
 				},
@@ -732,14 +728,8 @@ export const semantics = (): void => {
 		});
 
 		it("gradient color stops with modern target", async () => {
-			const sandbox = createSandbox();
-			const consoleStub = sandbox.stub(console, "warn");
-
 			const generated = await generatePluginCSS(
 				{
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					target: "modern",
 					theme: {
 						colors: {
 							yellow: {
@@ -778,13 +768,14 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: true,
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2(consoleStub.getCalls())) {
+			if (onTailwind2) {
 				assertContainsCSS(generated, [
 					`
 					:root {
@@ -809,12 +800,18 @@ export const semantics = (): void => {
 						--tw-gradient-from: rgb(var(--accent));
 						--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--accent), 0));
 					}
+					`,
+
+					`
 					.via-primary {
 						--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--primary)), var(--tw-gradient-to, rgba(var(--primary), 0));
 					}
 					.via-accent {
 						--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--accent)), var(--tw-gradient-to, rgba(var(--accent), 0));
 					}
+					`,
+
+					`
 					.to-primary {
 						--tw-gradient-to: rgb(var(--primary));
 					}
@@ -848,6 +845,9 @@ export const semantics = (): void => {
 						--gradient-from-color: rgb(var(--accent));
 						--gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(var(--accent), 0));
 					}
+					`,
+
+					`
 					.via-primary {
 						--gradient-via-color: rgb(var(--primary));
 						--gradient-color-stops: var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, rgba(var(--primary), 0));
@@ -856,6 +856,9 @@ export const semantics = (): void => {
 						--gradient-via-color: rgb(var(--accent));
 						--gradient-color-stops: var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, rgba(var(--accent), 0));
 					}
+					`,
+
+					`
 					.to-primary {
 						--gradient-to-color: rgb(var(--primary));
 					}
@@ -870,9 +873,6 @@ export const semantics = (): void => {
 		it("supports non-color utilities (font family) with modern target", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					target: "modern",
 					theme: {
 						fontFamily: {
 							slab: ["\"Roboto Slab\"", "\"Times New Roman\""],
@@ -909,6 +909,7 @@ export const semantics = (): void => {
 									},
 								},
 							},
+							variables: true,
 						}),
 					],
 				},
@@ -942,9 +943,6 @@ export const semantics = (): void => {
 		it("supports user-defined utilities with modern target", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					target: "modern",
 					theme: {
 						backgroundBlendMode: {
 							overlay: "overlay",
@@ -980,16 +978,28 @@ export const semantics = (): void => {
 							utilities: {
 								backgroundBlendMode: {
 									configKey: "backgroundBlendMode",
+									disassemble: (value: string) => value,
 									prefix: "bg-blend",
-									isColorUtility: false,
-									css: ({ computedClass, computedValue }) => ({
-										[computedClass]: {
-											backgroundBlendMode: computedValue,
-										},
-									}),
+									reassemble: (value: string) => value,
 								},
 							},
+							variables: true,
 						}),
+
+						({
+							addUtilities, e, theme, variants,
+						}) => {
+							const key = "backgroundBlendMode";
+							Object.entries(theme(key, {}) ?? {}).forEach(([valueName, value]) => {
+								addUtilities({
+									[`.${e(`bg-blend-${valueName}`)}`]: {
+										[key]: value,
+									},
+								}, {
+									variants: variants(key, []),
+								});
+							});
+						},
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
