@@ -11,3 +11,6 @@ __sapper__/
 /site/static/global.css
 /site/static/global.css.map
 pnpm-debug.log
+
+/*.js
+/*.d.ts
