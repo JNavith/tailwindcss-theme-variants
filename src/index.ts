@@ -198,6 +198,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 				return utilityEnabled;
 			};
 
+			const onlyie11 = (variables === false) || (variables === undefined && !onTailwind2);
+			const noie11 = (variables === true) || (variables === undefined && onTailwind2);
+
 			const semantics = flattenSemantics(allThemes);
 
 			const useUnlessOverriden = (source: ConfigurableSemantics, destinations: ConfigurableSemantics[]) => {
@@ -244,9 +247,6 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			// Instead, it'll be coerced where used below
 
 			const behavior = { ...builtinUtilities, ...utilities };
-
-			const onlyie11 = (variables === false) || (variables === undefined && !onTailwind2);
-			const noie11 = (variables === true) || (variables === undefined && onTailwind2);
 
 			if (!onlyie11) {
 				allThemes.forEach(([themeName, { mediaQuery, selector }]) => {
@@ -381,7 +381,11 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 }: ThisPluginOptions<GivenThemes, GroupName>) => {
 		const everySemantics = Object.values(themes).every((theme) => theme.semantics);
 
-		const extendedConfig: TailwindCSSConfig = {};
+		const extendedConfig: TailwindCSSConfig & { theme: { extend: NonNullable<TailwindCSSConfig["theme"]> } } = {
+			theme: {
+				extend: {},
+			},
+		};
 
 		if (everySemantics) {
 			if (!onTailwind2) {
@@ -402,12 +406,8 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			const semantics = flattenSemantics(allThemes);
 
 			if (!onlyie11) {
-				extendedConfig.theme = {};
-				extendedConfig.theme.extend = {};
-
 				Object.entries(semantics).forEach(([configKey, themeMaps]) => {
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					extendedConfig.theme!.extend[configKey] = {};
+					extendedConfig.theme.extend[configKey] = {};
 
 					const { reassemble } = behavior[configKey as SupportedSemanticUtilities];
 					Object.keys(themeMaps).forEach((semanticName) => {
