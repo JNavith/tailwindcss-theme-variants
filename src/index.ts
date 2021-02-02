@@ -23,18 +23,22 @@ const defaultVariants: {
 	[name: string]: (selector: string) => string;
 } = Object.fromEntries(Object.entries(builtinVariants).map(([variantName, variantFunction]) => [kebabCase(variantName), variantFunction]));
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires,import/no-unresolved
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const onTailwind2 = require("tailwindcss/package.json").version.startsWith("2.");
 
 const DEFAULT = ["DEFAULT", "default"];
-const flattenSemantics = (allThemes: [string, ThisPluginTheme][]) => allThemes.reduce(
-	(semanticsAccumulating, [themeName, themeConfiguration]) => {
-		Object.entries(themeConfiguration.semantics ?? {}).forEach(([utility, utilityValues]) => {
+
+type FlattenedSemantics = Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>;
+const flattenSemantics = (allThemes: [string, ThisPluginTheme][]): FlattenedSemantics => {
+	const semanticsAccumulating = {} as FlattenedSemantics;
+
+	for (const [themeName, themeConfiguration] of allThemes) {
+		for (const [utility, utilityValues] of Object.entries(themeConfiguration.semantics ?? {})) {
 			if (!semanticsAccumulating[utility as ConfigurableSemantics]) {
 				semanticsAccumulating[utility as ConfigurableSemantics] = {};
 			}
 
-			Object.entries(utilityValues ?? {}).forEach(([rootName, rootValue]) => {
+			for (const [rootName, rootValue] of Object.entries(utilityValues ?? {})) {
 				const thing = semanticsAccumulating[utility as ConfigurableSemantics];
 				const flatten = ([name, value]: [string, string | ObjectOfNestedStrings]) => {
 					if (typeof value === "string") {
@@ -45,24 +49,25 @@ const flattenSemantics = (allThemes: [string, ThisPluginTheme][]) => allThemes.r
 						}
 						thing[computedName].set(themeName, value);
 					} else {
-						Object.entries(value).forEach(([nestedName, nestedValue]) => {
+						for (const [nestedName, nestedValue] of Object.entries(value)) {
 							const computedName = DEFAULT.includes(nestedName) ? name : `${name}-${nestedName}`;
 							flatten([computedName, nestedValue]);
-						});
+						}
 					}
 				};
 
 				if (typeof rootValue === "string") {
 					flatten([DEFAULT[0], rootValue]);
 				} else {
-					Object.entries(rootValue).forEach(flatten);
+					for (const [name, value] of Object.entries(rootValue)) {
+						flatten([name, value]);
+					}
 				}
-			});
-		});
-
-		return semanticsAccumulating;
-	}, {} as Record<ConfigurableSemantics | SupportedSemanticUtilities, Record<string, Map<string, string>>>,
-);
+			}
+		}
+	}
+	return semanticsAccumulating;
+};
 
 const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName extends string>({
 	group, themes, baseSelector: passedBaseSelector, fallback = false, utilities = {}, variables, variants = {},
@@ -105,9 +110,9 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 		// Begin variants logic
 
 		// Use a normal default variant first
-		Object.entries({ "": (selector: string): string => selector, ...defaultVariants, ...variants }).forEach(([variantName, variantFunction]) => {
+		for (const [variantName, variantFunction] of Object.entries({ "": (selector: string): string => selector, ...defaultVariants, ...variants })) {
 			const toRegister = group ? [...allThemes, [group, { mediaQuery: "", selector: "" }] as typeof allThemes[0]] : allThemes;
-			toRegister.forEach(([rootTheme, themeConfig]) => {
+			for (const [rootTheme, themeConfig] of toRegister) {
 				const namedVariant = nameVariant(rootTheme, variantName);
 
 				addVariant(namedVariant, ({ container, separator }) => {
@@ -115,7 +120,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					// Remove the pre-existing (provided by Tailwind's core) CSS so that we don't duplicate it
 					container.removeAll();
 
-					(rootTheme === group ? allThemes : [[rootTheme, themeConfig]] as typeof allThemes).forEach(([themeName, { mediaQuery, selector }]) => {
+					for (const [themeName, { mediaQuery, selector }] of (rootTheme === group ? allThemes : [[rootTheme, themeConfig]] as typeof allThemes)) {
 						const nameSelector = (ruleSelector: string): string => `${variantFunction(`.${e(`${nameVariant(themeName, variantName).replace(/:/g, separator)}${separator}`)}${ruleSelector.slice(1)}`)}`;
 
 						if (themeName === fallbackTheme) {
@@ -173,10 +178,10 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 								container.append(normalScreenContainer);
 							}
 						}
-					});
+					}
 				});
-			});
-		});
+			}
+		}
 		// End variants logic
 
 		// Begin semantics logic
@@ -204,14 +209,12 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			const semantics = flattenSemantics(allThemes);
 
 			const useUnlessOverriden = (source: ConfigurableSemantics, destinations: ConfigurableSemantics[]) => {
-				destinations.forEach((destination) => {
-					if (semantics[source] && !semantics[destination]) {
-						semantics[destination] = {};
-						Object.entries(semantics?.[source] ?? {}).forEach(([sourceName, sourceConfiguration]) => {
-							semantics[destination][sourceName] = sourceConfiguration;
-						});
+				for (const destination of destinations) {
+					if (!semantics[destination]) semantics[destination] = {};
+					for (const [sourceName, sourceConfiguration] of Object.entries(semantics?.[source] ?? {})) {
+						semantics[destination][sourceName] = sourceConfiguration;
 					}
-				});
+				}
 			};
 
 			// Use "colors" as defaults for all the other color utilities (except "divideColor" -- see below)
@@ -249,11 +252,11 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			const behavior = { ...builtinUtilities, ...utilities };
 
 			if (!onlyie11) {
-				allThemes.forEach(([themeName, { mediaQuery, selector }]) => {
+				for (const [themeName, { mediaQuery, selector }] of allThemes) {
 					const fixedBaseSelector = baseSelector || ":root";
 					const semanticVariables: Record<string, string> = {};
-					Object.entries(semantics ?? {}).forEach(([utilityName, utilityConfig]) => {
-						Object.entries(utilityConfig ?? {}).forEach(([variable, valueMap]) => {
+					for (const [utilityName, utilityConfig] of Object.entries(semantics ?? {})) {
+						for (const [variable, valueMap] of Object.entries(utilityConfig ?? {})) {
 							if (semanticVariables[variable]) {
 								throw new TypeError(`tailwindcss-theme-variants: you duplicated a semantic variable name "${variable}" across your utilities in ${themeName}'s semantics configuration (found in ${utilityName} and at least one other place). this can be fixed by using a different name for one of them`);
 							}
@@ -274,22 +277,21 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 							const { configKey, disassemble } = behavior[utilityName as SupportedSemanticUtilities];
 
 							const toTry = 2 ** allHyphensAndPeriods.length;
-							[...Array(toTry).keys()].forEach((bitmap) => {
-								allHyphensAndPeriods.forEach((index, bit) => {
-									// eslint-disable-next-line no-bitwise
+							for (const bitmap of Array(toTry).keys()) {
+								for (const [bit, index] of allHyphensAndPeriods.entries()) {
 									lookupName = lookupName.substring(0, index) + (bitmap & (1 << bit) ? "." : "-") + lookupName.substring(index + 1);
-								});
+								}
 								const foundValue = lookupTheme(`${configKey}.${lookupName}`, undefined);
 								if (foundValue) realValue = foundValue;
-							});
+							}
 
 							if (realValue) {
 								semanticVariables[`--${variable}`] = disassemble(realValue);
 							} else {
 								throw new TypeError(`tailwindcss-theme-variants: the initial / constant value for the semantic variable named "${variable}" for the "${themeName}" theme couldn't be found; it should be named "${referenceValue}" ${referenceValue.includes(".") || referenceValue.includes("-") ? "(maybe with . in place of -?) " : ""}in \`theme.${configKey}\`. this can be fixed by making sure the value you referenced (${referenceValue}) is in your Tailwind CSS \`theme\` configuration under \`${configKey}\`.\nthere could be a mistake here; please create an issue if it actually does exist: https://github.com/JakeNavith/tailwindcss-theme-variants/issues`);
 							}
-						});
-					});
+						}
+					}
 
 					if (themeName === fallbackTheme) {
 						if (compactFallback) {
@@ -329,10 +331,10 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 							});
 						}
 					}
-				});
+				}
 			}
 
-			Object.entries(semantics as Record<SupportedSemanticUtilities, Record<string, Map<string, string>>>).forEach(([utility, utilityConfiguration]) => {
+			for (const [utility, utilityConfiguration] of Object.entries(semantics as FlattenedSemantics)) {
 				const { configKey, prefix: classPrefix } = behavior[utility as SupportedSemanticUtilities];
 				// If it's a core plugin and it's not enabled, return early (and do nothing)
 				if (!isUtilityEnabled(configKey)) {
@@ -353,7 +355,7 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 					}
 				}
 
-				Object.entries(utilityConfiguration).forEach(([semanticName, sourcePerTheme]) => {
+				for (const [semanticName, sourcePerTheme] of Object.entries(utilityConfiguration)) {
 					const classesToApply = Array.from(sourcePerTheme.entries()).map(([themeName, sourceName]) => {
 						const wholePrefix = `${themeName}${separator}${lookupConfig("prefix", "")}${classPrefix}`;
 						if (DEFAULT.includes(sourceName)) return wholePrefix;
@@ -368,8 +370,8 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 							},
 						}, dedupedVariants);
 					}
-				});
-			});
+				}
+			}
 		} else if (someSemantics) {
 			throw new TypeError("tailwindcss-theme-variants: either all themes must define `semantics` or none do. this can be fixed by TODO");
 		}
@@ -406,17 +408,17 @@ const thisPlugin = plugin.withOptions(<GivenThemes extends Themes, GroupName ext
 			const semantics = flattenSemantics(allThemes);
 
 			if (!onlyie11) {
-				Object.entries(semantics).forEach(([configKey, themeMaps]) => {
+				for (const [configKey, themeMaps] of Object.entries(semantics)) {
 					extendedConfig.theme.extend[configKey] = {};
 
 					const { reassemble } = behavior[configKey as SupportedSemanticUtilities];
-					Object.keys(themeMaps).forEach((semanticName) => {
+					for (const semanticName of Object.keys(themeMaps)) {
 						const reassembled = reassemble(`var(--${semanticName})`);
 						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 						// @ts-ignore it's typed wrong
 						extendedConfig.theme.extend[configKey][semanticName] = noie11 ? reassembled : (...args) => `${reassembled(...args)} !important`;
-					});
-				});
+					}
+				}
 			}
 		}
 
