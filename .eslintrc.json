@@ -20,7 +20,8 @@
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 11,
+        "ecmaVersion": 2019,
+        "extraFileExtensions": [".mjs"],
         "sourceType": "module",
         "project": "./tsconfig.json"
     },

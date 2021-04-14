@@ -5,12 +5,7 @@
 firebase-debug.log
 /.history/
 /node_modules/
-__sapper__/
-/site/src/node_modules/@sapper/
-/site/src/rendered-content/
-/site/static/global.css
-/site/static/global.css.map
+/projects/site/node_modules/
+/projects/tailwindcss-theme-variants/node_modules/
+/projects/tests/node_modules/
 pnpm-debug.log
-
-/*.js
-/*.d.ts

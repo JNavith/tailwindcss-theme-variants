@@ -1,6 +1,7 @@
 {
-	"name": "tailwindcss-theme-variants",
-	"version": "1.11.0-beta.1",
+	"name": "tailwindcss-theme-variants-workspace-root",
+	"private": true,
+	"version": "0.0.0",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -18,116 +19,29 @@
 	},
 	"bugs": "https://github.com/JakeNavith/tailwindcss-theme-variants/issues",
 	"homepage": "https://github.com/JakeNavith/tailwindcss-theme-variants",
-	"files": [
-		"index.js",
-		"index.d.ts",
-		"media-queries.js",
-		"media-queries.d.ts",
-		"selectors.js",
-		"selectors.d.ts",
-		"supports.js",
-		"supports.d.ts",
-		"utilities.js",
-		"utilities.d.ts",
-		"variants.js",
-		"variants.d.ts",
-		"preset-light-and-dark.js",
-		"preset-recommended.js"
-	],
-	"type": "commonjs",
-	"types": "index.d.ts",
-	"exports": {
-		".": {
-			"require": "./index.js",
-			"node": "./index.js",
-			"default": "./index.js"
-		},
-		"./media-queries": {
-			"require": "./media-queries.js",
-			"node": "./media-queries.js",
-			"default": "./media-queries.js"
-		},
-		"./selectors": {
-			"require": "./selectors.js",
-			"node": "./selectors.js",
-			"default": "./selectors.js"
-		},
-		"./supports": {
-			"require": "./supports.js",
-			"node": "./supports.js",
-			"default": "./supports.js"
-		},
-		"./utilities": {
-			"require": "./utilities.js",
-			"node": "./utilities.js",
-			"default": "./utilities.js"
-		},
-		"./variants": {
-			"require": "./variants.js",
-			"node": "./variants.js",
-			"default": "./variants.js"
-		},
-		"./presets/dark-mode": {
-			"require": "./preset-light-and-dark.js",
-			"node": "./preset-light-and-dark.js",
-			"default": "./preset-light-and-dark.js"
-		},
-		"./presets/recommended": {
-			"require": "./preset-recommended.js",
-			"node": "./preset-recommended.js",
-			"default": "./preset-recommended.js"
-		}
-	},
+	"type": "module",
 	"scripts": {
-		"eslint:fix": "eslint --fix ./src/**/*.ts ./scripts/**/*.cjs ./scripts/**/*.ts ./tests/**/*.ts",
-		"retext": "ts-node scripts/lint-content.ts",
-		"lint": "run-p retext eslint:fix",
-		"test": "cross-env TS_NODE_FILES=true mocha --require ts-node/register 'tests/index.ts'",
-		"render:content": "ts-node scripts/render-content.ts",
-		"render:readme": "ts-node scripts/render-readme.ts",
-		"render": "run-p render:content render:readme",
-		"build:js": "node scripts/esbuild.cjs",
-		"build:dts": "tsc --project tsconfig-src.json",
-		"prepare": "run-p build:js build:dts"
-	},
-	"dependencies": {
-		"lodash": "^4.17.20",
-		"postcss-selector-parser": "^6.0.4"
+		"eslint": "eslint ./projects/**/*.cjs ./projects/**/*.js ./projects/**/*.mjs ./projects/**/*.ts ./*.js",
+		"format": "npm run eslint -- --fix",
+		"retext": "node lint-content.js",
+		"lint": "run-p eslint retext",
+		"render": "node render.js"
 	},
 	"devDependencies": {
-		"@navith/tailwindcss-plugin-author-types": "^1.8.1-0.1",
-		"@types/assert": "^1.5.4",
-		"@types/lodash": "^4.14.168",
-		"@types/mocha": "^8.2.0",
-		"@types/node": "^14.14.22",
-		"@types/sinon": "^9.0.10",
-		"@typescript-eslint/eslint-plugin": "^4.14.2",
-		"@typescript-eslint/parser": "^4.14.2",
-		"cross-env": "^7.0.3",
-		"esbuild": "^0.8.39",
-		"eslint": "^7.19.0",
-		"eslint-config-airbnb-base": "^14.2.1",
-		"eslint-plugin-import": "^2.22.1",
+		"@typescript-eslint/eslint-plugin": "^4.22.0",
+		"@typescript-eslint/parser": "^4.22.0",
+		"eslint": "^7.24.0",
 		"markdown-toc": "^1.2.0",
-		"mocha": "^8.2.1",
 		"npm-run-all": "^4.1.5",
-		"postcss": "^8.2.4",
+		"postcss": "^8.2.10",
 		"remark-parse": "^9.0.0",
 		"remark-retext": "^4.0.0",
 		"remark-stringify": "^9.0.1",
-		"retext": "^7.0.1",
 		"retext-english": "^3.0.4",
 		"retext-passive": "^3.0.0",
 		"retext-readability": "^6.0.0",
-		"sinon": "^9.2.4",
-		"source-map": "^0.7.3",
 		"to-vfile": "^6.1.0",
-		"ts-node": "^9.1.1",
-		"typescript": "^4.1.3",
-		"unified": "^9.2.0",
+		"unified": "^9.2.1",
 		"vfile-reporter": "^6.0.2"
-	},
-	"peerDependencies": {
-		"tailwindcss": "^1.9.6 || ^2.0.1"
 	}
 }
