@@ -5,7 +5,4 @@
 firebase-debug.log
 /.history/
 /node_modules/
-/projects/site/node_modules/
-/projects/tailwindcss-theme-variants/node_modules/
-/projects/tests/node_modules/
 pnpm-debug.log

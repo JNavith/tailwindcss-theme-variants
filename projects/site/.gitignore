@@ -9,6 +9,6 @@ firebase-debug.log
 /__sapper__/
 /src/node_modules/@sapper/
 /src/rendered-content/
-/site/static/global.css
-/site/static/global.css.map
+/static/global.css
+/static/global.css.map
 pnpm-debug.log
