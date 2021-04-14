@@ -2,10 +2,35 @@ name: Lint, check, and test every commit and PR
 
 on:
   pull_request:
+    paths-ignore:
+      - "projects/site/**"
   push:
+    paths-ignore:
+      - "projects/site/**"
 
 jobs:
-  lint-check-and-test:
+  lint-and-check:
+    strategy:
+      matrix:
+        node-version: [14]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v2.0.0
+        with:
+          version: 5.18.x
+      - run: pnpm install
+      - run: pnpm run lint
+      - run: pnpm -r run check
+  
+  test:
+    needs: lint-and-check
     strategy:
       matrix:
         node-version: [12, 14]
@@ -24,6 +49,4 @@ jobs:
           version: 5.18.x
       - run: pnpm install
       - run: cd projects/tailwindcss-theme-variants && pnpm install --save tailwindcss@${{ matrix.tailwindcss-version }}
-      - run: pnpm run lint
-      - run: pnpm -r run check
       - run: pnpm -r run test
