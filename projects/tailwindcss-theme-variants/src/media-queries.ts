@@ -8,8 +8,8 @@ export const prefersAnyTransparency = "@media (prefers-reduced-transparency: no-
 export const prefersReducedTransparency = "@media (prefers-reduced-transparency: reduce)";
 
 export const prefersAnyContrast = "@media (prefers-contrast: no-preference)";
-export const prefersHighContrast = "@media (prefers-contrast: high)";
-export const prefersLowContrast = "@media (prefers-contrast: low)";
+export const prefersHighContrast = "@media (prefers-contrast: more)";
+export const prefersLowContrast = "@media (prefers-contrast: less)";
 
 export const colorsInverted = "@media (inverted-colors: inverted)";
 export const colorsNotInverted = "@media (inverted-colors: none)";
