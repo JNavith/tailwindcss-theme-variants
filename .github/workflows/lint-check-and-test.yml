@@ -12,19 +12,19 @@ jobs:
   lint-and-check:
     strategy:
       matrix:
-        node-version: [14]
+        node-version: [16]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v2.0.0
+      - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 5.18.x
+          version: 6
       - run: pnpm install
       - run: pnpm run lint
       - run: pnpm -r run check
@@ -33,20 +33,20 @@ jobs:
     needs: lint-and-check
     strategy:
       matrix:
-        node-version: [12, 14]
+        node-version: [14, 16]
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        tailwindcss-version: ["^1.9.6", "^2.1.1"]
+        tailwindcss-version: ["^2.2.16", "next"]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v2.0.0
+      - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 5.18.x
+          version: 6
       - run: pnpm install
       - run: cd projects/tailwindcss-theme-variants && pnpm install --save tailwindcss@${{ matrix.tailwindcss-version }}
       - run: pnpm -r run test

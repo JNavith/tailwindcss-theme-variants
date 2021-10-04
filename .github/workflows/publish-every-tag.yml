@@ -9,7 +9,7 @@ jobs:
   publish:
     strategy:
       matrix:
-        node-version: [14]
+        node-version: [16]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
@@ -19,9 +19,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v2.0.0
+      - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 5.18.x
+          version: 6
       - run: cd projects/tailwindcss-theme-variants && pnpm install
       - run: pnpm -r publish --no-git-checks
         env:
