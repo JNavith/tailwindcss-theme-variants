@@ -44,18 +44,6 @@ This table is complicated, so a text summary is also available in [tailwindcss-t
             <td>✅</td>
         </tr>
         <tr>
-            <th>Stacked variants like <code>hover</code></th>
-            <td>✅</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>✅</td>
-            <td>✅</td>
-            <td>✅</td>
-        </tr>
-        <tr>
             <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
             <td>🟡</td>
             <td>❌</td>
@@ -96,10 +84,6 @@ This table is complicated, so a text summary is also available in [tailwindcss-t
 
 ## Legend
 **Responsive**: While "inside" of a theme, it must be possible to "activate" classes depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
-
-**Stacked variants**: While "inside" of a theme, it must be possible to "activate" classes depending on pseudoselector conditions. For instance, it has to be possible to change the text color when **both** the theme is `green` **and** the text is `:hover`ed over.
-
-Plugins that have a 🟡 support only some of the variants in Tailwind's core, and none that come from other variant-registering plugins.
 
 **Supports `prefers-color-scheme` or other media queries**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) does. This approach still comes with the caveats that
 1. JavaScriptless visitors will not have the site's theme reflect their preferred one

@@ -14,10 +14,6 @@ module.exports = {
         },
     },
 
-    variants: {
-        backgroundColor: ["light", "dark"],
-    },
-
     plugins: [
         themeVariants({
             themes: {
@@ -53,7 +49,7 @@ this CSS is generated:
 }
 ```
 
-After also enabling `"light"` and `"dark"` variants for `textColor` and bringing in more colors from the [default palette](https://tailwindcss.com/docs/customizing-colors/#default-color-palette), we can implement a simple themed button in HTML like this:
+We can implement a simple themed button in HTML like this:
 
 ```html
 <html class="light-theme"> <!-- Change to dark-theme -->
@@ -82,10 +78,6 @@ module.exports = {
         backgroundColor: {
             "teal-500": "#38B2AC",
         },
-    },
-
-    variants: {
-        backgroundColor: ["light", "dark"],
     },
 
     plugins: [
@@ -122,7 +114,3 @@ Which generates this CSS:
     }
 }
 ```
-
-Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. 
-
-💡 [The `group` feature](#theme-groups) will take care of this for you!

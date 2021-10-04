@@ -1,18 +1,9 @@
 import { themeVariants, prefersDark, prefersLight } from ".";
 
 module.exports = {
-	variants: {
-		backgroundColor: ({ after }) => after(["themes", "themes:group-hover", "themes:focus-within", "themes:hover", "themes:focus"]),
-		borderColor: ({ after }) => after(["themes", "themes:group-hover", "themes:focus-within", "themes:hover", "themes:focus"]),
-		boxShadow: ({ after }) => after(["themes", "themes:group-hover", "themes:focus-within", "themes:hover", "themes:focus"]),
-		gradientColorStops: ({ after }) => after(["themes", "themes:hover", "themes:focus"]),
-		divideColor: ({ after }) => after(["themes"]),
-		textColor: ({ after }) => after(["themes", "themes:group-hover", "themes:focus-within", "themes:hover", "themes:focus", "themes:placeholder"]),
-	},
 	plugins: [
 		themeVariants({
-			group: "themes",
-			fallback: "compact",
+			fallback: true,
 			baseSelector: "html",
 			themes: {
 				light: {

@@ -37,10 +37,6 @@ module.exports = {
         },
     },
 
-    variants: {
-        backgroundColor: ["light", "dark"],
-    },
-
     plugins: [
         themeVariants({
             themes: {
@@ -76,7 +72,7 @@ this CSS is generated:
 }
 ```
 
-After also enabling `"light"` and `"dark"` variants for `textColor` and bringing in more colors from the [default palette](https://tailwindcss.com/docs/customizing-colors/#default-color-palette), we can implement a simple themed button in HTML like this:
+We can implement a simple themed button in HTML like this:
 
 ```html
 <html class="light-theme"> <!-- Change to dark-theme -->
@@ -105,10 +101,6 @@ module.exports = {
         backgroundColor: {
             "teal-500": "#38B2AC",
         },
-    },
-
-    variants: {
-        backgroundColor: ["light", "dark"],
     },
 
     plugins: [
@@ -146,10 +138,6 @@ Which generates this CSS:
 }
 ```
 
-Keep the `variants` listed in the same order as in `themes` in this plugin's configuration for consistency and the most expected behavior: in `backgroundColor`'s `variants`, `light` came first, then `dark`, so we also list `light` before `dark` in `themeVariants`'s `themes` option. 
-
-💡 [The `group` feature](#theme-groups) will take care of this for you!
-
 
 # ⚙️ Full configuration
 
@@ -157,8 +145,6 @@ This plugin expects configuration of the form
 
 ```ts
 {
-    group?: string,
-    
     themes: {
         [name: string]: {
             // At least one is required
@@ -168,17 +154,11 @@ This plugin expects configuration of the form
     },
 
     baseSelector?: string,
-    fallback?: boolean | "compact",
-
-    variants?: {
-        [name: string]: (selector: string) => string,
-    },
+    fallback?: boolean,
 }
 ```
 
 Where each parameter means:
-
-- `group` (defaults to not making a group name): the name of the group of themes in this configuration. For example, a sensible name for `light` and `dark` would be `themes` or `modes`. This will create a `themes` (or `modes`) variant that can be listed in `variants` to generate all the CSS for both `light` and `dark` themes in the correct order (matching your configuration). If you want to stack variants (explained in the `variants` description below), like `focus`, then similarly named variants like `themes:focus` will be created.
 
 - `themes`: an object mapping a theme name to the conditions that determine whether or not the theme will be active.
 
@@ -190,80 +170,9 @@ Where each parameter means:
 
 - `fallback` (default `false`): when none of the given media queries or selectors are active, then the first theme you listed in `themes` will activate. You can think of it as the *default* theme for your site.
 
-  If you pass `fallback: "compact"`, then your CSS file size will be drastically reduced for free because redundant things will be "canceled out." You are **recommended** to try this feature and only switch back to `true` if you encounter issues (which you should please [report 😁](https://github.com/JakeNavith/tailwindcss-theme-variants/issues)), because it will become the default option in the future.
-
-- `variants` (default is `{}`): an object mapping the name of a variant to a function that gives a selector for when that variant is active. These will be **merged** with [the default variants](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts) rather than replace them—this means it works like Tailwind's `extend` feature.
-
-  For example, the default `even` variant takes a `selector` and returns `` `${selector}:nth-child(even)` ``. The default `group-hover` variant returns `` `.group:hover ${selector}` ``
-
-  Each given name and function pair will create an appropriately named variant in combination with each theme for use in the `variants` section of your Tailwind CSS config, like `amoled:my-hover` if you have an `amoled` theme and a `my-hover` variant in this plugin's configuration. Either way, because `hover` is one of the default variants, `amoled:hover` will be created too.
-
 
 # Examples
 💡 If you want to see the plugin get stretched to its limits, see the test suite in [`the tests directory`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/tests).
-
-## Theme groups
-Specifying `group` in this plugin's configuration will create a magical variant you can use in place of manually typing out every single theme's name in the Tailwind `variants` section!
-
-For instance, you saw before that 
-
-```js
-const { themeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
-
-module.exports = {
-    theme: {},
-
-    variants: {
-        backgroundColor: ["light", "dark"],
-        textColor: ["hover", "light", "dark"],
-    },
-
-    plugins: [
-        themeVariants({
-            themes: {
-                light: {
-                    mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
-                },
-                dark: {
-                    mediaQuery: prefersDark /* "@media (prefers-color-scheme: dark)" */,
-                },
-            },
-        }),
-    ],
-};
-```
-
-will generate CSS with `light` classes then `dark` classes, but as you create more themes or start playing with the `fallback` feature and stacking variants, it becomes unmaintainable to keep writing all the theme variants out in `variants`. **Introducing: the `group` feature.**
-
-We can clean things up by calling this group `"schemes"` for example, and use that in the `variants` list instead:
-```js
-const { themeVariants, prefersLight, prefersDark } = require("tailwindcss-theme-variants");
-
-module.exports = {
-    theme: {},
-
-    variants: {
-        backgroundColor: ["schemes"],
-        textColor: ["hover", "schemes"],
-    },
-
-    plugins: [
-        themeVariants({
-            group: "schemes",
-            themes: {
-                light: {
-                    mediaQuery: prefersLight /* "@media (prefers-color-scheme: light)" */,
-                },
-                dark: {
-                    mediaQuery: prefersDark /* "@media (prefers-color-scheme: dark)" */,
-                },
-            },
-        }),
-    ],
-};
-```
-
-This will generate the exact same output CSS, but we are making things easier for ourselves as our plugin configuration becomes more complex.
 
 ## Fallback
 ### Media queries
@@ -322,16 +231,9 @@ Which will change the generated CSS to activate `light` earlier than any media q
     background-color: #38B2AC
 }
 
-/* New addition */
+/* Different! */
 .light\:bg-teal-500 {
     background-color: #38B2AC
-}
-/* End new addition */
-
-@media (prefers-color-scheme: light) {
-    .light\:bg-teal-500 {
-        background-color: #38B2AC
-    }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -389,11 +291,7 @@ These options, with the same Tailwind config as before with `backgroundColor: ["
     background-color: #1A202C;
 }
 
-:root:not(.light-theme) .dark\:bg-gray-900 {
-    background-color: #1A202C;
-}
-
-:root.dark-theme .dark\:bg-gray-900 {
+:root .dark\:bg-gray-900 {
     background-color: #1A202C;
 }
 
@@ -431,8 +329,6 @@ Which has the active theme table:
 
 
 ## Stacked variants
-💡 All of Tailwind CSS's core variants and more are bundled for use with this plugin. You can see the full list in [`src/variants.ts`](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts).
-
 You can "stack" built-in or custom variants on top of the existing theme variants. We call it *stacking* because multiple variants are required: like in `night:focus:border-white`, the border will only be white if the `night` theme is active **and** the element is `:focus`ed on.
 
 Here's an example of combining [`prefers-contrast: high`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) with the `:hover` variant:
@@ -443,14 +339,6 @@ module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
     },
-
-    variants: {
-        extend: {
-            backgroundColor: ["high-contrast"],
-            textColor: ["high-contrast", "high-contrast:hover"],
-        },
-    },
-
     plugins: [
         themeVariants({
             themes: {
@@ -479,70 +367,6 @@ You could create a simple card that uses contrast pleasant for fully sighted vis
 </div>
 ```
 
-### Writing a custom variant function
-You might need to write a variant function yourself if it's not [built-in to this plugin](https://github.com/JakeNavith/tailwindcss-theme-variants/blob/main/src/variants.ts). 
-
-It's common to use the same styles on links and buttons when they are hovered over or focused on, so you may want to make things easier for yourself and reduce duplication by creating a `"hocus"` variant that activates for **either** `:hover` **or** `:focus`.
-
-```js
-const { themeVariants } = require("tailwindcss-theme-variants");
-
-module.exports = {
-    theme: {
-        // Your Tailwind CSS theme configuration
-    },
-
-    variants: {
-        extend: {
-            opacity: [
-                "transparency-safe",        "transparency-reduce",
-                "transparency-safe:hocus",  "transparency-reduce:hocus",
-            ],
-        },
-    },
-
-    plugins: [
-        themeVariants({
-            themes: {
-                "transparency-safe": { 
-                    mediaQuery: prefersAnyTransparency /* "@media (prefers-reduced-transparency: no-preference)" */,
-                },
-                "transparency-reduce": { 
-                    mediaQuery: prefersReducedTransparency /* "@media (prefers-reduced-transparency: reduce)" */,
-                },
-            },
-            // prefers-reduced-transparency is not supported in any browsers yet,
-            // so assume an unsupported browser means the visitor is okay with transparency effects
-            fallback: "compact",
-            // If you haven't seen "compact" yet, it's the same as true
-            // but reduces resulting CSS file size by a lot
-            variants: {
-                // The custom variant function you wrote
-                hocus: (selector) => `${selector}:hover, ${selector}:focus`,
-            },
-        }),
-    ],
-};
-```
-
-With this, let's try making an icon button that's overlaid on top of an image in HTML. This button is generally translucent and becomes more opaque on hover or focus, but can be more visually distinct for visitors who need it.
-```html
-<div>
-    <button 
-        @click="..."
-        class="transparency-safe:opacity-25 transparency-safe:hocus:opacity-75
-               transparency-reduce:opacity-75 transparency-reduce:hocus:opacity-100
-               rounded-full text-white bg-black ...">
-
-        <svg class="fill-current positioning-classes...">
-            <!-- Path definitions... -->
-        </svg>
-    </button>
-
-    <img src="..." class="positioning-classes...">
-</div>
-```
-
 Another—complex—example: suppose you want to zebra stripe your tables, matching the current theme, and change it on hover:
 
 ```js
@@ -553,27 +377,13 @@ module.exports = {
         // Your Tailwind CSS theme configuration
     },
 
-    variants: {
-        extend: {
-            backgroundColor: ["accents", "accents:hover", "accents:odd", "accents:odd-hover"],
-        },
-    },
-
     plugins: [
         themeVariants({
-            group: "accents",
             baseSelector: "table.themed",
             themes: {
                 "no-accent": { selector: "" },
                 "green-accent": { selector: ".themed-green" },
                 "orange-accent": { selector: ".themed-orange" },
-            },
-            variants: {
-                // The custom variant function you wrote
-                "odd-hover": (selector) => `${selector}:nth-child(odd):hover`,
-
-                // By the way, the ordering here doesn't matter
-                // (as opposed to the ordering of variants in Tailwind's config above)
             },
         }),
     ],
@@ -588,7 +398,7 @@ We can then implement the themeable table in HTML (Svelte) like so:
         <tr class="no-accent:bg-white               green-accent:bg-green-50             orange-accent:bg-orange-50
                    no-accent:hover:bg-gray-100      green-accent:hover:bg-green-100      orange-accent:hover:bg-orange-100
                    no-accent:odd:bg-gray-100        green-accent:odd:bg-green-100        orange-accent:odd:bg-orange-100
-                   no-accent:odd-hover:bg-gray-200  green-accent:odd-hover:bg-green-200  orange-accent:odd-hover:bg-orange-100
+                   no-accent:odd:hover:bg-gray-200  green-accent:odd:hover:bg-green-200  orange-accent:odd:hover:bg-orange-100
                   ">
 
             <td>{person.firstName} {person.lastName}</td>
@@ -603,18 +413,12 @@ We can then implement the themeable table in HTML (Svelte) like so:
 ### Responsive variants
 Responsive variants let you distinguish the current breakpoint per theme. For example, `lg:green-theme:border-green-200` will have a `green-200` border *only* when the breakpoint is `lg` (or larger) **and** `green-theme` is active.
 
-⚠️ Responsive variants generate for utilities with `"responsive"` in *Tailwind*'s `variants` config, **not** this plugin's config. Also, because this feature is provided by Tailwind CSS rather than this plugin, you have to type `breakpoint:` **before** the `theme-name:` instead of after.
-
 ```js
 const { themeVariants } = require("tailwindcss-theme-variants");
 
 module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
-    },
-
-    variants: {
-        textColor: ["responsive", "day", "night"],
     },
     
     plugins: [
@@ -649,20 +453,15 @@ module.exports = {
         // Your Tailwind CSS theme configuration
     },
 
-    variants: {
-        padding: ["responsive", "density"]
-    },
-
     plugins: [
         themeVariants({
-            group: "density",
             // baseSelector is ":root"
             themes: {
                 comfortable: { selector: "[data-density=comfortable]" },
                 compact: { selector: "[data-density=compact]" },
             },
             // Fall back to the first theme listed (comfortable) when density is not configured
-            fallback: "compact",
+            fallback: true,
         }),
     ],
 };
@@ -689,17 +488,9 @@ module.exports = {
     theme: {
         // Your Tailwind CSS theme configuration
     },
-    
-    variants: {
-        // If you haven't seen the `group` feature yet:
-        // Instead of needing to write out "landscape", "portrait", "landscape:hover", "portrait:hover",
-        // We can name the group "orientation" and only write "orientation", "orientation:hover"
-        fontSize: ["responsive", "hover", "orientation", "orientation:hover"],
-    },
 
     plugins: [
         themeVariants({
-            group: "orientation",
             themes: {
                 landscape: {
                     mediaQuery: landscape,
@@ -708,7 +499,7 @@ module.exports = {
                     mediaQuery: portrait,
                 },
             },
-            fallback: "compact",
+            fallback: true,
         }),
     ],
 };
@@ -815,7 +606,7 @@ plugins: [
         // Since `inverted-colors` has limited browser support, 
         // assume visitors using unsupported browsers do not have their colors inverted
         // and fall back to the "not-inverted" theme
-        fallback: "compact",
+        fallback: true,
         // 💡 Since selectors are being used too, we could even provide 
         // a button on the site that will manually enable/disable inverted colors
     }),
@@ -857,8 +648,6 @@ It has the corresponding active theme table:
 </tbody>
 </table>
 
-💡 If you're using `fallback: true`, now would be a good time to try out `fallback: "compact"` to reduce generated CSS size without needing to make any other changes. Because using both selectors and media queries to activate themes results in *a ton* of CSS, the benefits of `compact`ing it are great now! If you encounter any problems, then you should [create an issue](https://github.com/JakeNavith/tailwindcss-theme-variants/issues) and switch back to `true` until it's resolved.
-
 ## Call the plugin more than once to separate unrelated themes
 The list of themes passed to one call of this plugin are intended to be *mutually exclusive*. So, if you have unrelated themes, like a set for motion, and another for light/dark, it doesn't make sense to stuff them all into the same plugin call. Instead, spread them out into two configs to be controlled independently:
 ```js
@@ -877,37 +666,10 @@ plugins: [
             "motion": { mediaQuery: prefersAnyMotion },
             "no-motion": { mediaQuery: prefersReducedMotion },
         },
-        fallback: "compact",
+        fallback: true,
     }),
 ]
 ```
-
-By the way, if you're not using it yet, this is the perfect opportunity to embrace the `group` configuration option. Instead of manually typing out all the combinations of *every* theme and *every* stacked variant, you can bring it back down to just per group per stacked variant:
-
-```js
-// Rest of the Tailwind CSS config and imports...
-plugins: [
-    themeVariants({
-        group: "themes",
-        baseSelector: "html",
-        themes: {
-            light: { selector: "[data-theme=light]" },
-            dark: { selector: "[data-theme=dark]" },
-        },
-    }),
-
-    themeVariants({
-        group: "motion-preference",
-        themes: {
-            "motion": { mediaQuery: prefersAnyMotion },
-            "no-motion": { mediaQuery: prefersReducedMotion },
-        },
-        fallback: "compact",
-    }),
-]
-```
-
-Now you have magic `"themes"` and `"motion-preference"` variants that are guaranteed to generate the CSS in the correct order, so you should use these instead of `"light", "dark"` and `"motion", "no-motion"` respectively. You'll even get stacked variants like `"themes:group-focus"` or `"motion-preference:hover"`.
 
 ## The ultimate example: how I use every feature together
 Because I primarily made this plugin to solve my own problems (a shocking reason, I know!), I take advantage of every feature this plugin provides. Here's an excerpt of the Tailwind CSS config I use on my site:
@@ -920,36 +682,10 @@ module.exports = {
         // ...
     },
 
-    variants: {
-        extend: {
-            backgroundColor: [
-                "themes",
-                "themes:hover",
-                "themes:focus",
-                "themes:selection",
-            ],
-
-            boxShadow: [
-                "themes",
-                "themes:focus"
-            ],
-            
-            textColor: [
-                "themes",
-                "themes:group-focus",
-                "themes:group-hover",
-                "themes:hover",
-                "themes:focus",
-                "themes:selection",
-            ],
-        },
-    },
-
     plugins: [
         themeVariants({
-            group: "themes",
             baseSelector: "html",
-            fallback: "compact",
+            fallback: true,
             themes: {
                 "light-theme": { selector: "[data-theme=light]", mediaQuery: prefersLight },
                 "dark-theme": { selector: "[data-theme=dark]", mediaQuery: prefersDark },
@@ -960,7 +696,7 @@ module.exports = {
 ```
 
 ## Usage with the Tailwind CSS Typography plugin
-To use theme variants with the official [Tailwind CSS Typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin, create `prose` modifiers for each theme and list the theme variants in the `typography` variants array.
+To use theme variants with the official [Tailwind CSS Typography](https://github.com/tailwindlabs/tailwindcss-typography) plugin, create `prose` modifiers for each theme and use them in the HTML.
 
 Here's an example of changing the prose colors with themes. This covers all of the color settings in the [default typography styles](https://github.com/tailwindlabs/tailwindcss-typography/blob/master/src/styles.js):
 
@@ -1103,22 +839,15 @@ module.exports = {
         },
     },
 
-    variants: {
-        extend: {
-            typography: ["themes"],
-        }
-    },
-
     plugins: [
         typography,
 
         themeVariants({
-            group: "themes",
             themes: {
                 "light-theme": { ... },
                 "dark-theme": { ... },
             },
-            fallback: "compact",
+            fallback: true,
         }),
     ],
 };
@@ -1261,18 +990,6 @@ This table is complicated, so a text summary is also available in [tailwindcss-t
             <td>✅</td>
         </tr>
         <tr>
-            <th>Stacked variants like <code>hover</code></th>
-            <td>✅</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>🟡</td>
-            <td>✅</td>
-            <td>✅</td>
-            <td>✅</td>
-        </tr>
-        <tr>
             <th>Supports <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme: dark</code></a></th>
             <td>🟡</td>
             <td>❌</td>
@@ -1313,10 +1030,6 @@ This table is complicated, so a text summary is also available in [tailwindcss-t
 
 ## Legend
 **Responsive**: While "inside" of a theme, it must be possible to "activate" classes depending on the current breakpoint. For instance, it has to be possible to change `background-color` when **both** the screen is `sm` **and** the current theme is `dark`.
-
-**Stacked variants**: While "inside" of a theme, it must be possible to "activate" classes depending on pseudoselector conditions. For instance, it has to be possible to change the text color when **both** the theme is `green` **and** the text is `:hover`ed over.
-
-Plugins that have a 🟡 support only some of the variants in Tailwind's core, and none that come from other variant-registering plugins.
 
 **Supports `prefers-color-scheme` or other media queries**: Because [any media query can be detected in JavaScript](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia), any plugin marked as not supporting [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) could "support" it by adding or removing classes or data attributes, like the [`prefers-dark.js` script](https://github.com/ChanceArthur/tailwindcss-dark-mode/blob/master/prefers-dark.js) does. This approach still comes with the caveats that
 1. JavaScriptless visitors will not have the site's theme reflect their preferred one

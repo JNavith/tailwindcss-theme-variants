@@ -1,6 +1,6 @@
 {
 	"name": "tailwindcss-theme-variants",
-	"version": "1.11.0-beta.1",
+	"version": "2.0.0-alpha.1",
 	"description": "Media-query- or JavaScript-based theme variants with fallback for Tailwind CSS",
 	"keywords": [
 		"plugin",
@@ -27,57 +27,13 @@
 		"selectors.d.ts",
 		"supports.js",
 		"supports.d.ts",
-		"utilities.js",
-		"utilities.d.ts",
-		"variants.js",
-		"variants.d.ts",
+		"theme-and-variable-converters.js",
+		"theme-and-variable-converters.d.ts",
 		"preset-light-and-dark.js",
 		"preset-recommended.js"
 	],
 	"type": "commonjs",
 	"types": "index.d.ts",
-	"exports": {
-		".": {
-			"require": "./index.js",
-			"node": "./index.js",
-			"default": "./index.js"
-		},
-		"./media-queries": {
-			"require": "./media-queries.js",
-			"node": "./media-queries.js",
-			"default": "./media-queries.js"
-		},
-		"./selectors": {
-			"require": "./selectors.js",
-			"node": "./selectors.js",
-			"default": "./selectors.js"
-		},
-		"./supports": {
-			"require": "./supports.js",
-			"node": "./supports.js",
-			"default": "./supports.js"
-		},
-		"./utilities": {
-			"require": "./utilities.js",
-			"node": "./utilities.js",
-			"default": "./utilities.js"
-		},
-		"./variants": {
-			"require": "./variants.js",
-			"node": "./variants.js",
-			"default": "./variants.js"
-		},
-		"./presets/dark-mode": {
-			"require": "./preset-light-and-dark.js",
-			"node": "./preset-light-and-dark.js",
-			"default": "./preset-light-and-dark.js"
-		},
-		"./presets/recommended": {
-			"require": "./preset-recommended.js",
-			"node": "./preset-recommended.js",
-			"default": "./preset-recommended.js"
-		}
-	},
 	"scripts": {
 		"check": "tsc --noEmit",
 		"build": "node --experimental-json-modules build.mjs",
@@ -85,15 +41,15 @@
 	},
 	"dependencies": {
 		"lodash": "^4.17.21",
-		"postcss-selector-parser": "^6.0.4"
+		"postcss-selector-parser": "^6.0.6"
 	},
 	"devDependencies": {
 		"@navith/tailwindcss-plugin-author-types": "^1.8.1-0.1",
-		"@types/lodash": "^4.14.168",
-		"@types/node": "^14.14.37",
-		"esbuild": "^0.11.10",
-		"postcss": "^8.2.10",
-		"typescript": "^4.2.4"
+		"@types/lodash": "^4.14.175",
+		"@types/node": "^14.17.20",
+		"esbuild": "^0.11.23",
+		"postcss": "^8.3.8",
+		"typescript": "^4.4.3"
 	},
 	"peerDependencies": {
 		"tailwindcss": "^1.9.6 || ^2.1.1"

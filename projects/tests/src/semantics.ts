@@ -4,19 +4,21 @@ import { createSandbox } from "sinon";
 import {
 	themeVariants as thisPlugin,
 	prefersDark, prefersLight,
-} from "tailwindcss-theme-variants";
+} from "tailwindcss-theme-variants/src/index";
+import { colorToRgb, rgbToThemeValue } from "tailwindcss-theme-variants/src/theme-and-variable-converters";
 import { assertContainsCSS, generatePluginCSS } from "./_utils";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires,import/no-unresolved
-const onTailwind2 = require("tailwindcss/package.json").version.startsWith("2.");
 
 export const semantics = (): void => {
 	describe("semantics", () => {
-		it("background color with constants (1.x) or with variables (2.x)", async () => {
+		it("background color", async () => {
 			const sandbox = createSandbox();
 
 			const generated = await generatePluginCSS(
 				{
+					safelist: [
+						"bg-primary",
+						"bg-on-primary",
+					],
 					theme: {
 						colors: {
 							white: "#FFF",
@@ -26,10 +28,6 @@ export const semantics = (): void => {
 								900: "#111",
 							},
 						},
-					},
-					corePlugins: ["backgroundColor"],
-					variants: {
-						backgroundColor: ["light", "dark"],
 					},
 
 					plugins: [
@@ -55,16 +53,20 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: onTailwind2,
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2) {
-				assertContainsCSS(generated, [
-					`
+			assertContainsCSS(generated, [
+				`
 					@media (prefers-color-scheme: light) {
 						html {
 							--primary: 255, 255, 255;
@@ -79,56 +81,34 @@ export const semantics = (): void => {
 						}
 					}
 				`,
-					`
+				`
 					.bg-primary {
-						background-color: rgb(var(--primary));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary), var(--tw-bg-opacity));
 					}
 
 					.bg-on-primary {
-						background-color: rgb(var(--on-primary));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--on-primary), var(--tw-bg-opacity));
 					}
 				`,
-				]);
-			} else {
-				assertContainsCSS(generated, [
-					`
-					@media (prefers-color-scheme: light) {
-						.bg-primary {
-							background-color: #FFF;
-						}
-					}
-					@media (prefers-color-scheme: dark) {
-						.bg-primary {
-							background-color: #111;
-						}
-					}
-				`,
-
-					`
-					@media (prefers-color-scheme: light) {
-						.bg-on-primary {
-							background-color: #222;
-						}
-					}
-					@media (prefers-color-scheme: dark) {
-						.bg-on-primary {
-							background-color: #EEE;
-						}
-					}
-				`,
-				]);
-			}
+			]);
 
 			sandbox.restore();
 		});
 
-		it("background color with constants (1.x) or with variables (2.x) with a custom prefix", async () => {
+		it("background color with a custom prefix", async () => {
 			const sandbox = createSandbox();
 
 			const generated = await generatePluginCSS(
 				{
 					prefix: "custom_prefix_",
 
+					safelist: [
+						"custom_prefix_bg-primary",
+						"custom_prefix_bg-on-primary",
+					],
+
 					theme: {
 						colors: {
 							white: "#FFF",
@@ -138,10 +118,6 @@ export const semantics = (): void => {
 								900: "#111",
 							},
 						},
-					},
-					corePlugins: ["backgroundColor"],
-					variants: {
-						backgroundColor: ["light", "dark"],
 					},
 
 					plugins: [
@@ -167,16 +143,20 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: onTailwind2,
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2) {
-				assertContainsCSS(generated, [
-					`
+			assertContainsCSS(generated, [
+				`
 					@media (prefers-color-scheme: light) {
 						html {
 							--primary: 255, 255, 255;
@@ -191,54 +171,34 @@ export const semantics = (): void => {
 						}
 					}
 				`,
-					`
+				`
 					.custom_prefix_bg-primary {
-						background-color: rgb(var(--primary));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary), var(--tw-bg-opacity));
 					}
-
+					
 					.custom_prefix_bg-on-primary {
-						background-color: rgb(var(--on-primary));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--on-primary), var(--tw-bg-opacity));
 					}
 				`,
-				]);
-			} else {
-				assertContainsCSS(generated, [
-					`
-					@media (prefers-color-scheme: light) {
-						.custom_prefix_bg-primary {
-							background-color: #FFF;
-						}
-					}
-					@media (prefers-color-scheme: dark) {
-						.custom_prefix_bg-primary {
-							background-color: #111;
-						}
-					}
-				`,
-
-					`
-					@media (prefers-color-scheme: light) {
-						.custom_prefix_bg-on-primary {
-							background-color: #222;
-						}
-					}
-					@media (prefers-color-scheme: dark) {
-						.custom_prefix_bg-on-primary {
-							background-color: #EEE;
-						}
-					}
-				`,
-				]);
-			}
+			]);
 
 			sandbox.restore();
 		});
 
-		it("text color with constants (1.x) or with variables (2.x) with hover variants", async () => {
+		it("text color with hover variants", async () => {
 			const sandbox = createSandbox();
 
 			const generated = await generatePluginCSS(
 				{
+					safelist: [
+						"green-theme",
+						"text-primary",
+						"text-accent",
+						"hover:text-primary",
+						"hover:text-accent",
+					],
 					theme: {
 						colors: {
 							green: {
@@ -255,14 +215,9 @@ export const semantics = (): void => {
 							},
 						},
 					},
-					corePlugins: ["textColor"],
-					variants: {
-						textColor: ["colors", "hover"],
-					},
 
 					plugins: [
 						thisPlugin({
-							group: "colors",
 							fallback: true,
 							themes: {
 								red: {
@@ -284,111 +239,75 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: onTailwind2,
+							utilities: {
+								textColor: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2) {
-				assertContainsCSS(generated, [
-					`
-						:root:not(.green-theme) {
-							--primary: 68, 0, 0;
-							--accent: 102, 0, 102;
-						}
-
-						:root.red-theme {
-							--primary: 68, 0, 0;
-							--accent: 102, 0, 102;
-						}
-
-						:root.green-theme {
-							--primary: 0, 68, 0;
-							--accent: 0, 102, 102;
-						}
-					`,
-
-					`
-						.text-primary {
-							color: rgb(var(--primary));
-						}
-
-						.text-accent {
-							color: rgb(var(--accent));
-						}
-					`,
-
-					`
-						.hover\\:text-primary:hover {
-							color: rgb(var(--primary));
-						}
-
-						.hover\\:text-accent:hover {
-							color: rgb(var(--accent));
-						}
-					`,
-				]);
-			} else {
-				assertContainsCSS(generated, [
-					`
-					:root:not(.green-theme) .text-primary {
-						color: #400;
+			assertContainsCSS(generated, [
+				`
+					:root {
+						--primary: 68, 0, 0;
+						--accent: 102, 0, 102;
 					}
-					:root.red-theme .text-primary {
-						color: #400;
-					}
-					:root.green-theme .text-primary {
-						color: #040;
+
+					:root.green-theme {
+						--primary: 0, 68, 0;
+						--accent: 0, 102, 102;
 					}
 				`,
-					`
-					:root:not(.green-theme) .text-accent {
-						color: #606;
+
+				`
+					.text-primary {
+						--tw-text-opacity: 1;
+						color: rgba(var(--primary), var(--tw-text-opacity));
 					}
-					:root.red-theme .text-accent {
-						color: #606;
-					}
-					:root.green-theme .text-accent {
-						color: #066;
-					}
-				`,
-					`
-					:root:not(.green-theme) .hover\\:text-primary:hover {
-						color: #400;
-					}
-					:root.red-theme .hover\\:text-primary:hover {
-						color: #400;
-					}
-					:root.green-theme .hover\\:text-primary:hover {
-						color: #040;
+					
+					.text-accent {
+						--tw-text-opacity: 1;
+						color: rgba(var(--accent), var(--tw-text-opacity));
 					}
 				`,
-					`
-					:root:not(.green-theme) .hover\\:text-accent:hover {
-						color: #606;
+
+				`
+					.hover\\:text-primary:hover {
+						--tw-text-opacity: 1;
+						color: rgba(var(--primary), var(--tw-text-opacity));
 					}
-					:root.red-theme .hover\\:text-accent:hover {
-						color: #606;
-					}
-					:root.green-theme .hover\\:text-accent:hover {
-						color: #066;
+					
+					.hover\\:text-accent:hover {
+						--tw-text-opacity: 1;
+						color: rgba(var(--accent), var(--tw-text-opacity));
 					}
 				`,
-				]);
-			}
+			]);
 
 			sandbox.restore();
 		});
 
-		it("text color with constants (1.x) or with variables (2.x) with a custom prefix with hover variants", async () => {
+		it("text color with a custom prefix with hover variants", async () => {
 			const sandbox = createSandbox();
 
 			const generated = await generatePluginCSS(
 				{
 					prefix: "$tw$",
 
+					safelist: [
+						"red-theme",
+						"green-theme",
+						"$tw$text-primary",
+						"$tw$text-accent",
+						"hover:$tw$text-primary",
+						"hover:$tw$text-accent",
+					],
+
 					theme: {
 						colors: {
 							green: {
@@ -405,14 +324,9 @@ export const semantics = (): void => {
 							},
 						},
 					},
-					corePlugins: ["textColor"],
-					variants: {
-						textColor: ["colors", "hover"],
-					},
 
 					plugins: [
 						thisPlugin({
-							group: "colors",
 							fallback: true,
 							themes: {
 								red: {
@@ -434,22 +348,21 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: onTailwind2,
+							utilities: {
+								textColor: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2) {
-				assertContainsCSS(generated, [
-					`
-						:root:not(.green-theme) {
-							--primary: 68, 0, 0;
-							--accent: 102, 0, 102;
-						}
-
-						:root.red-theme {
+			assertContainsCSS(generated, [
+				`
+						:root {
 							--primary: 68, 0, 0;
 							--accent: 102, 0, 102;
 						}
@@ -459,80 +372,40 @@ export const semantics = (): void => {
 							--accent: 0, 102, 102;
 						}
 					`,
-					`
+				`
 						.\\$tw\\$text-primary {
-							color: rgb(var(--primary));
+							--tw-text-opacity: 1;
+							color: rgba(var(--primary), var(--tw-text-opacity));
 						}
-
+						
 						.\\$tw\\$text-accent {
-							color: rgb(var(--accent));
+							--tw-text-opacity: 1;
+							color: rgba(var(--accent), var(--tw-text-opacity));
 						}
-					`,
-					`
+						`,
+				`
 						.hover\\:\\$tw\\$text-primary:hover {
-							color: rgb(var(--primary));
+							--tw-text-opacity: 1;
+							color: rgba(var(--primary), var(--tw-text-opacity));
 						}
-
+						
 						.hover\\:\\$tw\\$text-accent:hover {
-							color: rgb(var(--accent));
+							--tw-text-opacity: 1;
+							color: rgba(var(--accent), var(--tw-text-opacity));
 						}
 					`,
-				]);
-			} else {
-				assertContainsCSS(generated, [
-					`
-					:root:not(.green-theme) .\\$tw\\$text-primary {
-						color: #400;
-					}
-					:root.red-theme .\\$tw\\$text-primary {
-						color: #400;
-					}
-					:root.green-theme .\\$tw\\$text-primary {
-						color: #040;
-					}
-				`,
-					`
-					:root:not(.green-theme) .\\$tw\\$text-accent {
-						color: #606;
-					}
-					:root.red-theme .\\$tw\\$text-accent {
-						color: #606;
-					}
-					:root.green-theme .\\$tw\\$text-accent {
-						color: #066;
-					}
-				`,
-					`
-					:root:not(.green-theme) .hover\\:\\$tw\\$text-primary:hover {
-						color: #400;
-					}
-					:root.red-theme .hover\\:\\$tw\\$text-primary:hover {
-						color: #400;
-					}
-					:root.green-theme .hover\\:\\$tw\\$text-primary:hover {
-						color: #040;
-					}
-				`,
-					`
-					:root:not(.green-theme) .hover\\:\\$tw\\$text-accent:hover {
-						color: #606;
-					}
-					:root.red-theme .hover\\:\\$tw\\$text-accent:hover {
-						color: #606;
-					}
-					:root.green-theme .hover\\:\\$tw\\$text-accent:hover {
-						color: #066;
-					}
-				`,
-				]);
-			}
+			]);
 
 			sandbox.restore();
 		});
 
-		it("divide color and opacity with modern target", async () => {
+		it("divide color", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
+					safelist: [
+						"divide-primary",
+						"divide-accent",
+					],
 					theme: {
 						colors: {
 							yellow: {
@@ -547,16 +420,10 @@ export const semantics = (): void => {
 							100: "1",
 						},
 					},
-					corePlugins: ["divideColor", "divideOpacity"],
-					variants: {
-						divideColor: [],
-						divideOpacity: [],
-					},
 
 					plugins: [
 						thisPlugin({
-							group: "seasons",
-							fallback: "compact",
+							fallback: true,
 							themes: {
 								fall: {
 									mediaQuery: prefersDark,
@@ -577,7 +444,12 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: true,
+							utilities: {
+								divideColor: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
@@ -599,14 +471,93 @@ export const semantics = (): void => {
 				`,
 
 				`
-					.divide-primary > :not(${onTailwind2 ? "[hidden]" : "template"}) ~ :not(${onTailwind2 ? "[hidden]" : "template"}) {
-						--${onTailwind2 ? "tw-divide-opacity" : "divide-opacity"}: 1;
-						border-color: rgba(var(--primary), ${onTailwind2 ? "var(--tw-divide-opacity)" : "var(--divide-opacity, 1)"});
+					.divide-primary > :not([hidden]) ~ :not([hidden]) {
+						--tw-divide-opacity: 1;
+						border-color: rgba(var(--primary), var(--tw-divide-opacity));
 					}
 
-					.divide-accent > :not(${onTailwind2 ? "[hidden]" : "template"}) ~ :not(${onTailwind2 ? "[hidden]" : "template"}) {
-						--${onTailwind2 ? "tw-divide-opacity" : "divide-opacity"}: 1;
-						border-color: rgba(var(--accent), ${onTailwind2 ? "var(--tw-divide-opacity)" : "var(--divide-opacity, 1)"});
+					.divide-accent > :not([hidden]) ~ :not([hidden]) {
+						--tw-divide-opacity: 1;
+						border-color: rgba(var(--accent), var(--tw-divide-opacity));
+					}
+				`,
+			]);
+		});
+
+		it("inline border opacity", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					safelist: [
+						"border-primary/90",
+						"border-accent/60",
+					],
+					theme: {
+						colors: {
+							yellow: {
+								200: "#DD0",
+							},
+							purple: {
+								600: "#606",
+							},
+						},
+					},
+
+					plugins: [
+						thisPlugin({
+							fallback: true,
+							themes: {
+								spring987: {
+									mediaQuery: prefersLight,
+									semantics: {
+										colors: {
+											primary: "yellow-200",
+											accent: "purple-600",
+										},
+									},
+								},
+								fall879: {
+									mediaQuery: prefersDark,
+									semantics: {
+										colors: {
+											primary: "purple-600",
+											accent: "yellow-200",
+										},
+									},
+								},
+							},
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			),
+			[
+				`
+					:root {
+						--primary: 221, 221, 0;
+						--accent: 102, 0, 102;
+					}
+
+					@media (prefers-color-scheme: dark) {
+						:root {
+							--primary: 102, 0, 102;
+							--accent: 221, 221, 0;
+						}
+					}
+				`,
+
+				`
+					.border-primary\\/90 {
+						border-color: rgba(var(--primary), 0.9);
+					}
+
+					.border-accent\\/60 {
+						border-color: rgba(var(--accent), 0.6);
 					}
 				`,
 			]);
@@ -615,6 +566,14 @@ export const semantics = (): void => {
 		it("flattens nested configurations", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
+					safelist: [
+						"orange-theme",
+						"bg-primary-faint-400",
+						"bg-primary-faint",
+						"bg-primary",
+						"bg-primary-strong",
+						"bg-primary-strong-400",
+					],
 					theme: {
 						colors: {
 							blue: {
@@ -633,16 +592,11 @@ export const semantics = (): void => {
 							},
 						},
 					},
-					corePlugins: ["backgroundColor"],
-					variants: {
-						backgroundColor: [],
-					},
 
 					plugins: [
 						thisPlugin({
-							group: "colors",
 							baseSelector: "body",
-							fallback: "compact",
+							fallback: true,
 							themes: {
 								blue: {
 									selector: ".blue-theme",
@@ -651,11 +605,11 @@ export const semantics = (): void => {
 											primary: {
 												faint: {
 													400: "blue-100",
-													default: "blue-400",
+													DEFAULT: "blue-400",
 												},
-												default: "blue-500",
+												DEFAULT: "blue-500",
 												strong: {
-													default: "blue-600",
+													DEFAULT: "blue-600",
 													400: "blue-900",
 												},
 											},
@@ -669,11 +623,11 @@ export const semantics = (): void => {
 											primary: {
 												faint: {
 													400: "orange-100",
-													default: "orange-400",
+													DEFAULT: "orange-400",
 												},
-												default: "orange-500",
+												DEFAULT: "orange-500",
 												strong: {
-													default: "orange-600",
+													DEFAULT: "orange-600",
 													400: "orange-900",
 												},
 											},
@@ -681,7 +635,12 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: true,
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
@@ -708,31 +667,45 @@ export const semantics = (): void => {
 
 				`
 					.bg-primary-faint-400 {
-						background-color: rgb(var(--primary-faint-400));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary-faint-400), var(--tw-bg-opacity));
 					}
 
 					.bg-primary-faint {
-						background-color: rgb(var(--primary-faint));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary-faint), var(--tw-bg-opacity));
 					}
 
 					.bg-primary {
-						background-color: rgb(var(--primary));
-					}
-
-					.bg-primary-strong-400 {
-						background-color: rgb(var(--primary-strong-400));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary), var(--tw-bg-opacity));
 					}
 
 					.bg-primary-strong {
-						background-color: rgb(var(--primary-strong));
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary-strong), var(--tw-bg-opacity));
+					}
+
+					.bg-primary-strong-400 {
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--primary-strong-400), var(--tw-bg-opacity));
 					}
 				`,
 			]);
 		});
 
-		it("gradient color stops with modern target", async () => {
+		it("gradient color stops", async () => {
 			const generated = await generatePluginCSS(
 				{
+					safelist: [
+						"from-primary",
+						"from-accent",
+						"via-primary",
+						"via-accent",
+						"to-primary",
+						"to-accent",
+					],
+
 					theme: {
 						colors: {
 							yellow: {
@@ -743,14 +716,10 @@ export const semantics = (): void => {
 							},
 						},
 					},
-					corePlugins: ["gradientColorStops"],
-					variants: {
-						gradientColorStops: [],
-					},
 
 					plugins: [
 						thisPlugin({
-							fallback: "compact",
+							fallback: true,
 							themes: {
 								day: {
 									mediaQuery: prefersLight,
@@ -771,111 +740,73 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: true,
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
 						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
 			);
 
-			if (onTailwind2) {
-				assertContainsCSS(generated, [
-					`
-					:root {
-						--primary: 221, 221, 0;
-						--accent: 102, 0, 102;
-					}
+			assertContainsCSS(generated, [
+				`
+				:root {
+					--primary: 221, 221, 0;
+					--accent: 102, 0, 102;
+				}
 
-					@media (prefers-color-scheme: dark) {
-						:root {
-							--primary: 102, 0, 102;
-							--accent: 221, 221, 0;
-						}
+				@media (prefers-color-scheme: dark) {
+					:root {
+						--primary: 102, 0, 102;
+						--accent: 221, 221, 0;
 					}
+				}
+			`,
+
+				`
+				.from-primary {
+					--tw-gradient-from: rgb(var(--primary));
+					--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--primary), 0));
+				}
+				.from-accent {
+					--tw-gradient-from: rgb(var(--accent));
+					--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--accent), 0));
+				}
 				`,
 
-					`
-					.from-primary {
-						--tw-gradient-from: rgb(var(--primary));
-						--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--primary), 0));
-					}
-					.from-accent {
-						--tw-gradient-from: rgb(var(--accent));
-						--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(var(--accent), 0));
-					}
-					`,
-
-					`
-					.via-primary {
-						--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--primary)), var(--tw-gradient-to, rgba(var(--primary), 0));
-					}
-					.via-accent {
-						--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--accent)), var(--tw-gradient-to, rgba(var(--accent), 0));
-					}
-					`,
-
-					`
-					.to-primary {
-						--tw-gradient-to: rgb(var(--primary));
-					}
-					.to-accent {
-						--tw-gradient-to: rgb(var(--accent));
-					}
-					`,
-				]);
-			} else {
-				assertContainsCSS(generated, [
-					`
-					:root {
-						--primary: 221, 221, 0;
-						--accent: 102, 0, 102;
-					}
-
-					@media (prefers-color-scheme: dark) {
-						:root {
-							--primary: 102, 0, 102;
-							--accent: 221, 221, 0;
-						}
-					}
+				`
+				.via-primary {
+					--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--primary)), var(--tw-gradient-to, rgba(var(--primary), 0));
+				}
+				.via-accent {
+					--tw-gradient-stops: var(--tw-gradient-from), rgb(var(--accent)), var(--tw-gradient-to, rgba(var(--accent), 0));
+				}
 				`,
 
-					`
-					.from-primary {
-						--gradient-from-color: rgb(var(--primary));
-						--gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(var(--primary), 0));
-					}
-					.from-accent {
-						--gradient-from-color: rgb(var(--accent));
-						--gradient-color-stops: var(--gradient-from-color), var(--gradient-to-color, rgba(var(--accent), 0));
-					}
-					`,
-
-					`
-					.via-primary {
-						--gradient-via-color: rgb(var(--primary));
-						--gradient-color-stops: var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, rgba(var(--primary), 0));
-					}
-					.via-accent {
-						--gradient-via-color: rgb(var(--accent));
-						--gradient-color-stops: var(--gradient-from-color), var(--gradient-via-color), var(--gradient-to-color, rgba(var(--accent), 0));
-					}
-					`,
-
-					`
-					.to-primary {
-						--gradient-to-color: rgb(var(--primary));
-					}
-					.to-accent {
-						--gradient-to-color: rgb(var(--accent));
-					}
-					`,
-				]);
-			}
+				`
+				.to-primary {
+					--tw-gradient-to: rgb(var(--primary));
+				}
+				.to-accent {
+					--tw-gradient-to: rgb(var(--accent));
+				}
+				`,
+			]);
 		});
 
-		it("supports non-color utilities (font family) with modern target", async () => {
+		it("supports non-color utilities (font family)", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
+					safelist: [
+						"simple",
+						"font-heading",
+						"font-body",
+						"font-slab",
+					],
 					theme: {
 						fontFamily: {
 							slab: ["\"Roboto Slab\"", "\"Times New Roman\""],
@@ -884,14 +815,10 @@ export const semantics = (): void => {
 							display: ["Poppins", "Inter"],
 						},
 					},
-					corePlugins: ["fontFamily"],
-					variants: {
-						fontFamily: [],
-					},
 
 					plugins: [
 						thisPlugin({
-							fallback: "compact",
+							fallback: true,
 							themes: {
 								simple: {
 									selector: ".sophisticated",
@@ -912,7 +839,6 @@ export const semantics = (): void => {
 									},
 								},
 							},
-							variables: true,
 						}),
 					],
 				},
@@ -943,66 +869,85 @@ export const semantics = (): void => {
 			]);
 		});
 
-		it("supports user-defined utilities with modern target", async () => {
+		it("supports nested themes", async () => {
 			assertContainsCSS(await generatePluginCSS(
 				{
+					safelist: [
+						"orange-theme",
+						"fuchsia-theme",
+						"bg-accent",
+					],
 					theme: {
-						backgroundBlendMode: {
-							overlay: "overlay",
-							multiply: "multiply",
+						colors: {
+							orange: {
+								200: "#F80",
+								800: "#210",
+							},
+							fuchsia: {
+								200: "#F0F",
+								800: "#202",
+							},
 						},
-					},
-					corePlugins: [],
-					variants: {
-						backgroundBlendMode: [],
 					},
 
 					plugins: [
 						thisPlugin({
-							fallback: "compact",
+							fallback: true,
 							themes: {
-								darken: {
-									selector: "[data-blend=darken]",
+								light728125: {
+									mediaQuery: prefersDark,
 									semantics: {
-										backgroundBlendMode: {
-											standard: "multiply",
+										colors: {
+											accent: "light-accent",
 										},
 									},
 								},
-								shine: {
-									selector: "[data-blend=shine]",
+								dark728125: {
+									mediaQuery: prefersDark,
 									semantics: {
-										backgroundBlendMode: {
-											standard: "overlay",
+										colors: {
+											accent: "dark-accent",
 										},
 									},
 								},
 							},
 							utilities: {
-								backgroundBlendMode: {
-									configKey: "backgroundBlendMode",
-									disassemble: (value: string) => value,
-									prefix: "bg-blend",
-									reassemble: (value: string) => value,
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
 								},
 							},
-							variables: true,
 						}),
 
-						({
-							addUtilities, e, theme, variants,
-						}) => {
-							const key = "backgroundBlendMode";
-							Object.entries(theme(key, {}) ?? {}).forEach(([valueName, value]) => {
-								addUtilities({
-									[`.${e(`bg-blend-${valueName}`)}`]: {
-										[key]: value,
+						thisPlugin({
+							fallback: true,
+							themes: {
+								orange728125: {
+									selector: ".orange-theme",
+									semantics: {
+										colors: {
+											"light-accent": "orange-200",
+											"dark-accent": "orange-800",
+										},
 									},
-								}, {
-									variants: variants(key, []),
-								});
-							});
-						},
+								},
+								fuchsia728125: {
+									selector: ".fuchsia-theme",
+									semantics: {
+										colors: {
+											"light-accent": "fuchsia-200",
+											"dark-accent": "fuchsia-800",
+										},
+									},
+								},
+							},
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
+						}),
 					],
 				},
 				"@tailwind base;\n@tailwind utilities;",
@@ -1010,17 +955,28 @@ export const semantics = (): void => {
 			[
 				`
 					:root {
-						--standard: multiply;
+						--accent: var(--light-accent);
+					}
+					@media (prefers-color-scheme: dark) {
+						:root {
+							--accent: var(--dark-accent);
+						}
 					}
 
-					:root[data-blend=shine] {
-						--standard: overlay;
+					:root {
+						--light-accent: 255, 136, 0;
+						--dark-accent: 34, 17, 0;
+					}
+					:root.fuchsia-theme {
+						--light-accent: 255, 0, 255;
+						--dark-accent: 34, 0, 34;
 					}
 				`,
 
 				`
-					.bg-blend-standard {
-						background-blend-mode: var(--standard);
+					.bg-accent {
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--accent), var(--tw-bg-opacity));
 					}
 				`,
 			]);

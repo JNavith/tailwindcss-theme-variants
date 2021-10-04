@@ -1,7 +1,5 @@
 import { WrappedPlugin } from "@navith/tailwindcss-plugin-author-types";
 
-import * as builtinUtilities from "./utilities";
-
 export interface ThisPluginThemeSelectorAndMediaQuery {
 	selector: string;
 	mediaQuery: string;
@@ -15,41 +13,25 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 	}[Keys]
 
 export type SemanticUtility = {
-	configKey: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	disassemble: (value: any) => string;
-	prefix: string;
-	reassemble: (value: string) => string | ((args: { opacityVariable: string, opacityValue: string }) => string);
+	themeValueToVariableValue?: (value: any) => string;
+	variableValueToThemeValue?: (value: string) => any;
 }
 
 export type ObjectOfNestedStrings = {
 	[property: string]: string | ObjectOfNestedStrings,
 }
 
-export type SupportedSemanticUtilities = keyof typeof builtinUtilities;
-export type SpecialSemanticKeys = "colors" | "gradientColorStops";
-export type ConfigurableSemantics = SupportedSemanticUtilities | SpecialSemanticKeys;
-
 export type ThisPluginTheme = RequireAtLeastOne<ThisPluginThemeSelectorAndMediaQuery> & {
-	semantics?: {
-		[utility in ConfigurableSemantics]?: ObjectOfNestedStrings;
-	}
+	semantics?: ObjectOfNestedStrings;
 };
 
-export type Themes = { [name: string]: ThisPluginTheme };
+export type Themes = Record<string, ThisPluginTheme>;
 
-export interface ThisPluginOptions<GivenThemes extends Themes, GroupName extends string> {
-	group?: GroupName extends (keyof GivenThemes) ? never : GroupName;
-	themes: GivenThemes;
+export interface ThisPluginOptions {
+	themes: Themes;
 	baseSelector?: string;
-	fallback?: boolean | "compact";
-	utilities?: {
-		[name: string]: SemanticUtility;
-	};
-	variables?: boolean | "fallback";
-	variants?: {
-		[name: string]: (selector: string) => string;
-	};
+	fallback?: boolean;
+	utilities?: Record<string, SemanticUtility>;
 }
 
-export type ThisPlugin<GivenThemes extends Themes, GroupName extends string> = (options: ThisPluginOptions<GivenThemes, GroupName>) => WrappedPlugin;
+export type ThisPlugin = (options: ThisPluginOptions) => WrappedPlugin;

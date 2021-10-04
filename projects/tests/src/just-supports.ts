@@ -10,15 +10,20 @@ export const justSupports = (): void => {
 	describe("just @supports", () => {
 		it("works in place of media queries", async () => {
 			assertExactCSS(await generatePluginCSS({
+				safelist: [
+					"grid-rows-0",
+					"grid-rows-2",
+					"can-grid:grid-rows-0",
+					"can-grid:grid-rows-2",
+					"no-grid:grid-rows-0",
+					"no-grid:grid-rows-2",
+				],
+
 				theme: {
 					gridTemplateRows: {
 						0: "none",
 						2: "two",
 					},
-				},
-				corePlugins: ["gridTemplateRows"],
-				variants: {
-					gridTemplateRows: ["can-grid", "no-grid"],
 				},
 
 				plugins: [
@@ -62,22 +67,24 @@ export const justSupports = (): void => {
 			`);
 		});
 
-		it("supports compact fallback all the same", async () => {
+		it("supports fallback all the same", async () => {
 			assertExactCSS(await generatePluginCSS({
+				safelist: [
+					"grid-cols-0",
+					"grid-cols-2",
+					"cant-grid:grid-cols-0",
+					"cant-grid:grid-cols-2",
+					"has-grid:grid-cols-0",
+					"has-grid:grid-cols-2",
+				],
 				theme: {
 					gridTemplateColumns: {
 						0: "none",
 						2: "two",
 					},
 				},
-				corePlugins: ["gridTemplateColumns"],
-				variants: {
-					gridTemplateColumns: ["gridability"],
-				},
-
 				plugins: [
 					thisPlugin({
-						group: "gridability",
 						themes: {
 							"cant-grid": {
 								mediaQuery: noSupportsGrid,
@@ -86,7 +93,7 @@ export const justSupports = (): void => {
 								mediaQuery: supportsGrid,
 							},
 						},
-						fallback: "compact",
+						fallback: true,
 					}),
 				],
 			}),

@@ -4,17 +4,11 @@ import { merge } from "lodash";
 import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 
-export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Promise<string> => postcss(
+export const generatePluginCSS = (config: TailwindCSSConfig & { safelist?: string[] }, css?: string): Promise<string> => postcss(
 	tailwindcss(
 		merge({
 			theme: {},
-			corePlugins: false,
-			future: {
-				defaultLineHeights: true,
-				standardFontWeights: true,
-				removeDeprecatedGapUtilities: true,
-				purgeLayersByDefault: true,
-			},
+			corePlugins: { preflight: false },
 		} as TailwindCSSConfig, config),
 	),
 ).process(css ?? "@tailwind utilities", {
@@ -24,12 +18,13 @@ export const generatePluginCSS = (config: TailwindCSSConfig, css?: string): Prom
 // Source: jest-matcher-css
 const strip = (str: string): string => str
 	.replace(/^\s+/gm, "")
-	.replace(/;/g, "")
+	.replace(/;/g, ";\n")
+	.replace(/;\s*/g, "")
 	.replace(/,\s*/g, ", ")
 	.replace(/:\s+/g, ":")
 	.replace(/\s+{/g, "{")
 	.replace(/}\s+/g, "}")
-	.replace(/\n+/g, "\n");
+	.replace(/\n+/g, "");
 const prettify = (str: string): string => str.replace(/}/g, "\n}").replace(/{/g, "{\n");
 const clean = (str: string): string => prettify(strip(str));
 

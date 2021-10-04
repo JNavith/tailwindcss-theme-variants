@@ -123,7 +123,7 @@ const tailwindcssConfig = {
 		themeVariants({
 			group: "themes",
 			baseSelector: "html",
-			fallback: "compact",
+			fallback: true,
 			themes: {
 				"light-theme": {
 					selector: "[data-theme=light]",
