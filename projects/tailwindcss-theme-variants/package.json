@@ -28,9 +28,7 @@
 		"supports.js",
 		"supports.d.ts",
 		"theme-and-variable-converters.js",
-		"theme-and-variable-converters.d.ts",
-		"preset-light-and-dark.js",
-		"preset-recommended.js"
+		"theme-and-variable-converters.d.ts"
 	],
 	"type": "commonjs",
 	"types": "index.d.ts",
