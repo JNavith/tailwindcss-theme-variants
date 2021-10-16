@@ -898,9 +898,9 @@ themeVariants({
             semantics: {
                 colors: {
                     "body": "white",
-                    // Use Tailwind CSS's default palette's gray-800
+                    // Use Tailwind CSS's default palette's 800 shade of gray
                     // (unless you overrode it in your regular Tailwind CSS theme config)
-                    "on-body": "gray-800",
+                    "on-body": "gray.800",
                 },
             },
         },
@@ -908,8 +908,8 @@ themeVariants({
             mediaQuery: prefersDark,
             semantics: {
                 colors: {
-                    "body": "gray-900",
-                    "on-body": "gray-100",
+                    "body": "gray.900",
+                    "on-body": "gray.100",
                 },
             },
         },
