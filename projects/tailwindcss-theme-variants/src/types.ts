@@ -1,4 +1,4 @@
-import { WrappedPlugin } from "@navith/tailwindcss-plugin-author-types";
+import { ThemeValue, WrappedPlugin } from "@navith/tailwindcss-plugin-author-types";
 
 export interface ThisPluginThemeSelectorAndMediaQuery {
 	selector: string;
@@ -12,9 +12,11 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 		[K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
 	}[Keys]
 
+type ColorThemeValue = (obj: { opacityValue?: string, opacityVariable?: string }) => string;
+
 export type SemanticUtility = {
-	themeValueToVariableValue?: (value: any) => string;
-	variableValueToThemeValue?: (value: string) => any;
+	themeValueToVariableValue?: (value: string) => string;
+	variableValueToThemeValue?: (value: string) => (ThemeValue | ColorThemeValue);
 }
 
 export type ObjectOfNestedStrings = {

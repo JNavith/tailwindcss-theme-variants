@@ -34,21 +34,21 @@ export const semantics = (): void => {
 						thisPlugin({
 							baseSelector: "html",
 							themes: {
-								light: {
+								light8568956: {
 									mediaQuery: prefersLight,
 									semantics: {
 										colors: {
 											primary: "white",
-											"on-primary": "gray-800",
+											"on-primary": "gray.800",
 										},
 									},
 								},
-								dark: {
+								dark8568956: {
 									mediaQuery: prefersDark,
 									semantics: {
 										colors: {
-											primary: "gray-900",
-											"on-primary": "gray-100",
+											primary: "gray.900",
+											"on-primary": "gray.100",
 										},
 									},
 								},
@@ -129,7 +129,7 @@ export const semantics = (): void => {
 									semantics: {
 										colors: {
 											primary: "white",
-											"on-primary": "gray-800",
+											"on-primary": "gray.800",
 										},
 									},
 								},
@@ -137,8 +137,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersDark,
 									semantics: {
 										colors: {
-											primary: "gray-900",
-											"on-primary": "gray-100",
+											primary: "gray.900",
+											"on-primary": "gray.100",
 										},
 									},
 								},
@@ -224,8 +224,8 @@ export const semantics = (): void => {
 									selector: ".red-theme",
 									semantics: {
 										textColor: {
-											primary: "red-800",
-											accent: "pink-600",
+											primary: "red.800",
+											accent: "pink.600",
 										},
 									},
 								},
@@ -233,8 +233,8 @@ export const semantics = (): void => {
 									selector: ".green-theme",
 									semantics: {
 										textColor: {
-											primary: "green-800",
-											accent: "teal-600",
+											primary: "green.800",
+											accent: "teal.600",
 										},
 									},
 								},
@@ -333,8 +333,8 @@ export const semantics = (): void => {
 									selector: ".red-theme",
 									semantics: {
 										textColor: {
-											primary: "red-800",
-											accent: "pink-600",
+											primary: "red.800",
+											accent: "pink.600",
 										},
 									},
 								},
@@ -342,8 +342,8 @@ export const semantics = (): void => {
 									selector: ".green-theme",
 									semantics: {
 										textColor: {
-											primary: "green-800",
-											accent: "teal-600",
+											primary: "green.800",
+											accent: "teal.600",
 										},
 									},
 								},
@@ -429,8 +429,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersDark,
 									semantics: {
 										divideColor: {
-											primary: "purple-600",
-											accent: "yellow-200",
+											primary: "purple.600",
+											accent: "yellow.200",
 										},
 									},
 								},
@@ -438,8 +438,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersLight,
 									semantics: {
 										divideColor: {
-											primary: "yellow-200",
-											accent: "purple-600",
+											primary: "yellow.200",
+											accent: "purple.600",
 										},
 									},
 								},
@@ -510,8 +510,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersLight,
 									semantics: {
 										colors: {
-											primary: "yellow-200",
-											accent: "purple-600",
+											primary: "yellow.200",
+											accent: "purple.600",
 										},
 									},
 								},
@@ -519,8 +519,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersDark,
 									semantics: {
 										colors: {
-											primary: "purple-600",
-											accent: "yellow-200",
+											primary: "purple.600",
+											accent: "yellow.200",
 										},
 									},
 								},
@@ -604,13 +604,13 @@ export const semantics = (): void => {
 										colors: {
 											primary: {
 												faint: {
-													400: "blue-100",
-													DEFAULT: "blue-400",
+													400: "blue.100",
+													DEFAULT: "blue.400",
 												},
-												DEFAULT: "blue-500",
+												DEFAULT: "blue.500",
 												strong: {
-													DEFAULT: "blue-600",
-													400: "blue-900",
+													DEFAULT: "blue.600",
+													400: "blue.900",
 												},
 											},
 										},
@@ -622,13 +622,13 @@ export const semantics = (): void => {
 										colors: {
 											primary: {
 												faint: {
-													400: "orange-100",
-													DEFAULT: "orange-400",
+													400: "orange.100",
+													DEFAULT: "orange.400",
 												},
-												DEFAULT: "orange-500",
+												DEFAULT: "orange.500",
 												strong: {
-													DEFAULT: "orange-600",
-													400: "orange-900",
+													DEFAULT: "orange.600",
+													400: "orange.900",
 												},
 											},
 										},
@@ -725,8 +725,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersLight,
 									semantics: {
 										colors: {
-											primary: "yellow-200",
-											accent: "purple-600",
+											primary: "yellow.200",
+											accent: "purple.600",
 										},
 									},
 								},
@@ -734,8 +734,8 @@ export const semantics = (): void => {
 									mediaQuery: prefersDark,
 									semantics: {
 										colors: {
-											primary: "purple-600",
-											accent: "yellow-200",
+											primary: "purple.600",
+											accent: "yellow.200",
 										},
 									},
 								},
@@ -895,7 +895,7 @@ export const semantics = (): void => {
 							fallback: true,
 							themes: {
 								light728125: {
-									mediaQuery: prefersDark,
+									mediaQuery: prefersLight,
 									semantics: {
 										colors: {
 											accent: "light-accent",
@@ -926,8 +926,8 @@ export const semantics = (): void => {
 									selector: ".orange-theme",
 									semantics: {
 										colors: {
-											"light-accent": "orange-200",
-											"dark-accent": "orange-800",
+											"light-accent": "orange.200",
+											"dark-accent": "orange.800",
 										},
 									},
 								},
@@ -935,8 +935,8 @@ export const semantics = (): void => {
 									selector: ".fuchsia-theme",
 									semantics: {
 										colors: {
-											"light-accent": "fuchsia-200",
-											"dark-accent": "fuchsia-800",
+											"light-accent": "fuchsia.200",
+											"dark-accent": "fuchsia.800",
 										},
 									},
 								},
@@ -970,6 +970,119 @@ export const semantics = (): void => {
 					:root.fuchsia-theme {
 						--light-accent: 255, 0, 255;
 						--dark-accent: 34, 0, 34;
+					}
+				`,
+
+				`
+					.bg-accent {
+						--tw-bg-opacity: 1;
+						background-color: rgba(var(--accent), var(--tw-bg-opacity));
+					}
+				`,
+			]);
+		});
+
+		it("supports nested themes (reversed plugin order)", async () => {
+			assertContainsCSS(await generatePluginCSS(
+				{
+					safelist: [
+						"orange-theme",
+						"fuchsia-theme",
+						"bg-accent",
+					],
+					theme: {
+						colors: {
+							orange: {
+								200: "#F80",
+								800: "#210",
+							},
+							fuchsia: {
+								200: "#F0F",
+								800: "#202",
+							},
+						},
+					},
+
+					plugins: [
+						thisPlugin({
+							fallback: true,
+							themes: {
+								fuchsia9218582759817: {
+									selector: ".fuchsia-theme",
+									semantics: {
+										colors: {
+											"light-accent": "fuchsia.200",
+											"dark-accent": "fuchsia.800",
+										},
+									},
+								},
+								orange9218582759817: {
+									selector: ".orange-theme",
+									semantics: {
+										colors: {
+											"light-accent": "orange.200",
+											"dark-accent": "orange.800",
+										},
+									},
+								},
+							},
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
+						}),
+
+						thisPlugin({
+							fallback: true,
+							themes: {
+								dark9218582759817: {
+									mediaQuery: prefersDark,
+									semantics: {
+										colors: {
+											accent: "dark-accent",
+										},
+									},
+								},
+								light9218582759817: {
+									mediaQuery: prefersLight,
+									semantics: {
+										colors: {
+											accent: "light-accent",
+										},
+									},
+								},
+							},
+							utilities: {
+								colors: {
+									themeValueToVariableValue: colorToRgb,
+									variableValueToThemeValue: rgbToThemeValue,
+								},
+							},
+						}),
+					],
+				},
+				"@tailwind base;\n@tailwind utilities;",
+			),
+			[
+				`
+					:root {
+						--light-accent: 255, 0, 255;
+						--dark-accent: 34, 0, 34;
+					}
+					:root.orange-theme {
+						--light-accent: 255, 136, 0;
+						--dark-accent: 34, 17, 0;
+					}
+
+					:root {
+						--accent: var(--dark-accent);
+					}
+					@media (prefers-color-scheme: light) {
+						:root {
+							--accent: var(--light-accent);
+						}
 					}
 				`,
 
