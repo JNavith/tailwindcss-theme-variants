@@ -21,7 +21,7 @@
 	"homepage": "https://github.com/JakeNavith/tailwindcss-theme-variants",
 	"type": "module",
 	"scripts": {
-		"eslint": "eslint ./projects/**/*.cjs ./projects/**/*.js ./projects/**/*.mjs ./projects/**/*.ts ./*.js",
+		"eslint": "eslint ./projects/**/*.js ./projects/**/*.mjs ./projects/**/*.ts ./*.js",
 		"format": "npm run eslint -- --fix",
 		"retext": "node lint-content.js",
 		"lint": "run-p eslint retext",
