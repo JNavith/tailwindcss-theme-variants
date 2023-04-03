@@ -11,20 +11,20 @@ jobs:
     name: Build and Deploy
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - name: "Checkout Repo"
-        uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: pnpm/action-setup@v2
         with:
-          version: 6
+          version: 8
       - name: "Install Production and Development Dependencies"
         run: "pnpm install"
       - name: "Render Content"
