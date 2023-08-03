@@ -66,7 +66,7 @@
 		"@typescript-eslint/eslint-plugin": "4.10.0",
 		"@typescript-eslint/parser": "4.10.0",
 		"bufferutil": "4.0.2",
-		"class-validator": "0.12.2",
+		"class-validator": "0.14.0",
 		"core-js": "3.8.1",
 		"cross-env": "7.0.3",
 		"cssnano": "4.1.10",

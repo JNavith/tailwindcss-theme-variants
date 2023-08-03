@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -147,8 +151,8 @@ importers:
         specifier: 4.0.2
         version: 4.0.2
       class-validator:
-        specifier: 0.12.2
-        version: 0.12.2
+        specifier: 0.14.0
+        version: 0.14.0
       core-js:
         specifier: 3.8.1
         version: 3.8.1
@@ -2147,8 +2151,8 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: true
 
-  /@types/validator@13.0.0:
-    resolution: {integrity: sha512-WAy5txG7aFX8Vw3sloEKp5p/t/Xt8jD3GRD9DacnFv6Vo8ubudAsRTXgxpQwU0mpzY/H8U4db3roDuCMjShBmw==}
+  /@types/validator@13.9.0:
+    resolution: {integrity: sha512-NclP0IbzHj/4tJZKFqKh8E7kZdgss+MCUYV9G+TLltFfDA4lFgE4PKPpDIyS2FlcdANIfSx273emkupvChigbw==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@4.10.0(@typescript-eslint/parser@4.10.0)(eslint@7.15.0)(typescript@4.1.3):
@@ -3251,13 +3255,12 @@ packages:
       json-parse-helpfulerror: 1.0.3
     dev: false
 
-  /class-validator@0.12.2:
-    resolution: {integrity: sha512-TDzPzp8BmpsbPhQpccB3jMUE/3pK0TyqamrK0kcx+ZeFytMA+O6q87JZZGObHHnoo9GM8vl/JppIyKWeEA/EVw==}
+  /class-validator@0.14.0:
+    resolution: {integrity: sha512-ct3ltplN8I9fOwUd8GrP8UQixwff129BkEtuWDKL5W45cQuLd19xqmTLu5ge78YDm/fdje6FMt0hGOhl0lii3A==}
     dependencies:
-      '@types/validator': 13.0.0
-      google-libphonenumber: 3.2.24
-      tslib: 2.0.3
-      validator: 13.0.0
+      '@types/validator': 13.9.0
+      libphonenumber-js: 1.10.39
+      validator: 13.9.0
     dev: true
 
   /clean-css@4.2.3:
@@ -5426,11 +5429,6 @@ packages:
     dev: false
     optional: true
 
-  /google-libphonenumber@3.2.24:
-    resolution: {integrity: sha512-5Z3dZTgwacTjALlkRK5hTIjGLwTCJGNZtmWgnhpb1Z6XEBYGsXbJGsr9+MheP/2mAk/ssOvpvMXKEZISWeytcA==}
-    engines: {node: '>=0.10'}
-    dev: true
-
   /google-p12-pem@2.0.5:
     resolution: {integrity: sha512-7RLkxwSsMsYh9wQ5Vb2zRtkAHvqPvfoMGag+nugl1noYO7gf0844Yr9TIFA5NEBMAeVt2Z+Imu7CQMp3oNatzQ==}
     engines: {node: '>=8.10.0'}
@@ -6504,6 +6502,10 @@ packages:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+    dev: true
+
+  /libphonenumber-js@1.10.39:
+    resolution: {integrity: sha512-iPMM/NbSNIrdwbr94rAOos6krB7snhfzEptmk/DJUtTPs+P9gOhZ1YXVPcRgjpp3jJByclfm/Igvz45spfJK7g==}
     dev: true
 
   /lilconfig@2.1.0:
@@ -10820,8 +10822,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /validator@13.0.0:
-    resolution: {integrity: sha512-anYx5fURbgF04lQV18nEQWZ/3wHGnxiKdG4aL8J+jEDsm98n/sU/bey+tYk6tnGJzm7ioh5FoqrAiQ6m03IgaA==}
+  /validator@13.9.0:
+    resolution: {integrity: sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==}
     engines: {node: '>= 0.10'}
     dev: true
 
